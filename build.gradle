@@ -14,3 +14,21 @@ dependencies {
   implementation (project(':luwrain-base'))
   testImplementation libraries.junit
 }
+
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId = 'org.luwrain'
+      artifactId = 'luwrain-core'
+      version = '2.0.0'
+      from components.java
+    }
+  }
+  repositories {
+    maven {
+      url = uri('file:///out/_tmp/maven2')
+    }
+  }
+}
+
