@@ -12,6 +12,12 @@ final class Args
 	       required = false)
 	String appDir;
 
+        @Parameter(names = {"--print-dirs"},
+	       description = "Print directories information and exit",
+	       required = false)
+	boolean printDirs;
+
+
     @Parameter(names = {"-h", "--help"},
 	       description = "Print the help screen and exit",
 	       help = true,

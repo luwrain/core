@@ -21,9 +21,49 @@ import java.net.*;
 
 public final class LauncherImpl implements Launcher
 {
+static private final String
+    ENV_WIN_APP_DATA = "APPDATA",
+    	ENV_WIN_USER_PROFILE = "USERPROFILE",
+    WIN_APP_DATA = System.getenv(ENV_WIN_APP_DATA),
+        WIN_USER_PROFILE = System.getenv(ENV_WIN_USER_PROFILE),
+WIN_USER_DATA_DIR_NAME = "Luwrain";
+    
     @Override public void launch(String[] args)
     {
 	final var a = Args.parse(args);
-	System.out.println(a.appDir);
-	    }
+	final File
+	appDir = new File(a.appDir),
+	dataDir = getDataDir(a, appDir),
+	userHomeDir = getUserHomeDir(a),
+	userDataDir = getUserDataDir(a, userHomeDir);
+	if (a.printDirs)
+	{
+	    System.out.println("App: " + appDir.getAbsolutePath());
+	    System.out.println("Data: " + dataDir.getAbsolutePath());
+	    System.out.println("User home: " + userHomeDir.getAbsolutePath());
+	    	    System.out.println("User data: " + userDataDir.getAbsolutePath());
+	}
+    }
+
+    private File getDataDir(Args args, File appDir)
+    {
+	return new File(appDir, "data");
+    }
+
+    private File getUserHomeDir(Args args)
+    {
+	return new File(System.getProperty("user.home"));
+    }
+
+    private File getUserDataDir(Args args, File userHomeDir)
+    {
+	//Windows: in Application Data
+	if(WIN_APP_DATA != null && !WIN_APP_DATA.trim().isEmpty())
+	    return new File(new File(WIN_APP_DATA), WIN_USER_DATA_DIR_NAME);
+	if(WIN_USER_PROFILE != null && !WIN_USER_PROFILE.trim().isEmpty())
+	    return new File(new File(new File(new File(WIN_USER_PROFILE), "Local Settings"), "Application Data"), WIN_USER_DATA_DIR_NAME);
+	//We are likely on UNIX
+	return new File(new File(new File(userHomeDir, ".local"), "luwrain"), "default");
+    }
+
 }
