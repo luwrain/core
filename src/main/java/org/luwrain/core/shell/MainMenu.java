@@ -118,7 +118,7 @@ public final class MainMenu extends ListArea<MainMenuItem> implements PopupClosi
     static public MainMenu newMainMenu(Luwrain luwrain)
     {
 	NullCheck.notNull(luwrain, "luwrain");
-	final Settings.UserInterface ui = Settings.createUserInterface(luwrain.getRegistry());
+	final Settings.UserInterface ui = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
 	final MainMenuItem[] items = MainMenuItem.fromJson(ui.getMainMenuContent(""));
 	final ListArea.Params<MainMenuItem> params = new ListArea.Params<>();
 	params.context = new DefaultControlContext(luwrain);

@@ -66,10 +66,12 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
     static private Item[] loadItems(Luwrain luwrain)
     {
 	final ArrayList<Item> res = new ArrayList<>();
+	/*FIXME:newreg 
 	for(String d: luwrain.getRegistry().getDirectories(Settings.GLOBAL_KEYS_PATH))
 	{
 	    res.add(new Item(luwrain, d));
 	}
+	*/
 final Item[] toSort = res.toArray(new Item[res.size()]);
 Arrays.sort(toSort);
 return toSort;
@@ -96,8 +98,8 @@ return toSort;
 	Item(Luwrain luwrain, String command)
 	{
 	    this.path = join(Settings.GLOBAL_KEYS_PATH, command);
-	    this.sett = Settings.createHotKey(luwrain.getRegistry(), path);
-	    this.entry = new HotKeyEntry(luwrain.getRegistry(), path);
+	    this.sett = null;//FIXME:newreg Settings.createHotKey(luwrain.getRegistry(), path);
+	    this.entry = null;//FIXME:newreg new HotKeyEntry(luwrain.getRegistry(), path);
 	    	    this.command = command;
 	    this.events = entry.getKeys();
 	    this.title = luwrain.i18n().getCommandTitle(command);

@@ -34,7 +34,7 @@ final class Braille extends FormArea implements SectionArea
 	super(new DefaultControlContext(controlPanel.getCoreInterface()), "Брайль");
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
-	this.settings = Settings.createBraille(luwrain.getRegistry());
+	this.settings = null;//FIXME:newreg Settings.createBraille(luwrain.getRegistry());
 	fillForm();
     }
 

@@ -169,10 +169,12 @@ final class LuwrainImpl implements Luwrain
 	core.closeApp(this);
     }
 
+    /*
     @Override public Registry getRegistry()
     {
 	return core.registry();
     }
+    */
 
     @Override public I18n i18n()
     {

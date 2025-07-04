@@ -35,7 +35,7 @@ public final class Manager
 	NullCheck.notNull(extObjs, "extObjs");
 	NullCheck.notNull(luwrain, "luwrain");
 	this.extObjs = extObjs;
-	this.sett = Settings.createBackgroundSounds(luwrain.getRegistry());
+	this.sett = null;//FIXME:newreg Settings.createBackgroundSounds(luwrain.getRegistry());
 	this.soundsDir = luwrain.getFileProperty("luwrain.dir.sounds").toPath();
     }
 

@@ -34,7 +34,7 @@ final class Speech extends FormArea implements SectionArea
 	super(new DefaultControlContext(controlPanel.getCoreInterface()), name);
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
-	this.sett = Settings.createSpeechParams(luwrain.getRegistry());
+	this.sett = null;//FIXME:newreg Settings.createSpeechParams(luwrain.getRegistry());
 	addEdit("main-engine-name", luwrain.i18n().getStaticStr("CpSpeechMainEngineName"), sett.getMainEngineName(""));
 	addEdit("main-engine-params", luwrain.i18n().getStaticStr("CpSpeechMainEngineParams"), sett.getMainEngineParams(""));
 	addEdit("listening-engine-name", luwrain.i18n().getStaticStr("CpSpeechListeningEngineName"), sett.getListeningEngineName(""));

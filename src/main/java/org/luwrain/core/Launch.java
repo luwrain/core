@@ -54,6 +54,11 @@ final class Launch
 	    log.fatal("unable to select a language to use");
 	    System.exit(1);
 	}
+	final Config conf = new Config();
+	conf.setDataDir(dataDir);
+	conf.setUserHomeDir(userHomeDir);
+	conf.setUserDataDir(userDataDir);
+	conf.setLang(lang);
 	final org.luwrain.core.properties.PropertiesFiles filesProps = new org.luwrain.core.properties.PropertiesFiles();
 	filesProps.load(new File(dataDir, "properties"));
 	filesProps.load(new File(userDataDir, "properties"));

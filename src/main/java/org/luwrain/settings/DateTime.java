@@ -27,7 +27,7 @@ final class DateTime extends FormArea implements SectionArea
 {
     private final ControlPanel controlPanel;
     private final Luwrain luwrain;
-    private final Registry registry;
+    //    private final Registry registry;
     private final Settings.DateTime sett;
 
     DateTime(ControlPanel controlPanel)
@@ -36,8 +36,8 @@ final class DateTime extends FormArea implements SectionArea
 	NullCheck.notNull(controlPanel, "controlPanel");
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
-	this.registry = luwrain.getRegistry();
-this.sett = Settings.createDateTime(luwrain.getRegistry());
+	//	this.registry = luwrain.getRegistry();
+	this.sett = null;//FIXME:newreg Settings.createDateTime(luwrain.getRegistry());
 fillForm();
     }
 

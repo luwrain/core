@@ -113,7 +113,7 @@ final class DesktopArea extends EditableListArea<DesktopItem> implements Editabl
     {
 	if (luwrain == null)
 	    return false;
-	final Settings.UserInterface sett = Settings.createUserInterface(luwrain.getRegistry());
+	final Settings.UserInterface sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
 	final String cmdName = sett.getDesktopEscapeCommand("");
 	if (cmdName.trim().isEmpty())
 	    return false;
@@ -128,7 +128,7 @@ final class DesktopArea extends EditableListArea<DesktopItem> implements Editabl
 	{
 	    NullCheck.notNull(luwrain, "luwrain");
 	    this.luwrain = luwrain;
-	    this.sett = Settings.createUserInterface(luwrain.getRegistry());
+	    this.sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
 	    addAll(Arrays.asList(DesktopItem.fromJson(sett.getDesktopContent(""))));
 	}
 	@Override public boolean removeFromModel(int fromIndex, int toIndex)

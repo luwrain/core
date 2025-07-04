@@ -26,7 +26,7 @@ final class PersonalInfo extends FormArea implements SectionArea
 {
     private final ControlPanel controlPanel;
     private final Luwrain luwrain;
-    private final Registry registry;
+    //    private final Registry registry;
     private final Settings.PersonalInfo sett;
 
     PersonalInfo(ControlPanel controlPanel)
@@ -35,8 +35,8 @@ final class PersonalInfo extends FormArea implements SectionArea
 	NullCheck.notNull(controlPanel, "controlPanel");
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
-	this.registry = luwrain.getRegistry();
-this.sett = Settings.createPersonalInfo(luwrain.getRegistry());
+	//	this.registry = luwrain.getRegistry();
+	this.sett = null;//FIXME:newreg Settings.createPersonalInfo(luwrain.getRegistry());
 fillForm();
     }
 
@@ -50,7 +50,7 @@ fillForm();
     @Override public boolean saveSectionData()
     {
 	final Luwrain luwrain = controlPanel.getCoreInterface();
-	final Registry registry = luwrain.getRegistry();
+	//	final Registry registry = luwrain.getRegistry();
 	sett.setFullName(getEnteredText("name"));
 	sett.setDefaultMailAddress(getEnteredText("address"));
 	sett.setSignature(getMultilineEditText("\n"));

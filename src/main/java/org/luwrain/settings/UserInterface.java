@@ -34,7 +34,7 @@ final class UserInterface extends FormArea implements SectionArea
 	NullCheck.notNull(controlPanel, "controlPanel");
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
-	this.sett = Settings.createUserInterface(luwrain.getRegistry());
+	this.sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
 	fillForm();
     }
 

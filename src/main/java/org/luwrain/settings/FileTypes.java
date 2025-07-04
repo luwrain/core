@@ -61,8 +61,9 @@ final class FileTypes extends ListArea<FileTypes.Item> implements SectionArea
 	return false;
     }
 
-    static private Item[] loadItems(Registry registry)
+    static private Item[] loadItems(/*Registry registry*/)
     {
+	/*
 	NullCheck.notNull(registry, "registry");
 	final LinkedList<Item> res = new LinkedList<Item>();
 	for(String s: registry.getValues(Settings.FILE_TYPES_PATH))
@@ -82,6 +83,8 @@ final class FileTypes extends ListArea<FileTypes.Item> implements SectionArea
 	final Item[] toSort = res.toArray(new Item[res.size()]);
 	Arrays.sort(toSort);
 	return toSort;
+	*/
+	return new Item[0];//FIXME:newreg
     }
 
     static FileTypes create(ControlPanel controlPanel)
@@ -92,7 +95,7 @@ final class FileTypes extends ListArea<FileTypes.Item> implements SectionArea
 	params.context = new DefaultControlContext(luwrain);
 	params.appearance = new ListUtils.DefaultAppearance<>(params.context, Suggestions.LIST_ITEM);
 	params.name = "Типы файлов";
-	params.model = new ListUtils.FixedModel<>(loadItems(luwrain.getRegistry()));
+	params.model = new ListUtils.FixedModel<>(loadItems(/*luwrain.getRegistry()*/));
 	return new FileTypes(controlPanel, params);
     }
 

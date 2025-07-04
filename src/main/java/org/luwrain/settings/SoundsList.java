@@ -102,7 +102,7 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
 	if (soundsDirPath.length() + 1 < path.length() && path.startsWith(soundsDirPath))
 	    res = path.substring(soundsDirPath.length() + 1); else
 	    res = path;
-	luwrain.getRegistry().setString(getRegistryPath(item.sound), res);
+	//FIXME:newreg 	luwrain.getRegistry().setString(getRegistryPath(item.sound), res);
 	item.file = file;
 	refresh();
 	return true;
@@ -151,9 +151,11 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
 
     static private Item[] loadItems(Luwrain luwrain)
     {
+
 	NullCheck.notNull(luwrain, "luwrain");
-	final Registry registry = luwrain.getRegistry();
+	//	final Registry registry = luwrain.getRegistry();
 	final List<Item> res = new ArrayList<>();
+		/* FIXME:newreg 
 	final File soundsDir = luwrain.getFileProperty("luwrain.dir.sounds");
 	for(Sounds s: allSounds)
 	{
@@ -164,6 +166,7 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
 		file = "";
 	    res.add(new Item(s, luwrain.i18n().getStaticStr(getI18nName(s)), new File(soundsDir, file)));
 	}
+	*/
 	return res.toArray(new Item[res.size()]);
     }
 

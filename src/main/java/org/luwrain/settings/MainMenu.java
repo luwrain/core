@@ -48,7 +48,7 @@ final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
 	NullCheck.notNull(params, "params");
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
-	this.sett = Settings.createUserInterface(luwrain.getRegistry());
+	this.sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
     }
 
         @Override public boolean saveSectionData()
@@ -82,7 +82,7 @@ final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
     {
 	NullCheck.notNull(controlPanel, "controlPanel");
 	final Luwrain luwrain = controlPanel.getCoreInterface();
-	final Settings.UserInterface sett = Settings.createUserInterface(luwrain.getRegistry());
+	final Settings.UserInterface sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
 	final List<MainMenuItem> items = new Gson().fromJson(sett.getMainMenuContent(""), MainMenuItem.LIST_TYPE);
 	final List<UniRefInfo> uniRefs = new ArrayList<>();
 	if (items != null)

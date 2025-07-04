@@ -243,7 +243,7 @@ public final class Popups
 	NullCheck.notEmpty(name, "name");
 	NullCheck.notNull(startWith, "startWith");
 	NullCheck.notNullItems(extensions, "extensions");
-	final Settings.UserInterface sett = Settings.createUserInterface(luwrain.getRegistry());
+	final Settings.UserInterface sett = null;//Settings.createUserInterface(luwrain.getRegistry());
 	final CommanderArea.Filter<File> filter;
 	if (sett.getFilePopupSkipHidden(false))
 	    filter = CommanderPopup.FILTER_NO_HIDDEN; else
@@ -302,7 +302,7 @@ public final class Popups
     {
 	NullCheck.notNull(luwrain, "luwrain");
 	NullCheck.notEmpty(name, "name");
-	final Settings.UserInterface sett = Settings.createUserInterface(luwrain.getRegistry());
+	final Settings.UserInterface sett = null;//Settings.createUserInterface(luwrain.getRegistry());
 	final CommanderArea.Filter<File> filter;
 	if (sett.getFilePopupSkipHidden(false))
 	    filter = CommanderPopup.FILTER_NO_HIDDEN; else
@@ -441,7 +441,7 @@ public final class Popups
     static public Set<FilePopup.Flags> loadFilePopupFlags(Luwrain luwrain)
     {
 	NullCheck.notNull(luwrain, "luwrain");
-	final Settings.UserInterface sett = Settings.createUserInterface(luwrain.getRegistry());
+	final Settings.UserInterface sett = null;//Settings.createUserInterface(luwrain.getRegistry());
 	if (sett.getFilePopupSkipHidden(false))
 	    return EnumSet.of(FilePopup.Flags.SKIP_HIDDEN);
 	return EnumSet.noneOf(FilePopup.Flags.class);

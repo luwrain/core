@@ -43,7 +43,7 @@ public final class Listening
 	this.speech = speech;
 	this.area = area;
 	this.completion = completion;
-	this.sett = Settings.createSpeechParams(luwrain.getRegistry());
+	this.sett = null;//Settings.createSpeechParams(luwrain.getRegistry());
 		if (sett.getListeningEngineName("").isEmpty())
 		{
 		    this.channel = null;

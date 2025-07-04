@@ -132,7 +132,7 @@ return items.toArray(new Item[items.size()]);
 	@Override public boolean onListClick(ListArea area, int index, Item item)
 	{
 	    NullCheck.notNull(item, "item");
-	    final Settings.SoundScheme scheme = Settings.createCurrentSoundScheme(luwrain.getRegistry());
+	    /*FIXME:newreg 	    final Settings.SoundScheme scheme = Settings.createCurrentSoundScheme(luwrain.getRegistry());
 	    Path path = item.path;
 	    if (path.startsWith(luwrain.getFileProperty("luwrain.dir.data").toPath()))
 		path = luwrain.getFileProperty("luwrain.dir.data").toPath().relativize(path);
@@ -166,6 +166,8 @@ return items.toArray(new Item[items.size()]);
 	    }
 	    luwrain.message("Новые настройки сохранены", Luwrain.MessageType.OK);
 	    return true;
+	    */
+	    return false;
 	}
     };
 }
