@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -19,10 +19,11 @@ package org.luwrain.core;
 import java.io.*;
 import java.net.*;
 
-public final class LaunchFactoryImpl implements LaunchFactory
+public final class LauncherImpl implements Launcher
 {
-    @Override public Runnable newLaunch(boolean standalone, String[] args, File dataDir, File userDataDir, File userHomeDir)
+    @Override public void launch(String[] args)
     {
-	return new Launch(standalone, args, dataDir, userDataDir, userHomeDir);
-    }
+	final var a = Args.parse(args);
+	System.out.println(a.appDir);
+	    }
 }

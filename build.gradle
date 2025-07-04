@@ -1,17 +1,15 @@
 
 plugins {
-    id 'java'
+    id 'java-library'
       id "maven-publish"
   id 'io.freefair.lombok' version '8.6'
-}
-
-repositories {
-  mavenCentral()
 }
 
 dependencies {
   implementation libraries.base
   implementation libraries.graalvm
+  implementation libraries.mcp
+  implementation "com.beust:jcommander:1.78"
   implementation (project(':luwrain-base'))
   testImplementation libraries.junit
 }
