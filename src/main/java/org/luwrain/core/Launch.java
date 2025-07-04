@@ -69,7 +69,7 @@ final class Launch
 		new org.luwrain.core.properties.Player(),
 		new org.luwrain.core.properties.Listening(),
 	    });
-	this.registry = new org.luwrain.registry.fsdir.RegistryImpl(new File(new File(this.userDataDir, "registry"), "default").toPath());
+	this.registry = null;
 	this.classLoader = this.getClass().getClassLoader();
     }
 
