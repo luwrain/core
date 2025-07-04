@@ -27,7 +27,7 @@ static private final String
     WIN_APP_DATA = System.getenv(ENV_WIN_APP_DATA),
         WIN_USER_PROFILE = System.getenv(ENV_WIN_USER_PROFILE),
 WIN_USER_DATA_DIR_NAME = "Luwrain";
-    
+
     @Override public void launch(String[] args)
     {
 	final var a = Args.parse(args);
@@ -42,7 +42,9 @@ WIN_USER_DATA_DIR_NAME = "Luwrain";
 	    System.out.println("Data: " + dataDir.getAbsolutePath());
 	    System.out.println("User home: " + userHomeDir.getAbsolutePath());
 	    	    System.out.println("User data: " + userDataDir.getAbsolutePath());
+		    return;
 	}
+	new     Launch(a, dataDir, userDataDir, userHomeDir, "ru").run();
     }
 
     private File getDataDir(Args args, File appDir)

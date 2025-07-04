@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -18,94 +18,64 @@ package org.luwrain.core;
 
 import java.util.*;
 import java.io.*;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import org.apache.logging.log4j.*;
 
 import org.luwrain.core.util.*;
+
+import static java.util.Objects.*;
 
 import static org.luwrain.core.Base.*;
 import static org.luwrain.core.NullCheck.*;
 
-public final class Launch implements Runnable
+final class Launch
 {
-    static private final String
-	CMDARG_HELP = "--help",
-	CMDARG_PRINT_LANG = "--print-lang",
-	CMDARG_PRINT_DIRS = "--print-dirs",
-	CMDARG_CREATE_PROFILE = "--create-profile",
-	CMDARG_CREATE_PROFILE_IN = "--create-profile-in=";
+    static private final Logger log = LogManager.getLogger();
 
-    private final boolean standalone;
+    private final Args args;
     private final ClassLoader classLoader;
-    private final File dataDir;
-    private final File userDataDir;
-    private final File userHomeDir;
+    private final File dataDir, userDataDir, userHomeDir;
     private final String lang;
-    private final CmdLine cmdLine;
     private final Registry registry;
     private final PropertiesRegistry props;
     private OperatingSystem os = null;
     private Interaction interaction = null;
 
-    Launch(boolean standalone, String[] cmdLine, File dataDir, File userDataDir, File userHomeDir)
+    Launch(Args args, File dataDir, File userDataDir, File userHomeDir, String lang)
     {
-	notNullItems(cmdLine, "cmdLine");
-	notNull(dataDir, "dataDir");
-	notNull(userDataDir, "userDataDir");
-	notNull(userHomeDir, "userHomeDir");
-	debug("starting LUWRAIN: Java " + System.getProperty("java.version") + " by " + System.getProperty("java.vendor") + " (installed in " + System.getProperty("java.home") + ")");
-	initLog4j();
+	this.args = requireNonNull(args, "args can't be null");
+	this.dataDir = requireNonNull(dataDir, "dataDir can't be null");
+	this.userDataDir = requireNonNull(userDataDir, "userDataDir");
+	this.userHomeDir = requireNonNull(userHomeDir, "userHomeDir can't be null");
+	this.lang = lang;//Checks.detectLang(this.cmdLine);
+	log.debug("starting LUWRAIN: Java " + System.getProperty("java.version") + " by " + System.getProperty("java.vendor") + " (installed in " + System.getProperty("java.home") + ")");
 	new JniLoader().autoload(this.getClass().getClassLoader());
-	this.standalone = standalone;
-	this.cmdLine = new CmdLine(cmdLine);
-	this.dataDir = dataDir;
-	this.userDataDir = userDataDir;
-	this.userHomeDir = userHomeDir;
-	this.lang = Checks.detectLang(this.cmdLine);
 	if (lang.isEmpty())
 	{
-	    fatal("unable to select a language to use");
+	    log.fatal("unable to select a language to use");
 	    System.exit(1);
 	}
 	final org.luwrain.core.properties.PropertiesFiles filesProps = new org.luwrain.core.properties.PropertiesFiles();
 	filesProps.load(new File(dataDir, "properties"));
-	if (standalone)
-	{
-	    final org.luwrain.core.properties.Basic basicProps = new org.luwrain.core.properties.Basic(dataDir, userDataDir, userHomeDir);
-	    this.props = new PropertiesRegistry(new PropertiesProvider[]{
-		    basicProps,
-		    filesProps,
-		    new org.luwrain.core.properties.Player(),
-		    new org.luwrain.core.properties.Listening(),
-		});
-	    this.registry = loadMemRegistry(dataDir, lang);
-	} else
-	{
-	    filesProps.load(new File(userDataDir, "properties"));
-	    final org.luwrain.core.properties.Basic basicProps = new org.luwrain.core.properties.Basic(dataDir, userDataDir, userHomeDir);
-	    this.props = new PropertiesRegistry(new PropertiesProvider[]{
-		    basicProps,
-		    filesProps,
-		    new org.luwrain.core.properties.Player(),
-		    new org.luwrain.core.properties.Listening(),
-		});
-	    this.registry = new org.luwrain.registry.fsdir.RegistryImpl(new File(new File(this.userDataDir, "registry"), getRegVersion()).toPath());
-	}
+	filesProps.load(new File(userDataDir, "properties"));
+	final org.luwrain.core.properties.Basic basicProps = new org.luwrain.core.properties.Basic(dataDir, userDataDir, userHomeDir);
+	this.props = new PropertiesRegistry(new PropertiesProvider[]{
+		basicProps,
+		filesProps,
+		new org.luwrain.core.properties.Player(),
+		new org.luwrain.core.properties.Listening(),
+	    });
+	this.registry = new org.luwrain.registry.fsdir.RegistryImpl(new File(new File(this.userDataDir, "registry"), "default").toPath());
 	this.classLoader = this.getClass().getClassLoader();
     }
 
-    @Override public void run()
+    void run()
     {
-	handleCmdLine();
 	try {
-	    final UserProfile userProfile = new UserProfile(dataDir, userDataDir, getRegVersion(), lang);
+	    final UserProfile userProfile = new UserProfile(dataDir, userDataDir, "default", lang);
 	    userProfile.userProfileReady();
-	    if (!standalone)
 		userProfile.registryDirReady();
 	    init();
-	    new Core(cmdLine, classLoader, registry, os, interaction, props, lang, this.standalone).run();
+	    new Core(null, classLoader, registry, os, interaction, props, lang, false).run();
 	    interaction.close();
 	    info("exiting LUWRAIN normally");
 	    System.exit(0);
@@ -205,118 +175,5 @@ public final class Launch implements Runnable
 	}
     }
 
-    private void handleCmdLine()
-    {
-	//Help
-	if (cmdLine.used(CMDARG_HELP))
-	{
-	    System.out.println("Valid command line options are:");
-	    System.out.println(CMDARG_HELP + " - print this help info and exit");
-	    System.out.println(CMDARG_PRINT_LANG + " - print the chosen language and exit");
-	    System.out.println(Checks.CMDARG_LANG + " - set the language to use");
-	    System.out.println(CMDARG_PRINT_DIRS + " - print the detected values of the system directories and exit");
-	    if (!standalone)
-	    {
-		System.out.println(CMDARG_CREATE_PROFILE + " - generate the user profile directory in its default location and exit");
-		System.out.println(CMDARG_CREATE_PROFILE_IN + "<DESTDIR> - generate the user profile directory in <DESTDIR> and exit");
-	    }
-	    System.exit(0);
-	}
-	//Print the lang
-	if (cmdLine.used(CMDARG_PRINT_LANG))
-	{
-	    System.out.println("Chosen language: " + lang);
-	    System.exit(0);
-	}
-	//Print the dirs
-	if (cmdLine.used(CMDARG_PRINT_DIRS))
-	{
-	    System.out.println("Data: " + dataDir.getAbsolutePath());
-	    System.out.println("User profile: " + userDataDir.getAbsolutePath());
-	    System.out.println("User home: " + userHomeDir.getAbsolutePath());
-	    System.exit(0);
-	}
-	//Create profile in
-	if (!standalone && cmdLine.getArgs(CMDARG_CREATE_PROFILE_IN).length > 0)
-	{
-	    final String[] destDirs = cmdLine.getArgs((CMDARG_CREATE_PROFILE_IN));
-	    try {
-		for(String d: destDirs)
-		{
-		    final File destDir = new File(d);
-		    System.out.println("Creating user profile in " + destDir.getAbsolutePath());
-		    final UserProfile profile = new UserProfile(dataDir, destDir, getRegVersion(), lang);
-		    profile.userProfileReady();
-		    profile.registryDirReady();
-		}
-		System.exit(0);
-	    }
-	    catch(IOException e)
-	    {
-		System.err.println("ERROR: " + e.getClass().getName() + ":" + e.getMessage());
-		System.exit(1);
-	    }
-	}
-	//create profile
-	if (!standalone && cmdLine.used(CMDARG_CREATE_PROFILE))
-	{
-	    try {
-		System.out.println("Creating user profile in " + userDataDir.getAbsolutePath());
-		final UserProfile profile = new UserProfile(dataDir, userDataDir, getRegVersion(), lang);
-		profile.userProfileReady();
-		profile.registryDirReady();
-		System.exit(0);
-	    }
-	    catch(IOException e)
-	    {
-		System.err.println("ERROR: " + e.getClass().getName() + ":" + e.getMessage());
-		System.exit(1);
-	    }
-	}
-    }
-
-    private void initLog4j()
-    {
-	/*
-	try {
-	    final Properties props = new Properties();
-	    try (final InputStream is = getClass().getResourceAsStream("log4j.properties")) {
-		props.load(is);
-	    }
-	    org.apache.log4j.PropertyConfigurator.configure(props);
-	}
-	catch(IOException e)
-	{
-	    error("e, unable to init log4j");
-	}
-	*/
-    }
-
-    private String getRegVersion()
-    {
-	final String res = props.getProperty("luwrain.registry.version");
-	if (res == null || res.trim().isEmpty())
-	    return "default";
-	return res.toLowerCase();
-    }
-
-    private Registry loadMemRegistry(File dataDir, String lang)
-    {
-	notNull(dataDir, "dataDir");
-	notEmpty(lang, "lang");
-	notNull(dataDir, "dataDir");
-	final org.luwrain.registry.mem.RegistryImpl reg = new org.luwrain.registry.mem.RegistryImpl();
-	try {
-	    reg.load(new File(dataDir, "registry.dat"));
-	    reg.load(new File(dataDir, "registry." + lang + ".dat"));
-	    return reg;
-	}
-	catch(IOException e)
-	{
-	    error(e, "unable to load initial registry data");
-	    System.exit(1);
-	    return null;
-	}
-    }
 
 }
