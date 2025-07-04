@@ -32,11 +32,10 @@ final class Launch
     static private final Logger log = LogManager.getLogger();
 
     private final Args args;
+    private final Config conf;
     private final ClassLoader classLoader;
     private final File dataDir, userDataDir, userHomeDir;
     private final String lang;
-    private final Registry registry;
-    private final PropertiesRegistry props;
     private OperatingSystem os = null;
     private Interaction interaction = null;
 
@@ -54,22 +53,11 @@ final class Launch
 	    log.fatal("unable to select a language to use");
 	    System.exit(1);
 	}
-	final Config conf = new Config();
+this.conf = new Config();
 	conf.setDataDir(dataDir);
 	conf.setUserHomeDir(userHomeDir);
 	conf.setUserDataDir(userDataDir);
 	conf.setLang(lang);
-	final org.luwrain.core.properties.PropertiesFiles filesProps = new org.luwrain.core.properties.PropertiesFiles();
-	filesProps.load(new File(dataDir, "properties"));
-	filesProps.load(new File(userDataDir, "properties"));
-	final org.luwrain.core.properties.Basic basicProps = new org.luwrain.core.properties.Basic(dataDir, userDataDir, userHomeDir);
-	this.props = new PropertiesRegistry(new PropertiesProvider[]{
-		basicProps,
-		filesProps,
-		new org.luwrain.core.properties.Player(),
-		new org.luwrain.core.properties.Listening(),
-	    });
-	this.registry = null;
 	this.classLoader = this.getClass().getClassLoader();
     }
 
@@ -80,7 +68,7 @@ final class Launch
 	    userProfile.userProfileReady();
 		userProfile.registryDirReady();
 	    init();
-	    new Core(null, classLoader, registry, os, interaction, props, lang, false).run();
+	    new Core(conf).run();
 	    interaction.close();
 	    info("exiting LUWRAIN normally");
 	    System.exit(0);
@@ -97,7 +85,7 @@ final class Launch
     {
 	//time zone
 	{
-	    final Settings.DateTime sett = Settings.createDateTime(registry);
+	    final Settings.DateTime sett = Settings.createDateTime(null); //FIXME:newreg
 	    final String value = sett.getTimeZone("");
 	    if (!value.trim().isEmpty())
 	    {
@@ -112,8 +100,9 @@ final class Launch
 	initOs();
 
 	//Interaction
+	/*
 	final InteractionParamsLoader interactionParams = new InteractionParamsLoader();
-	interactionParams.loadFromRegistry(registry);
+	interactionParams.loadFromRegistry(null);
 	final String interactionClass = props.getProperty("luwrain.class.interaction");
 	if (interactionClass.isEmpty())
 	{
@@ -131,9 +120,10 @@ final class Launch
 	    fatal("interaction initialization failed");
 	    System.exit(1);
 	}
+	*/
 
 	//Network
-	final Settings.Network network = Settings.createNetwork(registry);
+	final Settings.Network network = Settings.createNetwork(null);
 	//	System.getProperties().put("socksProxyHost", network.getSocksProxyHost(""));
 	//	System.getProperties().put("socksProxyPort", network.getSocksProxyPort(""));
 	if (!network.getHttpProxyHost("").isEmpty())
@@ -158,7 +148,7 @@ final class Launch
 
     private void initOs()
     {
-	final String osClass = props.getProperty("luwrain.class.os");
+	final String osClass = "";//FIXME:props.getProperty("luwrain.class.os");
 	if (osClass.isEmpty())
 	{
 	    fatal("unable to load the operating system interface:no luwrain.class.os property in loaded core properties");
@@ -170,7 +160,7 @@ final class Launch
 	    fatal("unable to create a new instance of the operating system class " + osClass);
 	    System.exit(1);
 	}
-	final InitResult initRes = os.init(props);
+	final InitResult initRes = os.init(null);
 	if (initRes == null || !initRes.isOk())
 	{
 	    if (initRes != null)

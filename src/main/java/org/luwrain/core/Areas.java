@@ -27,14 +27,12 @@ abstract class Areas extends Base
     protected final TilesManager tiles;
     protected final WindowManager windowManager;
 
-    protected Areas(CmdLine cmdLine, Registry registry,
-			       PropertiesRegistry props, String lang, Interaction interaction)
+    protected Areas(Config conf)
     {
-	super(cmdLine, registry, props, lang);
-	notNull(interaction, "interaction");
+	super(conf);
 	this.apps = new AppManager();
 	this.tiles = new TilesManager(apps);
-	this.windowManager = new WindowManager(interaction, tiles);
+	this.windowManager = new WindowManager(conf.getInteraction(), tiles);
     }
 
     //        abstract Area getActiveArea(boolean speakMessages);

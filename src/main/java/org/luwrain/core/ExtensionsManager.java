@@ -218,11 +218,11 @@ public final class ExtensionsManager implements AutoCloseable
     List<ScriptFile> getScriptFiles(String componentName)
     {
 	notEmpty(componentName, "componentName");
-	final String dataDir = base.props.getProperty(Luwrain.PROP_DIR_DATA);
+	final String dataDir = base.conf.getDataDir().getAbsolutePath();
 
 	//Common JavaScript extensions
 	final List<ScriptFile> res = new ArrayList<>();
-	final File jsDir = base.props.getFileProperty(Luwrain.PROP_DIR_JS);
+	final File jsDir = base.conf.getJsDir();
 	if (jsDir.exists() && jsDir.isDirectory())
 	{
 	    final File[] files = jsDir.listFiles();

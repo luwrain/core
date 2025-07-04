@@ -40,12 +40,6 @@ final class LuwrainImpl implements Luwrain
 	this.core = core;
     }
 
-    @Override public CmdLine getCmdLine()
-    {
-	core.mainCoreThreadOnly();
-	return core.cmdLine;
-    }
-
     @Override public String getActiveAreaText(AreaTextType type, boolean issueErrorMessages)
     {
 	notNull(type, "type");
@@ -663,7 +657,7 @@ final class LuwrainImpl implements Luwrain
     {
 	NullCheck.notEmpty(propName, "propName");
 	//FIXME:	core.mainCoreThreadOnly();
-	return core.props.getFileProperty(propName);
+	return null;
     }
 
     /*
@@ -681,7 +675,7 @@ final class LuwrainImpl implements Luwrain
     {
 	NullCheck.notEmpty(propName, "propName");
 	//FIXME:	core.mainCoreThreadOnly();
-	return core.props.getProperty(propName);
+	return null;
     }
 
     @Override public void setEventResponse(EventResponse eventResponse)

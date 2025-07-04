@@ -30,24 +30,12 @@ abstract class EventDispatching extends Areas
 {
     protected final GlobalKeys globalKeys;
     protected Listening listening = null;
-    protected final org.luwrain.core.properties.Listening listeningProp;
     private AtomicBoolean idleEventCancelling = null;
 
-    protected EventDispatching(CmdLine cmdLine, Registry registry,
-			       PropertiesRegistry props, String lang, Interaction interaction)
+    protected EventDispatching(Config conf)
     {
-	super(cmdLine, registry, props, lang, interaction);
-	this.globalKeys = new GlobalKeys(registry);
-	org.luwrain.core.properties.Listening l = null;
-	for (PropertiesProvider p: props.getBasicProviders())
-	    if (p instanceof org.luwrain.core.properties.Listening)
-	    {
-		l = (org.luwrain.core.properties.Listening)p;
-		break;
-	    }
-	if (l == null)
-	    throw new RuntimeException("No listening properties provider");
-	this.listeningProp = l;
+	super(conf);
+	this.globalKeys = new GlobalKeys(null);
     }
 
     abstract protected void onBeforeEventProcessing();

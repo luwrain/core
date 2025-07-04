@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -24,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
+import static java.util.Objects.*;
 import static org.luwrain.core.NullCheck.*;
 
 abstract class Base implements EventConsumer
@@ -42,10 +43,9 @@ abstract class Base implements EventConsumer
 	boolean continueEventLoop();
     }
 
-    protected final CmdLine cmdLine;
-    protected final  Registry registry;
+    final Config conf;
+    final Configs configs;
     final Luwrain luwrain;
-    protected final PropertiesRegistry props;
     protected final HelpSections helpSects;
     protected final String lang;
 
@@ -73,21 +73,15 @@ abstract class Base implements EventConsumer
     private final Clipboard clipboard = new Clipboard();
     protected AnnouncementType announcement = null;
 
-    protected Base(CmdLine cmdLine, Registry registry, PropertiesRegistry props, String lang)
+    Base(Config conf)
     {
-	notNull(cmdLine, "cmdLine");
-	notNull(registry, "registry");
-	notNull(props, "props");
-	notEmpty(lang, "lang");
-	this.cmdLine = cmdLine;
+	this.conf = requireNonNull(conf, "conf can't be null");
 	this.luwrain = interfaces.systemObj;
-	this.registry = registry;
-	this.props = props;
-	this.props.setLuwrainObj(interfaces.systemObj);
-	this.lang = lang;
-	this.helpSects = new HelpSections(registry);
-	this.speech = new Speech(cmdLine, registry);
-	this.sounds = new org.luwrain.core.sound.SoundIcons(registry, props.getFileProperty(Luwrain.PROP_DIR_SOUNDS));
+	this.configs = new Configs(conf.getConfigsDir());
+	this.lang = conf.getLang();
+	this.helpSects = new HelpSections(null);
+	this.speech = new Speech(null, null);
+	this.sounds = new org.luwrain.core.sound.SoundIcons(null, null);
 	this.soundManager = new org.luwrain.core.sound.Manager(objRegistry, interfaces.systemObj);
 	this.mainCoreThread = Thread.currentThread();
     }
@@ -136,7 +130,7 @@ abstract class Base implements EventConsumer
 	    sounds.stop();
 	    return;
 	}
-	final String volumeStr = props.getProperty(PROP_ICONS_VOLUME);
+	final String volumeStr = "50";//FIXME:
 	int volume = 100;
 	try {
 	    if (!volumeStr.trim().isEmpty())
@@ -156,7 +150,7 @@ abstract class Base implements EventConsumer
     final void playSound(File file)
     {
 	notNull(file, "file");
-	final String volumeStr = props.getProperty(PROP_ICONS_VOLUME);
+	final String volumeStr = "50";//FIXME:
 	int volume = 100;
 	try {
 	    if (!volumeStr.trim().isEmpty())
@@ -245,7 +239,7 @@ abstract class Base implements EventConsumer
 
     File[] getInstalledPacksDirs()
     {
-	final File packsDir = props.getFileProperty("luwrain.dir.packs");
+	final File packsDir = conf.getPacksDir();
 	if (!packsDir.exists() || !packsDir.isDirectory())
 	    return new File[0];
 	final File[] files = packsDir.listFiles();

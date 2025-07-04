@@ -25,13 +25,14 @@ import org.luwrain.core.listening.*;
 import org.luwrain.script.Hooks;
 
 import static org.luwrain.core.NullCheck.*;
+import static java.util.Objects.*;
 
 final class Core extends EventDispatching
 {
     private final ClassLoader classLoader;
     final OperatingSystem os;
     final Interaction interaction;
-    final boolean standalone;
+boolean standalone;
     private final org.luwrain.core.shell.Conversations conversations;
     org.luwrain.player.Player player = null;
         private Application desktop = null;
@@ -40,19 +41,13 @@ final class Core extends EventDispatching
     private volatile boolean wasInputEvents = false;
     final UniRefProcManager uniRefProcs = new UniRefProcManager();//FIXME:
 
-    Core(CmdLine cmdLine, ClassLoader classLoader, Registry registry,
-	 OperatingSystem os, Interaction interaction, 
-	 PropertiesRegistry props, String lang, boolean standalone)
+    Core(Config conf)
     {
-	super(cmdLine, registry, props, lang, interaction);
-	notNull(classLoader, "classLoader");
-	notNull(os, "os");
-	notNull(interaction, "interaction");
-	this.classLoader = classLoader;
-	this.os = os;
-	this.interaction = interaction;
+	super(conf);
+	this.classLoader = requireNonNull(conf.getCoreClassLoader(), "conf.coreClassLoader can't be null");
+	this.os = requireNonNull(conf.getOperatingSystem(), "conf.operatingSystem can't be null");
+	this.interaction = requireNonNull(conf.getInteraction());
 	this.conversations = new org.luwrain.core.shell.Conversations(luwrain);
-	this.standalone = standalone;
     }
 
     void run()
@@ -142,7 +137,7 @@ final class Core extends EventDispatching
 
     private void init()
     {
-	extensions.load((ext)->interfaces.requestNew(ext), cmdLine, this.classLoader);
+	extensions.load((ext)->interfaces.requestNew(ext), null/*cmdLine*/, this.classLoader);
 	initObjects();
 	for (ScriptFile f: extensions.getScriptFiles("core"))
 	    try {
@@ -155,13 +150,13 @@ final class Core extends EventDispatching
 	initI18n();
 	objRegistry.add(null, new StartingModeProperty());
 	speech.init(objRegistry.getSpeechEngines());
-	braille.init(registry, os.getBraille(), this);
+	braille.init(null, os.getBraille(), this);
 	globalKeys.loadFromRegistry();
-	fileTypes.load(registry);
+	fileTypes.load(null);
 	loadPlayer();
 	loadDesktop();
-	props.setProviders(objRegistry.getPropertiesProviders());
-	uiSettings = Settings.createUserInterface(registry);
+	//	props.setProviders(objRegistry.getPropertiesProviders());
+	uiSettings = null;//FIXME:newreg Settings.createUserInterface(registry);
     }
 
     String loadScript(ScriptSource script) throws ExtensionException
@@ -258,12 +253,14 @@ final class Core extends EventDispatching
 		return;
 	    }
 	    LOGGER.info("Loaded player class is " + player.getClass().getName());
+	    /*
 	    for (PropertiesProvider p: props.getBasicProviders())
 		if (p instanceof org.luwrain.core.properties.Player)
 		{
 		    player.addListener((org.luwrain.player.Listener)p);
 		    break;
 		}
+	    **/
 	}
 	catch(Throwable ex)
 	{
@@ -662,12 +659,7 @@ onNewAreasLayout();
 	mainCoreThreadOnly();
 	if (fileNames.length < 1)
 	    return;
-	fileTypes.launch(this, registry, fileNames);
-    }
-
-    Registry  registry()
-    {
-	return registry;
+	fileTypes.launch(this, null, fileNames);
     }
 
             boolean runCommand(String command)
@@ -686,11 +678,11 @@ onNewAreasLayout();
 	    return;
 	stopAreaListening();
 	speech.silence();
-	this.listening = new Listening(luwrain, speech, activeArea, ()->listeningProp.setStatus(false));
+	this.listening = null;//FIXME:newregnew Listening(luwrain, speech, activeArea, ()->listeningProp.setStatus(false));
 	final AtomicBoolean res = new AtomicBoolean();
 	unsafeAreaOperation(()->res.set(listening.start()));
 	if (res.get())
-	    listeningProp.setStatus(true); else
+	    //	    listeningProp.setStatus(true); else
 	    eventNotProcessedMessage();
     }
 

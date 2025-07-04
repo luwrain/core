@@ -23,6 +23,10 @@ import lombok.*;
 @NoArgsConstructor
 public final class Config
 {
-    File dataDir, userHomeDir, userDataDir;
+    File dataDir, userHomeDir, userDataDir, configsDir;
+    File jsDir, packsDir;
     String lang;
+    Interaction interaction;
+    ClassLoader coreClassLoader;
+    OperatingSystem operatingSystem;
 }
