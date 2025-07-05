@@ -28,6 +28,7 @@ public final class Config
     File dataDir, userHomeDir, userDataDir, configsDir;
     File jsDir, packsDir;
     String lang;
+    Args args;
     Configs configs;
     ClassLoader coreClassLoader;
     Interaction interaction;

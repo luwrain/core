@@ -31,7 +31,6 @@ abstract class Base implements EventConsumer
 {
     static final Logger LOGGER =LogManager.getLogger();
 
-    
     static final String
 	LOG_COMPONENT = "core",
 	PROP_ICONS_VOLUME = "luwrain.sounds.iconsvol";
@@ -44,6 +43,7 @@ abstract class Base implements EventConsumer
     }
 
     final Config conf;
+    final Args args;
     final Configs configs;
     final Luwrain luwrain;
     final HelpSections helpSects;
@@ -77,10 +77,11 @@ abstract class Base implements EventConsumer
     {
 	this.conf = requireNonNull(conf, "conf can't be null");
 	this.luwrain = interfaces.systemObj;
+	this.args = requireNonNull(conf.getArgs(), "args can't be null");
 	this.configs = requireNonNull(conf.getConfigs(), "configs can't be null");
 	this.lang = conf.getLang();
 	this.helpSects = new HelpSections(configs);
-	this.speech = new Speech(null, null);
+	this.speech = new Speech(args, configs);
 	this.sounds = new org.luwrain.core.sound.SoundIcons(null, null);
 	this.soundManager = new org.luwrain.core.sound.Manager(objRegistry, interfaces.systemObj);
 	this.mainCoreThread = Thread.currentThread();

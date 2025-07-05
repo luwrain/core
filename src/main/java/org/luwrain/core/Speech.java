@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -21,28 +21,28 @@ import org.apache.logging.log4j.*;
 
 import org.luwrain.speech.*;
 
+import static java.util.Objects.*;
+
 public final class Speech
 {
-    static private final Logger LOG = LogManager.getLogger();
+    static private final Logger log = LogManager.getLogger();
     static final int PITCH_HINT = -25;
     static final int PITCH_MESSAGE = -25;
     static private final String SPEECH_PREFIX = "--speech=";
 
-    private final CmdLine cmdLine;
-    private final Settings.SpeechParams sett;
+    private final Args args;
+    private final Configs configs;
     private final Map<String, Engine> engines = new HashMap<>();
     private Channel defaultChannel = null;
     private int pitch = 50;
     private int rate = 50;
 
-    Speech(CmdLine cmdLine, Registry registry)
+    Speech(Args args, Configs configs)
     {
-	NullCheck.notNull(cmdLine, "cmdLine");
-	NullCheck.notNull(registry, "registry");
-	this.cmdLine = cmdLine;
-	this.sett = Settings.createSpeechParams(registry);
-	this.pitch = sett.getPitch(this.pitch);
-	this.rate = sett.getRate(this.rate);
+	this.args = requireNonNull(args, "args can't be null");
+	this.configs = requireNonNull(configs, "configs can't be null");
+	this.pitch = 50;
+	this.rate = 50;
     }
 
     void init(Engine[] engines)
@@ -53,49 +53,49 @@ public final class Speech
 	    final String name = e.getExtObjName();
 	    if (name == null || name.isEmpty())
 	    {
-		LOG.warn("The speech engine with empty name found, skipping it");
+		log.warn("The speech engine with empty name found, skipping it");
 		continue;
 	    }
 	    if (this.engines.containsKey(name))
 	    {
-		LOG.warn("Two speech engine with the same name \'" + name + "\'");
+		log.warn("Two speech engine with the same name \'" + name + "\'");
 		continue;
 	    }
 	    this.engines.put(name, e);
 	}
 	final String engineName;
 	final Map<String, String> params = new HashMap<>();
-	final String speechArg = cmdLine.getFirstArg(SPEECH_PREFIX);
+	final String speechArg = args.speech;
 	if (speechArg != null && !speechArg.isEmpty())
 	{
 	    engineName = parseChannelLine(speechArg, params);
 	    if (engineName == null)
 	    {
-		LOG.error("Unable to parse speech channel loading line: \'" + speechArg + "\'");
+		log.error("Unable to parse speech channel loading line: \'" + speechArg + "\'");
 		defaultChannel = null;
 		return;
 	    }
 	} else
 	{
-	    engineName = sett.getMainEngineName("");
+	    engineName = "";//sett.getMainEngineName("");
 	    if (engineName.isEmpty())
 	    {
-		LOG.error("No engine name in the registry for the main speech channel");
+		log.error("No engine name in the registry for the main speech channel");
 		defaultChannel = null;
 		return;
 	    }
-	    final String paramsLine = sett.getMainEngineParams("");
+	    final String paramsLine = "";//FIXME:sett.getMainEngineParams("");
 	    if (!parseParams(paramsLine, params))
 	    {
-		LOG.error("Unable to parse the params line for the engine \'" + engineName + "\':" + paramsLine);
+		log.error("Unable to parse the params line for the engine \'" + engineName + "\':" + paramsLine);
 		defaultChannel = null;
 		return;
 	    }
 	}
 	this.defaultChannel = loadChannel(engineName, params);
 	if (defaultChannel != null)
-	    LOG.debug("Main speech engine is \'" + engineName + "\'"); else
-	    LOG.error("Unable to load the default channel of the engine \'" + engineName + "\'");
+	    log.trace("Main speech engine is \'" + engineName + "\'"); else
+	    log.error("Unable to load the default channel of the engine \'" + engineName + "\'");
     }
 
         public Channel loadChannel(String engineName, String paramsLine)
@@ -114,7 +114,7 @@ public final class Speech
 	NullCheck.notNull(params, "params");
 	if (!engines.containsKey(engineName))
 	{
-	    LOG.error("No such speech engine: \'" + engineName + "\'");
+	    log.error("No such speech engine: \'" + engineName + "\'");
 	    return null;
 	}
 	return engines.get(engineName).newChannel(params);
@@ -165,7 +165,7 @@ public final class Speech
 	    if (value > 100)
 		this.rate = 100; else
 		this.rate = value;
-	sett.setRate(this.rate);
+	//	sett.setRate(this.rate);
     }
 
     int getPitch()
@@ -180,7 +180,7 @@ public final class Speech
 	    if (value > 100)
 		this.pitch = 100; else
 		this.pitch = value;
-	sett.setPitch(this.pitch);
+	//	sett.setPitch(this.pitch);
     }
 
     private int makePitch(int relPitch)

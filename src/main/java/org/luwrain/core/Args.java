@@ -6,6 +6,13 @@ import com.beust.jcommander.*;
 
 final class Args
 {
+    @Parameter(names = "--speech",
+	       description = "The speech settings",
+	       arity = 1,
+	       required = false)
+	String speech;
+
+    
     @Parameter(names = "--app-dir",
 	       description = "The directory with the distribution files",
 	       arity = 1,

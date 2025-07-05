@@ -54,6 +54,7 @@ final class Launch
 	conf.setUserHomeDir(userHomeDir);
 	conf.setUserDataDir(userDataDir);
 	conf.setLang(lang);
+	conf.setArgs(args);
 	this.classLoader = this.getClass().getClassLoader();
     }
 
