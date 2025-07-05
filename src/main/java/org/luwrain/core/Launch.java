@@ -69,7 +69,10 @@ final class Launch
 	    conf.setConfigs(configs);
 	    try {
 		try {
+		    initOs();
+		    conf.setOperatingSystem(os);
 		    initInteraction();
+		    conf.setInteraction(interaction);
 		    init();
 		    //		    new Core(conf).run();
 		}
@@ -92,31 +95,55 @@ final class Launch
 	}
     }
 
+        private void initOs()
+    {
+	log.trace("Loading operating system");
+	final var instances = new ArrayList<OperatingSystem>();
+	ServiceLoader<OperatingSystem> interactionLoader = ServiceLoader.load(OperatingSystem.class);
+	for (var instance: interactionLoader)
+	{
+	    log.trace("Found operating system instance of class " + instance.getClass().getName());
+	    instances.add(instance);
+	}
+	if (instances.isEmpty())
+	    throw new IllegalStateException("No operating system instances");
+	if (instances.size() > 1)
+	    throw new IllegalStateException("There are " + instances.size() + " operating system instances, please explicitly choose which to use");
+	this.os = instances.get(0);
+		log.trace("Using operating system from the class " + this.os.getClass().getName());
+	final InitResult initRes = os.init(null);
+	if (initRes == null || !initRes.isOk())
+	{
+	    if (initRes != null)
+		throw new RuntimeException("Unable to initialize operating system");
+	}
+    }
+
     private void initInteraction()
     {
 	log.trace("Loading interaction");
 	final var instances = new ArrayList<Interaction>();
-		        ServiceLoader<Interaction> interactionLoader = ServiceLoader.load(Interaction.class);
-		        for (var instance: interactionLoader)
-			{
-			    log.trace("Found interaction instance of class " + instance.getClass().getName());
-			    			    instances.add(instance);
-			}
-						if (instances.isEmpty())
-			    throw new IllegalStateException("No interaction instances");
-						if (instances.size() > 1)
-						throw new IllegalStateException("There are " + instances.size() + " interaction instances, please explicitly choose which to use");
-						this.interaction = instances.get(0);
-						log.trace("Using interaction from the class " + this.interaction.getClass().getName());
-	final InteractionParamsLoader interactionParams = new InteractionParamsLoader();
-	interactionParams.loadFromRegistry(null);
-	if (!interaction.init(interactionParams,os))
+	ServiceLoader<Interaction> interactionLoader = ServiceLoader.load(Interaction.class);
+	for (var instance: interactionLoader)
 	{
-	    fatal("interaction initialization failed");
-	    System.exit(1);
+	    log.trace("Found interaction instance of class " + instance.getClass().getName());
+	    instances.add(instance);
 	}
-	*/
-
+	if (instances.isEmpty())
+	    throw new IllegalStateException("No interaction instances");
+	if (instances.size() > 1)
+	    throw new IllegalStateException("There are " + instances.size() + " interaction instances, please explicitly choose which to use");
+	this.interaction = instances.get(0);
+	log.trace("Using interaction from the class " + this.interaction.getClass().getName());
+	Interaction.Params params = conf.getConfigs().load(Interaction.Params.class);
+	if (params == null)
+	{
+	    log.trace("No interaction params in configs, using default");
+	    params = new Interaction.Params();
+	    conf.getConfigs().save(params);
+	}
+	if (!interaction.init(params,os))
+	    throw new RuntimeException("Interaction init failed");
     }
 
     private void init()
@@ -136,8 +163,6 @@ final class Launch
 	    }
 	}
 	initOs();
-
-	//Interaction
 
 	//Network
 	final Settings.Network network = Settings.createNetwork(null);
@@ -163,29 +188,6 @@ final class Launch
 	System.getProperties().put("http.proxyPassword",network.getHttpProxyPassword("") );
     }
 
-    private void initOs()
-    {
-	final String osClass = "";//FIXME:props.getProperty("luwrain.class.os");
-	if (osClass.isEmpty())
-	{
-	    fatal("unable to load the operating system interface:no luwrain.class.os property in loaded core properties");
-	    System.exit(1);
-	}
-	os = (OperatingSystem)org.luwrain.util.ClassUtils.newInstanceOf(classLoader, osClass, OperatingSystem.class);
-	if (os == null)
-	{
-	    fatal("unable to create a new instance of the operating system class " + osClass);
-	    System.exit(1);
-	}
-	final InitResult initRes = os.init(null);
-	if (initRes == null || !initRes.isOk())
-	{
-	    if (initRes != null)
-		fatal("unable to initialize operating system with " + os.getClass().getName() + ":" + initRes.toString()); else
-		fatal("unable to initialize operating system with " + os.getClass().getName());
-	    System.exit(1);
-	}
-    }
 
 
 }

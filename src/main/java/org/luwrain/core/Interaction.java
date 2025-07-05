@@ -16,61 +16,40 @@
 
 package org.luwrain.core;
 
+import static java.util.Objects.*;
+
 public interface Interaction
 {
     public static final class Color
     {
-    public enum Predefined {WHITE,LIGHT_GRAY,GRAY,DARK_GRAY,BLACK,RED,PINK,ORANGE,YELLOW,GREEN,MAGENTA,CYAN,BLUE};
-    Predefined predefined=null;
-    float red=0,green=0,blue=0;
+	public enum Predefined {WHITE,LIGHT_GRAY,GRAY,DARK_GRAY,BLACK,RED,PINK,ORANGE,YELLOW,GREEN,MAGENTA,CYAN,BLUE};
+	public Predefined predefined=null;
+	public float red = 0, green = 0, blue = 0;
 
-    public Predefined getPredefined(){return predefined;}
-    public void setPredefined(Predefined predefined){this.predefined=predefined;}
+	public Color(float red,float green,float blue)
+	{
+	    this.red = red;
+	    this.green = green;
+	    this.blue = blue;
+	    predefined = null;
+	}
 
-    public float getRed(){return red;}
-    public void setRed(float red){this.red=red;}
-    public float getGreen(){return green;}
-    public void setGreen(float green){this.green=green;}
-    public float getBlue(){return blue;}
-    public void setBlue(float blue){this.blue=blue;}
-
-    public InteractionParamColor(float red,float green,float blue)
-    {
-	this.red=red;
-	this.green=green;
-	this.blue=blue;
-	predefined=null;
+	public Color(Predefined predefined)
+	{
+	    this.predefined = requireNonNull(predefined, "predefined can't be null");
+	}
     }
 
-    public InteractionParamColor(Predefined predefined)
+    public static final class Params
     {
-	this.predefined=predefined;
+	public int wndLeft = 0, wndTop = 0, wndWidth = -1 /* -1 means screen width*/, wndHeight = -1 /* -1 means screen height */;
+	public int marginLeft = 16, marginTop = 16, marginRight = 16, marginBottom = 16;
+	public Color fontColor = new Color(Color.Predefined.GRAY), font2Color = new Color(Color.Predefined.WHITE);
+	public Color bkgColor = new Color(Color.Predefined.BLACK), splitterColor = new Color(Color.Predefined.LIGHT_GRAY);
+	public int initialFontSize = 14;
+	public String fontName = "Monospaced";
     }
-}
 
-    
-public class InteractionParams
-{
-    public int wndLeft = 0;
-    public int wndTop = 0;
-    public int wndWidth = -1;//-1 means screen with;
-    public int wndHeight = -1;//-1 means screen height;
-    public int marginLeft = 16;
-    public int marginTop = 16;
-    public int marginRight = 16;
-    public int marginBottom = 16;
-    public InteractionParamColor fontColor = new InteractionParamColor(InteractionParamColor.Predefined.GRAY);
-    public InteractionParamColor font2Color = new InteractionParamColor(InteractionParamColor.Predefined.WHITE);
-    public InteractionParamColor bkgColor = new InteractionParamColor(InteractionParamColor.Predefined.BLACK);
-    public InteractionParamColor splitterColor = new InteractionParamColor(InteractionParamColor.Predefined.LIGHT_GRAY);
-    public int initialFontSize = 14;
-    public String fontName = "Monospaced";
-}
-
-
-
-    
-    
     public interface GraphicalModeControl
     {
 	void close();
@@ -81,7 +60,7 @@ public interface GraphicalMode
     Object getGraphicalObj(GraphicalModeControl control);
 }
 
-    boolean init(InteractionParams params,OperatingSystem os);
+    boolean init(Params params,OperatingSystem os);
     void close();
     void startInputEventsAccepting(EventConsumer eventConsumer);
     void stopInputEventsAccepting();
