@@ -18,21 +18,27 @@ package  org.luwrain.core;
 
 import java.util.*;
 import java.io.*;
+import org.apache.logging.log4j.*;
 
 import org.h2.mvstore.*;
 import com.google.gson.*;
 
 import static java.util.Objects.*;
+import static java.nio.file.Files.*;
 
 final class Configs implements AutoCloseable
 {
+    static private final Logger log = LogManager.getLogger();
+
     private final File configsDir;
     private final Gson gson = new Gson();
     private final MVStore store;
     private final MVMap<String, String> mvMap;
 
-    Configs(File configsDir)
+    Configs(File configsDir) throws IOException
     {
+	createDirectories(configsDir.toPath());
+	log.trace("Opening configs session in " + configsDir.getAbsolutePath());
 	this.configsDir = requireNonNull(configsDir, "configsDir can't be null");
 	this.store = MVStore.open(new File(configsDir, "configs.mvdb").getAbsolutePath()); 
 this.mvMap = store.openMap("main");
@@ -55,6 +61,7 @@ this.mvMap = store.openMap("main");
 
     @Override public void close()
     {
+		log.trace("Closing configs session in " + configsDir.getAbsolutePath());
 	store.close();
     }
 }

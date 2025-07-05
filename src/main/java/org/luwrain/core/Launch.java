@@ -18,6 +18,7 @@ package org.luwrain.core;
 
 import java.util.*;
 import java.io.*;
+import java.util.ServiceLoader;
 import org.apache.logging.log4j.*;
 
 import org.luwrain.core.util.*;
@@ -53,7 +54,7 @@ final class Launch
 	    log.fatal("unable to select a language to use");
 	    System.exit(1);
 	}
-this.conf = new Config();
+	this.conf = new Config();
 	conf.setDataDir(dataDir);
 	conf.setUserHomeDir(userHomeDir);
 	conf.setUserDataDir(userDataDir);
@@ -64,21 +65,58 @@ this.conf = new Config();
     void run()
     {
 	try {
-	    final UserProfile userProfile = new UserProfile(dataDir, userDataDir, "default", lang);
-	    userProfile.userProfileReady();
-		userProfile.registryDirReady();
-	    init();
-	    new Core(conf).run();
-	    interaction.close();
-	    info("exiting LUWRAIN normally");
+	    final Configs configs = new Configs(new File(userDataDir, "conf"));
+	    conf.setConfigs(configs);
+	    try {
+		try {
+		    initInteraction();
+		    init();
+		    //		    new Core(conf).run();
+		}
+		finally {
+		    if (interaction != null)
+			interaction.close();
+		}
+	    }
+	    finally {
+		configs.close();
+	    }
 	    System.exit(0);
 	}
 	catch(Throwable e)
 	{
-	    error(e, "top level exception");
-	    fatal("terminating LUWRAIN abnormally");
+	    log.fatal("Fatal LUWRAIN error , exiting", e);
+	    System.err.println();
+	    System.err.println("FATAL " + e.getMessage());
 	    System.exit(1);
 	}
+    }
+
+    private void initInteraction()
+    {
+	log.trace("Loading interaction");
+	final var instances = new ArrayList<Interaction>();
+		        ServiceLoader<Interaction> interactionLoader = ServiceLoader.load(Interaction.class);
+		        for (var instance: interactionLoader)
+			{
+			    log.trace("Found interaction instance of class " + instance.getClass().getName());
+			    			    instances.add(instance);
+			}
+						if (instances.isEmpty())
+			    throw new IllegalStateException("No interaction instances");
+						if (instances.size() > 1)
+						throw new IllegalStateException("There are " + instances.size() + " interaction instances, please explicitly choose which to use");
+						this.interaction = instances.get(0);
+						log.trace("Using interaction from the class " + this.interaction.getClass().getName());
+	final InteractionParamsLoader interactionParams = new InteractionParamsLoader();
+	interactionParams.loadFromRegistry(null);
+	if (!interaction.init(interactionParams,os))
+	{
+	    fatal("interaction initialization failed");
+	    System.exit(1);
+	}
+	*/
+
     }
 
     private void init()
@@ -100,27 +138,6 @@ this.conf = new Config();
 	initOs();
 
 	//Interaction
-	/*
-	final InteractionParamsLoader interactionParams = new InteractionParamsLoader();
-	interactionParams.loadFromRegistry(null);
-	final String interactionClass = props.getProperty("luwrain.class.interaction");
-	if (interactionClass.isEmpty())
-	{
-	    fatal("unable to load the interaction:no luwrain.class.interaction property in loaded properties");
-	    System.exit(1);
-	}
-	interaction = (Interaction)org.luwrain.util.ClassUtils.newInstanceOf(this.classLoader, interactionClass, Interaction.class);
-	if (interaction == null)
-	{
-	    fatal("Unable to create an instance of  the interaction class " + interactionClass);
-	    System.exit(1);
-	}
-	if (!interaction.init(interactionParams,os))
-	{
-	    fatal("interaction initialization failed");
-	    System.exit(1);
-	}
-	*/
 
 	//Network
 	final Settings.Network network = Settings.createNetwork(null);

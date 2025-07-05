@@ -77,7 +77,7 @@ abstract class Base implements EventConsumer
     {
 	this.conf = requireNonNull(conf, "conf can't be null");
 	this.luwrain = interfaces.systemObj;
-	this.configs = new Configs(conf.getConfigsDir());
+	this.configs = requireNonNull(conf.getConfigs(), "configs can't be null");
 	this.lang = conf.getLang();
 	this.helpSects = new HelpSections(null);
 	this.speech = new Speech(null, null);

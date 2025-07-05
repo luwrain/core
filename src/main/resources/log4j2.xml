@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
   <Appenders>
-                <LogAppender name="LogAppender" />
     <Console name="console" target="SYSTEM_OUT">
-      <PatternLayout pattern="%msg (%logger{36} %t %-5level)%n" />
+      <PatternLayout pattern="%msg (%-5level %logger{36} %t)%n" />
     </Console>
-    <!--<Console name="ConsoleErrors" target="SYSTEM_OUT">
-      <PatternLayout pattern="ERROR: %msg (%logger{36} %t %-5level)%n" />
-    </Console>-->
-    <File name="file" fileName="${sys:user.home}/luwrain.log">
-      <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-    </File>
+    <RollingFile name="file" fileName="/tmp/luwrain.log" filePattern="/tmp/lcloud-%d{MM-dd-yyyy}.log.gz" ignoreExceptions="false">
+      <PatternLayout pattern="%msg (%logger{36}) - %-5level [%t] - %d{yyyy-mm-dd HH:mm:ss.SSS} %n"/>
+      <TimeBasedTriggeringPolicy />
+    </RollingFile>
   </Appenders>
-
   <Loggers>
-
     <Root level="trace">
       <AppenderRef ref="file" />
-            <AppenderRef ref="LogAppender" />
+            <AppenderRef ref="console" level="info" />
     </Root>
     </Loggers>
 </Configuration>

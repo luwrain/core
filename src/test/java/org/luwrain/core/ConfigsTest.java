@@ -25,7 +25,7 @@ public class ConfigsTest
 {
     private TempDir tempDir = null;
 
-    @Test void withClosing()
+    @Test void withClosing() throws Exception
     {
 	try (final var c = new Configs(tempDir.getFile())) {
 	    TestClass testClass = new TestClass();
@@ -38,7 +38,7 @@ public class ConfigsTest
 	}
     }
 
-    @Test void withoutClosing()
+    @Test void withoutClosing() throws Exception
     {
 	try (final var c = new Configs(tempDir.getFile())) {
 	    TestClass testClass = new TestClass();
