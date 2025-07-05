@@ -8,11 +8,17 @@ plugins {
 dependencies {
   implementation libraries.base
   implementation libraries.graalvm
+  implementation libraries.h2
   implementation libraries.mcp
   implementation "com.beust:jcommander:1.78"
   implementation (project(':luwrain-base'))
   testImplementation libraries.junit
 }
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
 
 publishing {
   publications {

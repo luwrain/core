@@ -19,6 +19,8 @@ package org.luwrain.core;
 import java.io.*;
 import lombok.*;
 
+
+
 @Data
 @NoArgsConstructor
 public final class Config
