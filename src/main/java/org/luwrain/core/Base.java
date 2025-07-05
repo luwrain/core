@@ -46,32 +46,32 @@ abstract class Base implements EventConsumer
     final Config conf;
     final Configs configs;
     final Luwrain luwrain;
-    protected final HelpSections helpSects;
-    protected final String lang;
+    final HelpSections helpSects;
+    final String lang;
 
     private final Thread mainCoreThread;
-    protected final InterfaceManager interfaces = new InterfaceManager(this);
-    protected final ExtensionsManager extensions = new ExtensionsManager(this, interfaces);
-    protected final ObjRegistry objRegistry = new ObjRegistry();
+    final InterfaceManager interfaces = new InterfaceManager(this);
+    final ExtensionsManager extensions = new ExtensionsManager(this, interfaces);
+    final ObjRegistry objRegistry = new ObjRegistry();
     final TempFiles tempFiles = new TempFiles();
-    protected final CommandManager commands = new CommandManager();//FIXME:must be merged into objRegistry
-    protected final EventQueue eventQueue = new EventQueue();
-    protected final MainStopCondition mainStopCondition = new MainStopCondition();
+    final CommandManager commands = new CommandManager();//FIXME:must be merged into objRegistry
+    final EventQueue eventQueue = new EventQueue();
+    final MainStopCondition mainStopCondition = new MainStopCondition();
     private EventResponse eventResponse = null;
 
-    protected final WorkersTracking workers = new WorkersTracking();
-    protected final JobsManager jobs = new JobsManager(interfaces.systemObj, extensions);
-    protected final I18nImpl i18n = new I18nImpl();
-    protected final Speech speech;
-    protected final org.luwrain.core.speech.SpeakingText speakingText = new org.luwrain.core.speech.SpeakingText(extensions);
-    protected final BrailleImpl braille = new BrailleImpl();
-    protected final org.luwrain.core.sound.SoundIcons sounds;
-    protected final org.luwrain.core.sound.Manager soundManager;
+    final WorkersTracking workers = new WorkersTracking();
+    final JobsManager jobs = new JobsManager(interfaces.systemObj, extensions);
+    final I18nImpl i18n = new I18nImpl();
+    final Speech speech;
+    final org.luwrain.core.speech.SpeakingText speakingText = new org.luwrain.core.speech.SpeakingText(extensions);
+    final BrailleImpl braille = new BrailleImpl();
+    final org.luwrain.core.sound.SoundIcons sounds;
+    final org.luwrain.core.sound.Manager soundManager;
 
     final FileTypes fileTypes = new FileTypes();
     final FileContentType contentTypes = new FileContentType();
     private final Clipboard clipboard = new Clipboard();
-    protected AnnouncementType announcement = null;
+    AnnouncementType announcement = null;
 
     Base(Config conf)
     {
@@ -79,7 +79,7 @@ abstract class Base implements EventConsumer
 	this.luwrain = interfaces.systemObj;
 	this.configs = requireNonNull(conf.getConfigs(), "configs can't be null");
 	this.lang = conf.getLang();
-	this.helpSects = new HelpSections(null);
+	this.helpSects = new HelpSections(configs);
 	this.speech = new Speech(null, null);
 	this.sounds = new org.luwrain.core.sound.SoundIcons(null, null);
 	this.soundManager = new org.luwrain.core.sound.Manager(objRegistry, interfaces.systemObj);

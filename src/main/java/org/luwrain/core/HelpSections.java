@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -16,22 +16,30 @@
 
 package org.luwrain.core;
 
+import java.util.*;
+
+import static java.util.Objects .*;
+
 final class HelpSections
 {
-    private final Registry registry;
-
-    HelpSections(Registry registry)
+    static private final class Config
     {
-	NullCheck.notNull(registry, "registry");
-	this.registry = registry;
+	Map<String, String> sections;
+    }
+
+    private final Configs conf;
+
+    HelpSections(Configs conf)
+    {
+	this.conf = requireNonNull(conf, "conf can't be null");
     }
 
     String getSectionUrl(String sectName)
     {
-	NullCheck.notEmpty(sectName, "sectName");
-	final String path = Registry.join(Settings.HELP_SECTIONS_PATH, sectName);
-	if (registry.getTypeOf(path) != Registry.STRING)
-	    return "";
-	return registry.getString(path);
+	requireNonNull(sectName, "sectName can['t be null");
+	final var c = conf.load(Config.class);
+	if (c == null || c.sections == null || !c.sections.containsKey(sectName))
+	    return null;
+	return c.sections.get(sectName);
     }
 }

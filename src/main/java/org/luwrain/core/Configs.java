@@ -44,7 +44,7 @@ final class Configs implements AutoCloseable
 this.mvMap = store.openMap("main");
     }
 
-    <E> E load(Class<E> cl)
+    synchronized <E> E load(Class<E> cl)
     {
 	requireNonNull(cl, "cl can't be null");
 	final String str = mvMap.get(cl.getName());
@@ -53,16 +53,15 @@ this.mvMap = store.openMap("main");
 		return gson.fromJson(str, cl);
     }
 
-    <E> void save(E obj)
+    synchronized <E> void save(E obj)
     {
 	requireNonNull(obj, "obj can't be null");
 	mvMap.put(obj.getClass().getName(), gson.toJson(obj));
         }
 
-    @Override public void close()
+    @Override public synchronized void close()
     {
 		log.trace("Closing configs session in " + configsDir.getAbsolutePath());
 	store.close();
     }
 }
-

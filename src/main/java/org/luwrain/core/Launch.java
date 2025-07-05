@@ -21,12 +21,7 @@ import java.io.*;
 import java.util.ServiceLoader;
 import org.apache.logging.log4j.*;
 
-import org.luwrain.core.util.*;
-
 import static java.util.Objects.*;
-
-import static org.luwrain.core.Base.*;
-import static org.luwrain.core.NullCheck.*;
 
 final class Launch
 {
@@ -73,8 +68,8 @@ final class Launch
 		    conf.setOperatingSystem(os);
 		    initInteraction();
 		    conf.setInteraction(interaction);
-		    init();
-		    //		    new Core(conf).run();
+		    initTimeZone();
+		    new Core(conf).run();
 		}
 		finally {
 		    if (interaction != null)
@@ -95,7 +90,7 @@ final class Launch
 	}
     }
 
-        private void initOs()
+    private void initOs()
     {
 	log.trace("Loading operating system");
 	final var instances = new ArrayList<OperatingSystem>();
@@ -110,7 +105,7 @@ final class Launch
 	if (instances.size() > 1)
 	    throw new IllegalStateException("There are " + instances.size() + " operating system instances, please explicitly choose which to use");
 	this.os = instances.get(0);
-		log.trace("Using operating system from the class " + this.os.getClass().getName());
+	log.trace("Using operating system from the class " + this.os.getClass().getName());
 	final InitResult initRes = os.init(null);
 	if (initRes == null || !initRes.isOk())
 	{
@@ -146,25 +141,26 @@ final class Launch
 	    throw new RuntimeException("Interaction init failed");
     }
 
-    private void init()
+    private void initTimeZone()
     {
-	//time zone
+	final var sett = conf.getConfigs().load(org.luwrain.io.json.CommonSettings.class);
+	if (sett == null || requireNonNullElse(sett.getTimeZone(), "").trim().isEmpty())
 	{
-	    final Settings.DateTime sett = Settings.createDateTime(null); //FIXME:newreg
-	    final String value = sett.getTimeZone("");
-	    if (!value.trim().isEmpty())
-	    {
-		final TimeZone timeZone = TimeZone.getTimeZone(value.trim());
-		if (timeZone != null)
-		{
-		    TimeZone.setDefault(timeZone);
-		} else
-		    warn("time zone " + value.trim() + " is unknown");
-	    }
+	    log.trace("No time zone information, skipping setting the time zone");
+	    return;
 	}
-	initOs();
+	final String value = sett.getTimeZone().trim();
+	log.trace("Setting the time zone  "+ value);
+	final TimeZone timeZone = TimeZone.getTimeZone(value);
+	if (timeZone != null)
+	{
+	    TimeZone.setDefault(timeZone);
+	    return;
+	}
+	log.warn("time zone " + value + " is unknown");
+    }
 
-	//Network
+    /*
 	final Settings.Network network = Settings.createNetwork(null);
 	//	System.getProperties().put("socksProxyHost", network.getSocksProxyHost(""));
 	//	System.getProperties().put("socksProxyPort", network.getSocksProxyPort(""));
@@ -186,8 +182,5 @@ final class Launch
 	}
 	System.getProperties().put("http.proxyUser", network.getHttpProxyUser(""));
 	System.getProperties().put("http.proxyPassword",network.getHttpProxyPassword("") );
-    }
-
-
-
+    */
 }
