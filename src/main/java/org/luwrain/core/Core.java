@@ -118,7 +118,6 @@ boolean standalone;
 	if (!command.startsWith("app "))
 	    return false;
 	final String params = command.substring("app ".length());
-	Log.debug("proba", "params " + params);
 	String shortcut = null;
 	final List<String> args = new ArrayList<>();
 	//FIXME:quotes
@@ -278,8 +277,13 @@ boolean standalone;
 	if (desktops.isEmpty())
 	    throw new RuntimeException("No desktop providers");
 	desktop = desktops.get(0);
-	LOGGER.info("Loaded desktop class is " + desktop.getClass().getName());
-	desktop.onLaunchApp(interfaces.requestNew(desktop));
+	LOGGER.trace("Loaded desktop class is " + desktop.getClass().getName());
+	final var initRes = desktop.onLaunchApp(interfaces.requestNew(desktop));
+	if (!initRes.isOk())
+	{
+	    LOGGER.error("Unable to init the desktop app: " + initRes.toString());
+	    throw new RuntimeException("Unable to init the desktop app of the class " + desktop.getClass().getName());
+	}
 	apps.setDesktopApp(desktop);
     }
 

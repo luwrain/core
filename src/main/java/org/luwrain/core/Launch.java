@@ -84,7 +84,7 @@ final class Launch
 	{
 	    log.fatal("Fatal LUWRAIN error , exiting", e);
 	    System.err.println();
-	    System.err.println("FATAL " + e.getMessage());
+	    System.err.println("FATAL: " + e.getMessage());
 	    System.exit(1);
 	}
     }

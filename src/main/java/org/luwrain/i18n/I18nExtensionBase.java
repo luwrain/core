@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2021 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,8 +14,6 @@
    General Public License for more details.
 */
 
-//LWR_API 2.0
-
 package org.luwrain.i18n;
 
 import java.net.*;
@@ -23,6 +21,8 @@ import java.io.*;
 import java.util.*;
 
 import org.luwrain.core.*;
+
+import static java.util.Objects.*;
 
 public class I18nExtensionBase extends EmptyExtension
 {
@@ -39,7 +39,7 @@ public class I18nExtensionBase extends EmptyExtension
 
     public I18nExtensionBase(String langName)
     {
-	NullCheck.notEmpty(langName, "langName");
+	requireNonNull(langName, "langName can't be null");
 	this.classLoader = classLoader;
 	this.langName = langName;
     }

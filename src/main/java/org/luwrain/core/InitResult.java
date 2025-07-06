@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,10 +14,13 @@
    General Public License for more details.
 */
 
-//LWR_API 1.0
-
 package org.luwrain.core;
 
+import lombok.*;
+
+import static java.util.Objects.*;
+
+@Data
 public final class InitResult 
 {
     public enum Type {
@@ -29,74 +32,38 @@ public final class InitResult
     };
 
     private final Type type;
-    private final Object arg;
+    private final String message;
+    private Throwable exception;
 
     public InitResult()
     {
 	this.type = Type.OK;
-	this.arg = null;
+	this.message = null;
+	this.exception = null;
     }
 
     public InitResult(Type type)
     {
-	NullCheck.notNull(type, "type");
-	this.type = type;
-	this.arg = null;
+	this.type = requireNonNull(type, "type can't be null");
+	this.message = null;
+	this.exception = null;
     }
 
-    public InitResult(Type type, Object arg)
+    public InitResult(Type type, String message)
     {
-	NullCheck.notNull(type, "type");
-	NullCheck.notNull(arg, "arg");
-	this.type = type;
-	this.arg = arg;
+	this.type = requireNonNull(type, "type can't be null");
+	this.message = requireNonNull(message, "message can't be null");
     }
 
     public InitResult(Throwable e)
     {
-	NullCheck.notNull(e, "e");
 	this.type = Type.EXCEPTION;
-	this.arg = e;
-    }
-
-    public Type getType()
-    {
-	return type;
-    }
-
-    public Object getArg()
-    {
-	return arg;
-    }
-
-    public Throwable getException()
-    {
-	if (arg != null && arg instanceof Throwable)
-	    return (Throwable)arg;
-	return null;
-    }
-
-    public String getMessage()
-    {
-	if (arg != null && arg instanceof String)
-	    return (String)arg;
-	return null;
+	this.message = null;
+	this.exception = requireNonNull(e, "e can't be null");
     }
 
     public boolean isOk()
     {
 	return type == Type.OK;
-    }
-
-    @Override public String toString()
-    {
-	if (arg == null)
-	    return "[" + type.toString() + "]";
-	if (arg instanceof Throwable)
-	{
-	    final Throwable e = (Throwable)arg;
-	    return "[" + type.toString() + "] " + e.getClass().getName() + ":" + e.getMessage();
-	}
-	return "[" + type.toString() + "] " + arg.toString();
     }
 }

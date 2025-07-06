@@ -24,6 +24,8 @@ import org.luwrain.controls.*;
 import org.luwrain.shell.*;
 import org.luwrain.io.json.*;
 
+import static java.util.Objects.*;
+
 final class DesktopArea extends EditableListArea<DesktopItem> implements EditableListArea.ClickHandler<DesktopItem>
 {
     private final Luwrain luwrain;
@@ -31,16 +33,15 @@ final class DesktopArea extends EditableListArea<DesktopItem> implements Editabl
     DesktopArea(Luwrain luwrain, String areaName, Conversations conv)
     {
 	super(createParams(luwrain, areaName, conv));
-	NullCheck.notNull(luwrain, "luwrain");
-	this.luwrain = luwrain;
+	this.luwrain = requireNonNull(luwrain, "luwrain can't be null");
 	setListClickHandler(this);
     }
 
     static private EditableListArea.Params<DesktopItem> createParams(Luwrain luwrain, String areaName, Conversations conv)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(areaName, "areaName");
-	NullCheck.notNull(conv, "conv");
+	requireNonNull(luwrain, "luwrain can't be null");
+requireNonNull(areaName, "areaName can't be null");
+	requireNonNull(conv, "conv can't be null");
 	final EditableListArea.Params<DesktopItem> params = new EditableListArea.Params<>();
 	params.context = new DefaultControlContext(luwrain);
 	params.model = new Model(luwrain);
@@ -69,7 +70,7 @@ final class DesktopArea extends EditableListArea<DesktopItem> implements Editabl
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.isSpecial() && !event.isModified())
 	    switch(event.getSpecial())
 	    { 
@@ -81,7 +82,7 @@ final class DesktopArea extends EditableListArea<DesktopItem> implements Editabl
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return super.onSystemEvent(event);
 	switch(event.getCode())
@@ -123,13 +124,13 @@ final class DesktopArea extends EditableListArea<DesktopItem> implements Editabl
     static private final class Model extends ArrayList<DesktopItem> implements EditableListArea.Model<DesktopItem>
     {
 	private final Luwrain luwrain;
-	private final Settings.UserInterface sett;
 	Model(Luwrain luwrain)
 	{
-	    NullCheck.notNull(luwrain, "luwrain");
+	    requireNonNull(luwrain, "luwrain can't be null");
 	    this.luwrain = luwrain;
-	    this.sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
-	    addAll(Arrays.asList(DesktopItem.fromJson(sett.getDesktopContent(""))));
+	    final var conf = luwrain.loadConf(org.luwrain.shell.Config.class);
+	    if (conf != null)
+		addAll(Arrays.asList(DesktopItem.fromJson(conf.getDesktopContent())));
 	}
 	@Override public boolean removeFromModel(int fromIndex, int toIndex)
 	{
@@ -182,7 +183,9 @@ final class DesktopArea extends EditableListArea<DesktopItem> implements Editabl
 	}
 	private void save()
 	{
-	    sett.setDesktopContent(DesktopItem.toJson(toArray(new DesktopItem[size()])));
+	    final var conf = luwrain.loadConf(org.luwrain.shell.Config.class);
+	    conf.setDesktopContent(DesktopItem.toJson(toArray(new DesktopItem[size()])));
+	    luwrain.saveConf(conf);
 	}
     }
 }

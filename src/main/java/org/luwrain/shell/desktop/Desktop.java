@@ -40,8 +40,10 @@ public final class Desktop implements org.luwrain.core.Desktop
 	    return new InitResult(InitResult.Type.NO_STRINGS_OBJ, Strings.NAME);
 	this.strings = (Strings)o;
 	this.conv = new Conversations(luwrain, strings);
-	final Settings.UserInterface sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
-	this.name = sett.getDesktopTitle("").trim();
+	this.name = "";
+	final var conf = luwrain.loadConf(org.luwrain.shell.Config.class);
+	if (conf != null)
+	    this.name = requireNonNullElse(conf.getDesktopTitle(), "").trim();
 	if (this.name.isEmpty())
 	    this.name = luwrain.i18n().getStaticStr("Desktop");
 	this.desktopArea = new DesktopArea(luwrain, name, conv);

@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -17,13 +17,17 @@
 package org.luwrain.core;
 
 import java.util.*;
+import org.apache.logging.log4j.*;
 
 import org.luwrain.i18n.*;
 
+import static java.util.Objects.*;
+
 final class I18nImpl implements I18n, I18nExtension
 {
+    static private final Logger log = LogManager.getLogger();
+
     static private final String
-	LOG_COMPONENT = Base.LOG_COMPONENT,
 	EN_LANG = "en",
 	NO_CHOSEN_LANG = "#NO CHOSEN LANGUAGE#";
 
@@ -55,7 +59,7 @@ final class I18nImpl implements I18n, I18nExtension
 	}
 	catch(Throwable e)
 	{
-	    Log.error(LOG_COMPONENT, "unable to make a speakable text of type " + speakableTextType + ": " + e.getClass().getName() + ": " + e.getMessage());
+	    log.error("Unable to make a speakable text of type " + speakableTextType + ": " + e.getClass().getName() + ": " + e.getMessage());
 	    return text;
 	}
     }
@@ -183,21 +187,26 @@ final class I18nImpl implements I18n, I18nExtension
 
     @Override public void addStrings(String lang, String component, Object obj)
     {
-	NullCheck.notEmpty(lang, "lang");
-	NullCheck.notEmpty(component, "component");
-	NullCheck.notNull(obj, "obj");
+	requireNonNull(lang, "lang can't be null");
+	requireNonNull(component, "component can't be null");
+	requireNonNull(obj, "obj can't be null");
 	for(StringsObj o: stringsObjs)
 	    if (o.lang.equals(lang) && o.component.equals(component))
 		return;
+	log.trace("Adding the strings object " + component + " for the language  "+ lang);
 	stringsObjs.add(new StringsObj(lang, component, obj));
     }
 
     @Override public boolean addLang(String name, Lang lang)
     {
-	NullCheck.notEmpty(name, "name");
-	NullCheck.notNull(lang, "lang");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(lang, "lang can't be null");
 	if (langs.containsKey(name))
+	{
+	    log.warn("Trying to add the language  "+ name + " twice");
 	    return false;
+	}
+	    log.trace("Adding the lang " + name);
 	langs.put(name, lang);
 	return true;
     }
@@ -207,11 +216,11 @@ final class I18nImpl implements I18n, I18nExtension
 	NullCheck.notEmpty(name, "name");
 	if (langs.isEmpty())
 	{
-	    Log.error(LOG_COMPONENT, "no langs registered, unable to choose the default");
+	    log.error("No langs registered, unable to choose the default");
 	    return false;
 	}
 	for(Map.Entry<String, Lang> l: langs.entrySet())
-	    Log.debug(LOG_COMPONENT, "lang \'" + l.getKey() + "\' loaded");
+	    log.trace("Lang \'" + l.getKey() + "\' loaded");
 	Lang desiredLang = null;
 	String desiredLangName = "";
 	Lang anyLang = null;
@@ -233,9 +242,9 @@ final class I18nImpl implements I18n, I18nExtension
 		enLang = l.getValue();
 	}
 	if (desiredLang == null)
-	    Log.warning(LOG_COMPONENT, "the desired language \'" + name + "\' not found");
+	    log.warn("The desired language \'" + name + "\' not found");
 	if (enLang == null)
-	    Log.warning(LOG_COMPONENT, "English language not found");
+	    log.warn("English language not found");
 	if (desiredLang != null)
 	{
 	    chosenLang = desiredLang;
