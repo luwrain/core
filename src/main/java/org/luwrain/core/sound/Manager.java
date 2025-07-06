@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -22,6 +22,8 @@ import java.nio.file.*;
 
 import org.luwrain.core.*;
 
+import static java.util.Objects.*;
+
 public final class Manager
 {
     private final ExtObjects extObjs;
@@ -30,13 +32,13 @@ public final class Manager
     private BkgPlayer bkgPlayer = null;
     private boolean startingMode = false;
 
-    public Manager(ExtObjects extObjs, Luwrain luwrain)
+    public Manager(ExtObjects extObjs, Luwrain luwrain, Path soundsDir)
     {
-	NullCheck.notNull(extObjs, "extObjs");
-	NullCheck.notNull(luwrain, "luwrain");
+requireNonNull(extObjs, "extObjs can't be null");
+requireNonNull(luwrain, "luwrain can't be null");
 	this.extObjs = extObjs;
 	this.sett = null;//FIXME:newreg Settings.createBackgroundSounds(luwrain.getRegistry());
-	this.soundsDir = luwrain.getFileProperty("luwrain.dir.sounds").toPath();
+	this.soundsDir = requireNonNull(soundsDir, "soundsDir can't be null");
     }
 
     public void playBackground(String url)

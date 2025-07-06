@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -21,10 +21,11 @@ import java.util.*;
 import org.luwrain.core.*;
 import org.luwrain.interaction.*;
 
+import static java.util.Objects.*;
+
 public final class InputEvent extends Event
 {
     public enum Modifiers {ALT, SHIFT, CONTROL};
-
     public enum Special {
 	ENTER, BACKSPACE, ESCAPE, TAB,
 	ARROW_DOWN, ARROW_UP, ARROW_LEFT, ARROW_RIGHT,
@@ -47,7 +48,7 @@ public final class InputEvent extends Event
 
     public InputEvent(Special special)
     {
-	NullCheck.notNull(special, "special");
+	requireNonNull(special, "special can't be null");
 	this.isSpecial = true;
 	this.special = special;
 	this.nonSpecialChar = '\0';
@@ -58,8 +59,8 @@ public final class InputEvent extends Event
 
     public InputEvent(Special special, Set<Modifiers> modifiers)
     {
-	NullCheck.notNull(special, "special");
-	NullCheck.notNull(modifiers, "modifiers");
+	requireNonNull(special, "special can't be null");
+	requireNonNull(modifiers, "modifiers can't be null");
 	this.isSpecial = true;
 	this.special = special;
 	this.nonSpecialChar = '\0';
@@ -93,7 +94,7 @@ public final class InputEvent extends Event
 
     public InputEvent(char nonSpecialChar, Set<Modifiers> modifiers)
     {
-	NullCheck.notNull(modifiers, "modifiers");
+	requireNonNull(modifiers, "modifiers can't be null");
 	this.isSpecial = false;
 	this.special = null;
 	this.nonSpecialChar = nonSpecialChar;

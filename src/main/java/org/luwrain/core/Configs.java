@@ -26,7 +26,7 @@ import com.google.gson.*;
 import static java.util.Objects.*;
 import static java.nio.file.Files.*;
 
-final class Configs implements AutoCloseable
+public final class Configs implements AutoCloseable
 {
     static private final Logger log = LogManager.getLogger();
 
@@ -44,7 +44,7 @@ final class Configs implements AutoCloseable
 this.mvMap = store.openMap("main");
     }
 
-    synchronized <E> E load(Class<E> cl)
+    public synchronized <E> E load(Class<E> cl)
     {
 	requireNonNull(cl, "cl can't be null");
 	final String str = mvMap.get(cl.getName());
@@ -53,7 +53,7 @@ this.mvMap = store.openMap("main");
 		return gson.fromJson(str, cl);
     }
 
-    synchronized <E> void save(E obj)
+    public synchronized <E> void save(E obj)
     {
 	requireNonNull(obj, "obj can't be null");
 	mvMap.put(obj.getClass().getName(), gson.toJson(obj));

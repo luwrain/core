@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -18,94 +18,79 @@ package org.luwrain.core;
 
 import java.util.*;
 import org.luwrain.core.events.*;
+import org.luwrain.io.json.*;
+
+import static java.util.Objects.*;
+import static org.luwrain.core.events.InputEvent.*;
 
 final class GlobalKeys
 {
-    private final List<Item> items = new ArrayList<>();
-    private final Registry registry;
+    static final HotKey[] DEFAULT_KEYMAP = {
+	cmd(Special.F2, "save"),
+	cmd(Special.F3, "open"),
 
-    GlobalKeys(Registry registry)
+	//text editing
+	cmd('c', Modifiers.CONTROL, "copy"),
+	cmd(Special.ALTERNATIVE_DELETE, "clear"),
+	cmd(Special.DELETE, Modifiers.SHIFT, "clear-region")
+    };
+    
+    private final List<HotKey> keys = new ArrayList<>();
+    private final Configs configs;
+
+    GlobalKeys(Configs configs)
     {
-	NullCheck.notNull(registry, "registry");
-	this.registry = registry;
+	this.configs = requireNonNull(configs, "configs");
     }
 
     String getCommandName(InputEvent event )
     {
-	NullCheck.notNull(event, "event");
-	for(int i = 0;i < items.size();i++)
-	{
-	    final Item item = items.get(i);
-	    if (item.event.equals(event))
-		return item.actionName;
-	}
+	requireNonNull(event, "event can't be null");
+	for(var key: keys)
+	    if (key.getInputEvent().equals(event))
+		return key.getCommand();
 	return null;
     }
 
-    void loadFromRegistry()
+    void load()
     {
-	final String globalKeysDir = Settings.GLOBAL_KEYS_PATH;
-	String[] dirs = registry.getDirectories(Settings.GLOBAL_KEYS_PATH);
-	if (dirs != null)
-	    for(String s: dirs)
-	    {
-		final InputEvent event = getInputEventFromRegistry(globalKeysDir + "/" + s);
-		if (event != null)
-		    addMapping(event, s.trim());
-	    }
+	keys.clear();
+	var conf = configs.load(Config.class);
+	if (conf != null && conf.keys != null)
+	    keys.addAll(conf.keys);
     }
 
-    private void addMapping(InputEvent event, String actionName)
+    static HotKey cmd(Special special, String cmdName)
     {
-	NullCheck.notNull(event, "event");
-	NullCheck.notNull(actionName, "actionName");
-	if (getCommandName(event) != null)
-	    return;
-	items.add(new Item(event, actionName));
+	final var key = new HotKey();
+	key.setInputEvent(new InputEvent(requireNonNull(special, "special can't be null")));
+	key.setCommand(requireNonNull(cmdName, "cmdName can't be null"));
+	return key;
     }
 
-    private InputEvent getInputEventFromRegistry(String path)
+    static HotKey cmd(Special special, Modifiers modifier, String cmdName)
     {
-	NullCheck.notNull(path, "path");
-	final Settings.HotKey proxy = Settings.createHotKey(registry, path);
-	InputEvent.Special special = null;
-	char c = ' ';
-	final String specialStr = proxy.getSpecial("");
-	if (!specialStr.trim().isEmpty())
-	{
-	    special = InputEvent.translateSpecial(specialStr);
-	    if (special == null)
-	    {
-		Log.error("core", "registry path " + path + " tries to use an unknown special keyboard code \'" + specialStr + "\'");
-		return null;
-	    }
-	} else
-	{
-	    final String charStr = proxy.getCharacter("");
-	    if (charStr.isEmpty())
-	    {
-		Log.error("core", "registry path " + path + " does not contain neither \'special\' nor \'character\' values");
-		return null;
-	    }
-	    c = charStr.charAt(0);
-	}
-	final boolean withControl = proxy.getWithControl(false);
-	final boolean withShift = proxy.getWithShift(false);
-	final boolean withAlt = proxy.getWithAlt(false);
-	return new InputEvent(special != null, special, c, withShift, withControl, withAlt); 
+	requireNonNull(special, "special can't be null");
+	requireNonNull(modifier, "modifier can't be null");
+	final var key = new HotKey();
+	key.setInputEvent(new InputEvent(special, EnumSet.of(modifier)));
+	key.setCommand(requireNonNull(cmdName, "cmdName can't be null"));
+	return key;
     }
 
-    static private class Item
+        static HotKey cmd(char ch, Modifiers modifier, String cmdName)
     {
-	final InputEvent event;
-	final String actionName;
+	requireNonNull(modifier, "modifier can't be null");
+	final var key = new HotKey();
+	key.setInputEvent(new InputEvent(ch, EnumSet.of(modifier)));
+	key.setCommand(requireNonNull(cmdName, "cmdName can't be null"));
+	return key;
+    }
 
-	Item(InputEvent event, String actionName)
-	{
-	    NullCheck.notNull(event, "event");
-	    NullCheck.notNull(actionName, "actionName");
-	    this.event = event;
-	    this.actionName = actionName;
-	}
+
+
+    static private final class Config
+    {
+	List<HotKey> keys;
     }
 }

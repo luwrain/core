@@ -137,7 +137,7 @@ boolean standalone;
 
     private void init()
     {
-	extensions.load((ext)->interfaces.requestNew(ext), null/*cmdLine*/, this.classLoader);
+	extensions.load((ext)->interfaces.requestNew(ext), this.classLoader);
 	initObjects();
 	for (ScriptFile f: extensions.getScriptFiles("core"))
 	    try {
@@ -151,7 +151,7 @@ boolean standalone;
 	objRegistry.add(null, new StartingModeProperty());
 	speech.init(objRegistry.getSpeechEngines());
 	braille.init(null, os.getBraille(), this);
-	globalKeys.loadFromRegistry();
+	globalKeys.load();
 	fileTypes.load(null);
 	loadPlayer();
 	loadDesktop();

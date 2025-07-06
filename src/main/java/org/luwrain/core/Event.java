@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,14 +14,12 @@
    General Public License for more details.
 */
 
-//LWR_API 1.0
-
 package org.luwrain.core;
 
 public class Event
 {
-    private volatile boolean processed = false;
-    private final Object syncObj = new Object();
+    private transient volatile boolean processed = false;
+    private transient final Object syncObj = new Object();
 
     /**
      * Signals that the processing of this event is finished. Do not touch
@@ -30,7 +28,7 @@ public class Event
      * loop. Once this method is called, all threads freezed on {@code waitForBeProcessed()}
      * method continue the execution.
      */
-    public final void markAsProcessed()
+    final void markAsProcessed()
     {
 	if (processed)
 	    return;

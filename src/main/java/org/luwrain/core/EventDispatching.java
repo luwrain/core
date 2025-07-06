@@ -26,6 +26,8 @@ import org.luwrain.core.queries.*;
 import org.luwrain.popups.*;
 import org.luwrain.core.listening.*;
 
+import static java.util.Objects.*;
+
 abstract class EventDispatching extends Areas
 {
     protected final GlobalKeys globalKeys;
@@ -35,7 +37,7 @@ abstract class EventDispatching extends Areas
     protected EventDispatching(Config conf)
     {
 	super(conf);
-	this.globalKeys = new GlobalKeys(null);
+	this.globalKeys = new GlobalKeys(configs);
     }
 
     abstract protected void onBeforeEventProcessing();
@@ -97,7 +99,7 @@ return;
 
     @Override public void announce(StopCondition stopCondition)
     {
-	NullCheck.notNull(stopCondition, "stopCondition");
+	requireNonNull(stopCondition, "stopCondition can't be null");
 	if (this.announcement != null && stopCondition.continueEventLoop() && listening == null)
 	    switch(this.announcement)
 	    {

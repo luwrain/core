@@ -82,8 +82,8 @@ abstract class Base implements EventConsumer
 	this.lang = conf.getLang();
 	this.helpSects = new HelpSections(configs);
 	this.speech = new Speech(args, configs);
-	this.sounds = new org.luwrain.core.sound.SoundIcons(null, null);
-	this.soundManager = new org.luwrain.core.sound.Manager(objRegistry, interfaces.systemObj);
+	this.sounds = new org.luwrain.core.sound.SoundIcons(configs);
+	this.soundManager = new org.luwrain.core.sound.Manager(objRegistry, luwrain, new File(conf.getDataDir(), "sounds").toPath());
 	this.mainCoreThread = Thread.currentThread();
     }
 

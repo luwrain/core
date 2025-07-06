@@ -28,7 +28,7 @@ final class Launch
     static private final Logger log = LogManager.getLogger();
 
     private final Args args;
-    private final Config conf;
+    private final Config conf = new Config();
     private final ClassLoader classLoader;
     private final File dataDir, userDataDir, userHomeDir;
     private final String lang;
@@ -49,13 +49,13 @@ final class Launch
 	    log.fatal("unable to select a language to use");
 	    System.exit(1);
 	}
-	this.conf = new Config();
 	conf.setDataDir(dataDir);
 	conf.setUserHomeDir(userHomeDir);
 	conf.setUserDataDir(userDataDir);
 	conf.setLang(lang);
 	conf.setArgs(args);
 	this.classLoader = this.getClass().getClassLoader();
+	conf.setCoreClassLoader(this.classLoader);
     }
 
     void run()

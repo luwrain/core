@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -22,6 +22,7 @@ import org.apache.logging.log4j.*;
 
 import org.luwrain.core.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.util.StreamUtils.*;
 import static org.luwrain.core.NullCheck.*;
 
@@ -29,23 +30,30 @@ public final class SoundIcons
 {
     static private final Logger log = LogManager.getLogger();
 
-    private final Registry registry;
-    private final File soundsDir;
-    private final Map<Sounds, File> soundFiles = new HashMap<>();
+    private final Configs configs;
+    private final Map<Sounds, String> soundFiles = new HashMap<>();
         private final Map<Sounds, byte[]> cache = new HashMap<>();
     private WavePlayers.Simple previous = null;
 
-    public SoundIcons(Registry registry, File soundsDir)
+    public SoundIcons(Configs configs)
     {
-	notNull(registry, "registry");
-	notNull(soundsDir, "soundsDir");
-	this.registry = registry;
-	this.soundsDir = soundsDir;
+	this.configs = requireNonNull(configs, "configs can't be null");
+    }
+
+    public void load()
+    {
+	cache.clear();
+	soundFiles.clear();
+	final var conf = configs.load(Config.class);
+	if (conf != null && conf.icons != null)
+	    for(var e: conf.icons.entrySet())
+		soundFiles.put(e.getKey(), e.getValue());
     }
 
     public void play(Sounds sound, int volumePercent)
     {
-	notNull(sound, "sound");
+requireNonNull(sound, "sound can't be null");
+/*
 	final File soundFile;
 	if (!soundFiles.containsKey(sound))
 	{
@@ -64,18 +72,19 @@ public final class SoundIcons
 		log.error("No sound file specified for Sounds." + sound.toString());
 		return;
 	    }
-	    soundFiles.put(sound, soundFile);
+	    soundFiles.put(sound, soundFile.getAbsolutePath());
 	} else
-	    soundFile = soundFiles.get(sound);
+	    soundFile = new File(soundFiles.get(sound));
 	if (previous != null)
 	    previous.stopPlaying();
 	previous = new WavePlayers.Simple(soundFile.getAbsolutePath(), volumePercent);
 	new Thread(previous).start();
+*/
     }
 
         public void play(File file, int volumePercent)
     {
-	notNull(file, "file");
+requireNonNull(file, "file can't be null");
 	if (previous != null)
 	    previous.stopPlaying();
 	previous = new WavePlayers.Simple(file.getAbsolutePath(), volumePercent);
@@ -88,31 +97,9 @@ public final class SoundIcons
 	    previous.stopPlaying();
     }
 
-    private File getSoundFile(Sounds sound)
-    {
-	notNull(sound, "sound");
-	/*
-	final String path = getRegistryPathForSound(sound);
-	if (registry.getTypeOf(path) != Registry.STRING)
-	    return null;
-	final String value = registry.getString(path);
-	if (value == null || value.isEmpty())
-	    return null;
-	return new File(soundsDir, value);
-	*/
-	return null;
-    }
-
-    private String getRegistryPathForSound(Sounds sound)
-    {
-	notNull(sound, "sound");
-	final String paramName = sound.toString().toLowerCase().replaceAll("_", "-");
-	return Registry.join(org.luwrain.core.Settings.CURRENT_SOUND_SCHEME_PATH, paramName);
-    }
-
     private void loadToCache(Sounds sound)
     {
-	notNull(sound, "sound");
+requireNonNull(sound, "sound can't benull");
 	if (cache.containsKey(sound))
 	    return;
 		final String name = sound.toString().toLowerCase().replaceAll("_", "-") + ".wav";
@@ -132,5 +119,10 @@ public final class SoundIcons
 		    return;
 		}
 		cache.put(sound, os.toByteArray());
+    }
+
+    static final class Config
+    {
+	Map<Sounds, String> icons;
     }
 }

@@ -26,60 +26,19 @@ import lombok.*;
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 
-@Data
 @NoArgsConstructor
-public class HotKey
+public final class HotKey
 {
     static public final Type LIST_TYPE = new TypeToken<List<HotKey>>(){}.getType();
 
-    static private Gson gson = null;
+    private InputEvent ev;
+    private String cmd;
+    private String scr;
 
-    private InputEvent.Special special = null;
-    private Character ch = null;
-
-    private Boolean
-	withAlt = null,
-	withControl = null,
-	withShift = null;
-
-    public HotKey(InputEvent.Special special, Character ch, Boolean withAlt, Boolean withControl, Boolean withShift)
-    {
-	this.special = special;
-	this.ch = ch;
-	this.withAlt = withAlt;
-	this.withControl = withControl;
-	this.withShift = withShift;
-    }
-
-    public boolean getWithAltNotNull() { return withAlt != null?withAlt.booleanValue():false; }
-        public boolean getWithControlNotNull() { return withControl != null?withControl.booleanValue():false; }
-            public boolean getWithShiftNotNull() { return withShift != null?withShift.booleanValue():false; }
-
-    public EnumSet<InputEvent.Modifiers> getModifiers()
-    {
-	final EnumSet<InputEvent.Modifiers> res = EnumSet.noneOf(InputEvent.Modifiers.class);
-	if (getWithAltNotNull())
-	    res.add(InputEvent.Modifiers.ALT);
-	if (getWithControlNotNull())
-	    res.add(InputEvent.Modifiers.CONTROL);
-	if (getWithShiftNotNull())
-	    res.add(InputEvent.Modifiers.SHIFT);
-	return res;
-    }
-
-    static public String toJsonArray(HotKey[] hotKeys)
-    {
-	if (gson == null)
-	    gson = new Gson();
-	return gson.toJson(hotKeys);
-    }
-
-    static public HotKey[]  fromJsonArray(String s)
-    {
-	NullCheck.notNull(s, "s");
-	if (gson == null)
-	    gson = new Gson();
-	final List<HotKey> res = new Gson().fromJson(s, LIST_TYPE);
-	return res != null?res.toArray(new HotKey[res.size()]):new HotKey[0];
-    }
+    public InputEvent getInputEvent() { return ev; }
+    public void setInputEvent(InputEvent ev) { this.ev = ev; }
+    public String getCommand() { return cmd; }
+    public void setCommand(String cmd) { this.cmd = cmd; }
+    public String getScript() { return scr; }
+    public void setScript(String scr) { this.scr = scr; }
 }

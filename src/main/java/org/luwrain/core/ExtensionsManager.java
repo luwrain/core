@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -22,14 +22,12 @@ import java.io.*;
 
 import org.apache.logging.log4j.*;
 
-import static org.luwrain.core.Base.*;
+import static java.util.Objects.*;
+//import static org.luwrain.core.Base.*;
 import static org.luwrain.core.NullCheck.*;
 
 public final class ExtensionsManager implements AutoCloseable
 {
-    static final String
-	EXTENSIONS_LIST_PREFIX = "--extensions=";
-
     static private final Logger log = LogManager.getLogger();
 
         static final class Entry
@@ -40,10 +38,8 @@ public final class ExtensionsManager implements AutoCloseable
 	final ExtensionObject[] extObjects;
 	Entry(Extension ext, Luwrain luwrain)
 	{
-	    notNull(ext, "ext");
-	    notNull(luwrain, "luwrain");
-	    this.ext = ext;
-	    this.luwrain = luwrain;
+	    this.ext = requireNonNull(ext, "ext can't be null");
+	    this.luwrain = requireNonNull(luwrain, "luwrain can't be null");
 	    this.id = java.util.UUID.randomUUID().toString();
 	    this.extObjects = ext.getExtObjects(luwrain);
 	}
@@ -55,16 +51,13 @@ public final class ExtensionsManager implements AutoCloseable
 
     ExtensionsManager(Base base, InterfaceManager interfaces)
     {
-	notNull(base, "base");
-	notNull(interfaces, "interfaces");
-	this.base = base;
-	this.interfaces = interfaces;
+	this.base = requireNonNull(base, "base can't be null");
+	this.interfaces = requireNonNull(interfaces, "interfaces can't be null");
     }
 
-    void load(InterfaceRequest interfaceRequest, CmdLine cmdLine, ClassLoader classLoader)
+    void load(InterfaceRequest interfaceRequest, ClassLoader classLoader)
     {
 	notNull(interfaceRequest, "interfaceRequest");
-	notNull(cmdLine, "cmdLine");
 	notNull(classLoader, "classLoader");
 
 	for(final Extension ext: ServiceLoader.load(Extension.class))
@@ -90,26 +83,26 @@ public final class ExtensionsManager implements AutoCloseable
 	    extensions.add(new Entry(ext, iface));
 	}
 
-	final String[] extensionsList = getExtensionsList(cmdLine, classLoader);
+	final String[] extensionsList = getExtensionsList(classLoader);
 	if (extensionsList == null || extensionsList.length == 0)
 	    return;
 	for(String s: extensionsList)
 	{
 	    if (s == null || s.trim().isEmpty())
 		continue;
-	    debug("loading " + s);
+	    log.debug("loading " + s);
 	    final Object o;
 	    try {
 		o = Class.forName(s, true, classLoader).getDeclaredConstructor().newInstance();
 	    }
 	    catch (Throwable e)
 	    {
-		error(e, "loading of extension " + s + " failed");
+		log.error("Loading of extension " + s + " failed, e");
 		continue;
 	    }
 	    if (!(o instanceof Extension))
 	    {
-		error("loading of extension " + s + " failed: this object isn't an instance of org.luwrain.core.Extension");
+		log.error("loading of extension " + s + " failed: this object isn't an instance of org.luwrain.core.Extension");
 		continue;
 	    }
 	    final Extension ext = (Extension)o;
@@ -120,13 +113,13 @@ public final class ExtensionsManager implements AutoCloseable
 	    }
 	    catch (Throwable ex)
 	    {
-		error(ex, "loading of extension " + s + " failed on extension init");
+		log.error("Loading of extension " + s + " failed on extension init", ex);
 		interfaces.release(iface);
 		continue;
 	    }
 	    if (message != null)
 	    {
-		error("loading of extension " + s + " failed: " + message);
+		log.error("Loading of extension " + s + " failed: " + message);
 		interfaces.release(iface);
 		continue;
 	    }
@@ -143,7 +136,7 @@ public final class ExtensionsManager implements AutoCloseable
 	    }
 	    catch (Throwable ex)
 	    {
-		error(ex);
+		log.error(ex);
 	    }
 	    interfaces.release(e.luwrain);
 	}
@@ -201,10 +194,10 @@ public final class ExtensionsManager implements AutoCloseable
 	return res.toArray(new String[res.size()]);
     }
 
-    private String[] getExtensionsList(CmdLine cmdLine, ClassLoader classLoader)
+    private String[] getExtensionsList(ClassLoader classLoader)
     {
-	NullCheck.notNull(cmdLine, "cmdLine");
-	NullCheck.notNull(classLoader, "classLoader");
+	requireNonNull(classLoader, "classLoader can't be null");
+	/*
 	final String[] cmdlineExtList = cmdLine.getArgs(EXTENSIONS_LIST_PREFIX);
 	if(cmdlineExtList.length > 0)
 	{
@@ -212,6 +205,7 @@ public final class ExtensionsManager implements AutoCloseable
 		return s.split(":",-1);
 	    return new String[0];
 	}
+	*/
 	return getExtensionsListFromManifest(classLoader);
     }
 
@@ -248,12 +242,12 @@ public final class ExtensionsManager implements AutoCloseable
 	    final File packDataDir = new File(pack, "data");
 	    if (packDataDir.exists() && !packDataDir.isDirectory())
 	    {
-		warn("the pack contains '" + packDataDir.getAbsolutePath() + "' exists and it isn't a directory");
+		log.warn("The pack contains '" + packDataDir.getAbsolutePath() + "' exists and it isn't a directory");
 		continue;
 	    }
 	    if (!packDataDir.exists() && !packDataDir.mkdir())
 	    {
-		error("unable to create '" + packDataDir.getAbsolutePath() + "', skipping the pack");
+		log.error("Unable to create '" + packDataDir.getAbsolutePath() + "', skipping the pack");
 		continue;
 	    }
 	    final File jsExtDir = new File(pack, "js");
