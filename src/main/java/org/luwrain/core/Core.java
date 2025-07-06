@@ -148,7 +148,7 @@ boolean standalone;
 	    }
 	initI18n();
 	objRegistry.add(null, new StartingModeProperty());
-	speech.init(objRegistry.getSpeechEngines());
+	speech.init();
 	//braille.init(null, os.getBraille(), this);
 	globalKeys.load();
 	fileTypes.load(configs);

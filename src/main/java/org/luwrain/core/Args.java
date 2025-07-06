@@ -6,13 +6,17 @@ import com.beust.jcommander.*;
 
 final class Args
 {
-    @Parameter(names = "--speech",
-	       description = "The speech settings",
+    @Parameter(names = {"-s", "--speech"},
+	       description = "Desired speech engine",
 	       arity = 1,
 	       required = false)
 	String speech;
 
-    
+        @Parameter(names = {"-S", "--speech-arg"},
+	       description = "Set an argument for the used speech engine",
+	       variableArity = true,	       required = false)
+	List<String> speechArgs;
+
     @Parameter(names = "--app-dir",
 	       description = "The directory with the distribution files",
 	       arity = 1,
@@ -23,7 +27,6 @@ final class Args
 	       description = "Print directories information and exit",
 	       required = false)
 	boolean printDirs;
-
 
     @Parameter(names = {"-h", "--help"},
 	       description = "Print the help screen and exit",

@@ -17,14 +17,14 @@
 package org.luwrain.core;
 
 import java.util.*;
+//import java.util.service.*;
 import java.util.jar.*;
 import java.io.*;
 
 import org.apache.logging.log4j.*;
 
 import static java.util.Objects.*;
-//import static org.luwrain.core.Base.*;
-import static org.luwrain.core.NullCheck.*;
+//import static org.luwrain.core.NullCheck.*;
 
 public final class ExtensionsManager implements AutoCloseable
 {
@@ -57,15 +57,14 @@ public final class ExtensionsManager implements AutoCloseable
 
     void load(InterfaceRequest interfaceRequest, ClassLoader classLoader)
     {
-	notNull(interfaceRequest, "interfaceRequest");
-	notNull(classLoader, "classLoader");
-
+	requireNonNull(interfaceRequest, "interfaceRequest can't be null");
+	requireNonNull(classLoader, "classLoader can't be null");
 	for(final Extension ext: ServiceLoader.load(Extension.class))
 	{
 		    final Luwrain iface = interfaceRequest.getInterfaceObj(ext);
 	    final String message;
 	    try {
-		log.info("Initializing the " + ext.getClass().getName() + " extension");
+		log.trace("Initializing the " + ext.getClass().getName() + " extension");
 		message = ext.init(iface);
 	    }
 	    catch (Throwable ex)
@@ -82,50 +81,20 @@ public final class ExtensionsManager implements AutoCloseable
 	    }
 	    extensions.add(new Entry(ext, iface));
 	}
-
-	final String[] extensionsList = getExtensionsList(classLoader);
-	if (extensionsList == null || extensionsList.length == 0)
-	    return;
-	for(String s: extensionsList)
-	{
-	    if (s == null || s.trim().isEmpty())
-		continue;
-	    log.debug("loading " + s);
-	    final Object o;
-	    try {
-		o = Class.forName(s, true, classLoader).getDeclaredConstructor().newInstance();
-	    }
-	    catch (Throwable e)
-	    {
-		log.error("Loading of extension " + s + " failed, e");
-		continue;
-	    }
-	    if (!(o instanceof Extension))
-	    {
-		log.error("loading of extension " + s + " failed: this object isn't an instance of org.luwrain.core.Extension");
-		continue;
-	    }
-	    final Extension ext = (Extension)o;
-	    final Luwrain iface = interfaceRequest.getInterfaceObj(ext);
-	    final String message;
-	    try {
-		message = ext.init(iface);
-	    }
-	    catch (Throwable ex)
-	    {
-		log.error("Loading of extension " + s + " failed on extension init", ex);
-		interfaces.release(iface);
-		continue;
-	    }
-	    if (message != null)
-	    {
-		log.error("Loading of extension " + s + " failed: " + message);
-		interfaces.release(iface);
-		continue;
-	    }
-	    extensions.add(new Entry(ext, iface));
-	}
     }
+
+    public <E> List<E>  load(Class<E> cl)
+    {
+	requireNonNull(cl, "cl can't be null");
+	final List<E> res = new ArrayList<>();
+	for(var e: ServiceLoader.load(cl))
+	{
+	    log.trace("Loaded " + e.getClass().getName() + " as an instance of " + cl.getName());
+	    res.add(e);
+	}
+	return res;
+    }
+
 
     @Override public void close()
     {
@@ -143,6 +112,7 @@ public final class ExtensionsManager implements AutoCloseable
 	extensions = null;
     }
 
+
     public <E extends ExtensionObject> List<E> getLoadedExtObjects(Class<E> c)
     {
 	final var res = new ArrayList<E>();
@@ -156,62 +126,19 @@ public final class ExtensionsManager implements AutoCloseable
     //From any thread
     public boolean runHooks(String hookName, Luwrain.HookRunner runner)
     {
-	notEmpty(hookName, "hookName");
-	notNull(runner, "runner");
+	requireNonNull(hookName, "hookName can't be null");
+	requireNonNull(runner, "runner can't be null");
+	if (hookName.isEmpty())
+	    throw new IllegalArgumentException("hookName can't be empty");
 	for(Entry e: extensions)
 	    if (e.ext instanceof HookContainer && !((HookContainer)e.ext).runHooks(hookName, runner))
 		return false;
 	return true;
     }
 
-    private String[] getExtensionsListFromManifest(ClassLoader classLoader)
-    {
-	NullCheck.notNull(classLoader, "classLoader");
-	final List<String> res = new ArrayList<>();
-	try {
-	    Enumeration<java.net.URL> resources = classLoader.getResources("META-INF/MANIFEST.MF");
-	    while (resources.hasMoreElements())
-	    {                                                                                                         
-		try {
-		    Manifest manifest = new Manifest(resources.nextElement().openStream());
-		    Attributes attr = manifest.getAttributes("org/luwrain");
-		    if (attr == null)
-			continue;
-		    final String value = attr.getValue("Extensions");
-		    if (value != null)
-			res.add(value);
-		}
-		catch (IOException e)
-		{                                                                                                                 
-		    e.printStackTrace();
-		}
-	    }
-	}
-	catch (IOException ee)
-	{
-	    ee.printStackTrace();
-	}
-	return res.toArray(new String[res.size()]);
-    }
-
-    private String[] getExtensionsList(ClassLoader classLoader)
-    {
-	requireNonNull(classLoader, "classLoader can't be null");
-	/*
-	final String[] cmdlineExtList = cmdLine.getArgs(EXTENSIONS_LIST_PREFIX);
-	if(cmdlineExtList.length > 0)
-	{
-	    for(String s: cmdlineExtList)
-		return s.split(":",-1);
-	    return new String[0];
-	}
-	*/
-	return getExtensionsListFromManifest(classLoader);
-    }
-
     List<ScriptFile> getScriptFiles(String componentName)
     {
-	notEmpty(componentName, "componentName");
+	requireNonNull(componentName, "componentName can't be null");
 	final String dataDir = base.conf.getDataDir().getAbsolutePath();
 
 	//Common JavaScript extensions

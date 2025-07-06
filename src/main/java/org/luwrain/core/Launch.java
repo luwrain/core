@@ -18,7 +18,6 @@ package org.luwrain.core;
 
 import java.util.*;
 import java.io.*;
-import java.util.ServiceLoader;
 import org.apache.logging.log4j.*;
 
 import static java.util.Objects.*;

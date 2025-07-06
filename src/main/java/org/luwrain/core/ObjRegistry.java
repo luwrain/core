@@ -41,7 +41,6 @@ final class ObjRegistry implements ExtObjects
 
     private Map<String, Entry<Shortcut>> shortcuts = new HashMap<>();
     private Map<String, Entry<Worker>> workers = new HashMap<>();
-    private Map<String, Entry<org.luwrain.speech.Engine>> speechEngines = new HashMap<>();
     private Map<String, Entry<MediaResourcePlayer>> players = new HashMap<>();
         private Map<String, Entry<PropertiesProvider>> propsProviders = new HashMap<>();
 
@@ -70,16 +69,6 @@ final class ObjRegistry implements ExtObjects
 	    if (!players.containsKey(name))
 	    {
 		players.put(name, new Entry<>(ext, name, player));
-		res = true;
-	    }
-	}
-
-				if (obj instanceof org.luwrain.speech.Engine)
-	{
-	    final org.luwrain.speech.Engine engine = (org.luwrain.speech.Engine)obj;
-	    if (!speechEngines.containsKey(name))
-	    {
-		speechEngines.put(name, new Entry<>(ext, name, engine));
 		res = true;
 	    }
 	}
@@ -114,7 +103,6 @@ final class ObjRegistry implements ExtObjects
 	notNull(ext, "ext");
 	removeEntriesByExt(shortcuts, ext);
 	removeEntriesByExt(workers, ext);
-	removeEntriesByExt(speechEngines, ext);
 	removeEntriesByExt(players, ext);
     }
 
@@ -142,20 +130,6 @@ final class ObjRegistry implements ExtObjects
 	for(Map.Entry<String, Entry<MediaResourcePlayer>> e: players.entrySet())
 	    res.add(e.getValue().obj);
 	return res.toArray(new MediaResourcePlayer[res.size()]);
-    }
-
-    boolean hasSpeechEngine(String name)
-    {
-	NullCheck.notEmpty(name, "name");
-	return speechEngines.containsKey(name);
-    }
-
-        org.luwrain.speech.Engine[] getSpeechEngines()
-    {
-	final List<org.luwrain.speech.Engine> res = new ArrayList<>();
-	for(Map.Entry<String, Entry<org.luwrain.speech.Engine>> e: speechEngines.entrySet())
-	    res.add(e.getValue().obj);
-	return res.toArray(new org.luwrain.speech.Engine[res.size()]);
     }
 
             Worker[] getWorkers()

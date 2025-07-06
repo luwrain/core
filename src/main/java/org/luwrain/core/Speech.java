@@ -32,22 +32,24 @@ public final class Speech
 
     private final Args args;
     private final Configs configs;
+    private final ExtensionsManager extensions;
     private final Map<String, Engine> engines = new HashMap<>();
     private Channel defaultChannel = null;
     private int pitch = 50;
     private int rate = 50;
 
-    Speech(Args args, Configs configs)
+    Speech(Args args, Configs configs, ExtensionsManager extensions)
     {
 	this.args = requireNonNull(args, "args can't be null");
 	this.configs = requireNonNull(configs, "configs can't be null");
+	this.extensions = requireNonNull(extensions);
 	this.pitch = 50;
 	this.rate = 50;
     }
 
-    void init(Engine[] engines)
+    void init()
     {
-	NullCheck.notNullItems(engines, "engines");
+	final var engines = extensions.load(Engine.class);
 	for(Engine e: engines)
 	{
 	    final String name = e.getExtObjName();
@@ -58,17 +60,27 @@ public final class Speech
 	    }
 	    if (this.engines.containsKey(name))
 	    {
-		log.warn("Two speech engine with the same name \'" + name + "\'");
+		log.warn("Two speech engines with the same name '" + name + "'");
 		continue;
 	    }
 	    this.engines.put(name, e);
+	    log.trace("Registered the speech engine '" + name + "'");
+	}
+	if (engines.isEmpty())
+	{
+	    log.warn("No speech engines, skipping speech output initialization");
+	    defaultChannel = null;
+	    return;
 	}
 	final String engineName;
 	final Map<String, String> params = new HashMap<>();
-	final String speechArg = args.speech;
-	if (speechArg != null && !speechArg.isEmpty())
-	{
-	    engineName = parseChannelLine(speechArg, params);
+	final var conf = configs.load(Config.class);
+	if (args.speech != null && !args.speech.isEmpty())
+	    engineName = args.speech; else
+	    if (conf != null)
+		engineName = conf.engineName; else
+		engineName = null;
+	/*
 	    if (engineName == null)
 	    {
 		log.error("Unable to parse speech channel loading line: \'" + speechArg + "\'");
@@ -92,10 +104,11 @@ public final class Speech
 		return;
 	    }
 	}
+	*/
 	this.defaultChannel = loadChannel(engineName, params);
 	if (defaultChannel != null)
-	    log.trace("Main speech engine is \'" + engineName + "\'"); else
-	    log.error("Unable to load the default channel of the engine \'" + engineName + "\'");
+	    log.trace("Main speech engine is '" + engineName + "'"); else
+	    log.error("Unable to load the default channel of the engine '" + engineName + "'");
     }
 
         public Channel loadChannel(String engineName, String paramsLine)
@@ -250,5 +263,11 @@ public final class Speech
 	    params.put(s.substring(0, pos), s.substring(pos + 1));
 	}
 	return true;
+    }
+
+    static private final class Config
+    {
+	String engineName;
+	List<String> args;
     }
 }
