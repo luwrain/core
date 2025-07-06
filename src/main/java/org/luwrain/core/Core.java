@@ -160,12 +160,12 @@ boolean standalone;
 
     String loadScript(ScriptSource script) throws ExtensionException
     {
-	notNull(script, "script");
+	requireNonNull(script, "script can't be null");
 	mainCoreThreadOnly();
 	final var ext = new org.luwrain.script.core.ScriptExtension(script.toString()){
 		@Override public void launchApp(Application app)
 		{
-		    notNull(app, "app");
+		    requireNonNull(app, "app can't be null");
 		    Core.this.launchApp(app);
 		}
 	    };

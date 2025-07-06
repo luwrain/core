@@ -127,7 +127,7 @@ public final class LuwrainObj extends LuwrainObjBase
 	final String name = args[0].asString();
 	if (name.trim().isEmpty())
 	    return false;
-	extObjs.add(new ShortcutImpl(module, name.trim(), luwrain.getFileProperty(Luwrain.PROP_DIR_DATA), args[1]));
+	extObjs.add(new ShortcutImpl(module, name.trim(), new File(luwrain.getPath(Luwrain.PATH_SYS_DATA_DIR)), args[1]));
 	return true;
 	    }
 

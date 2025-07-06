@@ -1,3 +1,4 @@
+
 /*
    Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
 
@@ -56,6 +57,7 @@ import org.luwrain.speech.Channel;
 public interface Luwrain extends PropertiesBase, HookContainer
 {
     static public final String
+	PATH_SYS_DATA_DIR = "SYS_DATA_DIR",
 	PROP_DIR_DATA = "luwrain.dir.data",
 	PROP_DIR_JS = "luwrain.dir.js",
 	PROP_DIR_USERHOME = "luwrain.dir.userhome",
@@ -108,7 +110,7 @@ public interface Luwrain extends PropertiesBase, HookContainer
     String[] xGetLoadedSpeechFactories();
     MediaResourcePlayer[] getMediaResourcePlayers();
     org.luwrain.player.Player getPlayer();
-    //    Registry getRegistry();
+    String getPath(String pathId);
     String loadScript(ScriptSource scriptSource) throws ExtensionException;
     int getScreenWidth();
     int getScreenHeight();

@@ -73,38 +73,32 @@ public final class Speech
 	    return;
 	}
 	final String engineName;
-	final Map<String, String> params = new HashMap<>();
 	final var conf = configs.load(Config.class);
 	if (args.speech != null && !args.speech.isEmpty())
 	    engineName = args.speech; else
 	    if (conf != null)
 		engineName = conf.engineName; else
 		engineName = null;
-	/*
 	    if (engineName == null)
 	    {
-		log.error("Unable to parse speech channel loading line: \'" + speechArg + "\'");
-		defaultChannel = null;
-		return;
+log.warn("Speech engine not specified. Use '-s' command line option to set the desired engine name");
+defaultChannel = null;
+return;
 	    }
-	} else
-	{
-	    engineName = "";//sett.getMainEngineName("");
-	    if (engineName.isEmpty())
+	    final Map<String, String> params = new HashMap<>();
+	    if (args.speechParams  != null && !args.speechParams.isEmpty())
 	    {
-		log.error("No engine name in the registry for the main speech channel");
-		defaultChannel = null;
-		return;
-	    }
-	    final String paramsLine = "";//FIXME:sett.getMainEngineParams("");
-	    if (!parseParams(paramsLine, params))
-	    {
-		log.error("Unable to parse the params line for the engine \'" + engineName + "\':" + paramsLine);
-		defaultChannel = null;
-		return;
-	    }
-	}
-	*/
+		for(var p: args.speechParams)
+		{
+		    final var eq = p.indexOf("=");
+		    if (eq > 0)
+			params.put(p.substring(0, eq), p.substring(eq + 1)); else
+			params.put(p, "");
+		}
+	    } else
+	    if (conf != null && conf.params != null)
+		params.putAll(conf.params);
+	    log.trace("Loading speech engine '" + engineName + "' with params " + params.toString());
 	this.defaultChannel = loadChannel(engineName, params);
 	if (defaultChannel != null)
 	    log.trace("Main speech engine is '" + engineName + "'"); else
@@ -113,21 +107,26 @@ public final class Speech
 
         public Channel loadChannel(String engineName, String paramsLine)
     {
+	/*
 	NullCheck.notEmpty(engineName, "engineName");
 	NullCheck.notNull(paramsLine, "paramsLine");
 	final Map<String, String> params = new HashMap<>();
 	if (!parseParams(paramsLine, params))
 	    return null;
 	return loadChannel(engineName, params);
+	*/
+	return null;
     }
 
     private Channel loadChannel(String engineName, Map<String, String> params)
     {
-	NullCheck.notEmpty(engineName, "engineName");
-	NullCheck.notNull(params, "params");
+	requireNonNull(engineName, "engineName");
+	requireNonNull(params, "params");
+	if (engineName.isEmpty())
+	    throw new IllegalArgumentException("engineName can't be empty");
 	if (!engines.containsKey(engineName))
 	{
-	    log.error("No such speech engine: \'" + engineName + "\'");
+	    log.error("No such speech engine: '" + engineName + "'");
 	    return null;
 	}
 	return engines.get(engineName).newChannel(params);
@@ -216,58 +215,9 @@ public final class Speech
 	return value;
     }
 
-    static private String parseChannelLine(String line, Map<String, String> params)
-    {
-	NullCheck.notNull(line, "line");
-	NullCheck.notNull(params, "params");
-	final int pos = line.indexOf(":");
-	if (pos <= 0)
-	    return line;
-	if (!parseParams(line.substring(pos + 1), params))
-	    return null;
-	return line.substring(0, pos);
-    }
-
-    static private boolean parseParams(String line, Map<String, String> params)
-    {
-	NullCheck.notNull(line, "line");
-	NullCheck.notNull(params, "params");
-	if (line.isEmpty())
-	    return true;
-	final List<String> items = new ArrayList<>();
-	String item = "";
-	for(int i = 0;i < line.length();++i)
-	{
-	    final char c = line.charAt(i);
-	    switch(c)
-	    {
-	    case ',':
-		if (i == 0 || line.charAt(i - 1) != '\\')
-		{
-		    items.add(item);
-		    item = "";
-		    continue;
-		}
-		item += c;
-		break;
-	    default:
-		item += c;
-	    }
-	}
-	items.add(item);
-	for(String s: items)
-	{
-	    final int pos = s.indexOf("=");
-	    if (pos <= 0)
-		return false;
-	    params.put(s.substring(0, pos), s.substring(pos + 1));
-	}
-	return true;
-    }
-
     static private final class Config
     {
 	String engineName;
-	List<String> args;
+	Map<String, String> params;
     }
 }

@@ -12,10 +12,10 @@ final class Args
 	       required = false)
 	String speech;
 
-        @Parameter(names = {"-S", "--speech-arg"},
-	       description = "Set an argument for the used speech engine",
+        @Parameter(names = {"-S", "--speech-param"},
+	       description = "Set a parameter for the used speech engine",
 	       variableArity = true,	       required = false)
-	List<String> speechArgs;
+	List<String> speechParams;
 
     @Parameter(names = "--app-dir",
 	       description = "The directory with the distribution files",

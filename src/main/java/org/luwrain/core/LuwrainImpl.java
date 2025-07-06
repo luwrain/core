@@ -175,13 +175,16 @@ final class LuwrainImpl implements Luwrain
 	core.closeApp(this);
     }
 
-    /*
-    @Override public Registry getRegistry()
+    @Override public String getPath(String pathId)
     {
-	return core.registry();
+	switch(requireNonNull(pathId, "pathId can't be null"))
+	{
+	case PATH_SYS_DATA_DIR:
+	    return core.conf.getDataDir().getAbsolutePath();
+	}
+	return null;
     }
-    */
-
+    
     @Override public I18n i18n()
     {
 	return core.i18n;
