@@ -44,7 +44,7 @@ WIN_USER_DATA_DIR_NAME = "Luwrain";
 	    	    System.out.println("User data: " + userDataDir.getAbsolutePath());
 		    return;
 	}
-	new     Launch(a, dataDir, userDataDir, userHomeDir, "ru").run();
+	new     Launch(a, appDir, dataDir, userDataDir, userHomeDir, "ru").run();
     }
 
     private File getDataDir(Args args, File appDir)

@@ -33,7 +33,7 @@ final class Core extends EventDispatching
     final OperatingSystem os;
     final Interaction interaction;
 boolean standalone;
-    private final org.luwrain.core.shell.Conversations conversations;
+    private final org.luwrain.shell.Conversations conversations;
     org.luwrain.player.Player player = null;
         private Application desktop = null;
     final WavePlayers.Player wavePlayer = new WavePlayers.Player();
@@ -47,7 +47,7 @@ boolean standalone;
 	this.classLoader = requireNonNull(conf.getCoreClassLoader(), "conf.coreClassLoader can't be null");
 	this.os = requireNonNull(conf.getOperatingSystem(), "conf.operatingSystem can't be null");
 	this.interaction = requireNonNull(conf.getInteraction());
-	this.conversations = new org.luwrain.core.shell.Conversations(luwrain);
+	this.conversations = new org.luwrain.shell.Conversations(luwrain);
     }
 
     void run()
@@ -150,9 +150,9 @@ boolean standalone;
 	initI18n();
 	objRegistry.add(null, new StartingModeProperty());
 	speech.init(objRegistry.getSpeechEngines());
-	braille.init(null, os.getBraille(), this);
+	//braille.init(null, os.getBraille(), this);
 	globalKeys.load();
-	fileTypes.load(null);
+	fileTypes.load(configs);
 	loadPlayer();
 	loadDesktop();
 	//	props.setProviders(objRegistry.getPropertiesProviders());
@@ -276,10 +276,7 @@ boolean standalone;
 	for (var d: ServiceLoader.load(Desktop.class))
 	    desktops.add(d);
 	if (desktops.isEmpty())
-	{
-	    LOGGER.fatal("No desktop service providers");
 	    throw new RuntimeException("No desktop providers");
-	}
 	desktop = desktops.get(0);
 	LOGGER.info("Loaded desktop class is " + desktop.getClass().getName());
 	desktop.onLaunchApp(interfaces.requestNew(desktop));

@@ -30,18 +30,19 @@ final class Launch
     private final Args args;
     private final Config conf = new Config();
     private final ClassLoader classLoader;
-    private final File dataDir, userDataDir, userHomeDir;
-    private final String lang;
     private OperatingSystem os = null;
     private Interaction interaction = null;
 
-    Launch(Args args, File dataDir, File userDataDir, File userHomeDir, String lang)
+    Launch(Args args, File appDir, File dataDir, File userDataDir, File userHomeDir, String lang)
     {
 	this.args = requireNonNull(args, "args can't be null");
-	this.dataDir = requireNonNull(dataDir, "dataDir can't be null");
-	this.userDataDir = requireNonNull(userDataDir, "userDataDir");
-	this.userHomeDir = requireNonNull(userHomeDir, "userHomeDir can't be null");
-	this.lang = lang;//Checks.detectLang(this.cmdLine);
+	conf.setAppDir(requireNonNull(appDir, "appDir can't be null"));
+	conf.setDataDir(requireNonNull(dataDir, "dataDir can't be null"));
+	conf.setUserDataDir(requireNonNull(userDataDir, "userDataDir"));
+	conf.setUserHomeDir(requireNonNull(userHomeDir, "userHomeDir can't be null"));
+	conf.setJsDir(new File(appDir, "js"));
+	conf.setPacksDir(new File(userDataDir, "packs"));
+	conf.setSoundsDir(new File(dataDir, "sounds"));
 	log.debug("starting LUWRAIN: Java " + System.getProperty("java.version") + " by " + System.getProperty("java.vendor") + " (installed in " + System.getProperty("java.home") + ")");
 	new JniLoader().autoload(this.getClass().getClassLoader());
 	if (lang.isEmpty())
@@ -49,9 +50,6 @@ final class Launch
 	    log.fatal("unable to select a language to use");
 	    System.exit(1);
 	}
-	conf.setDataDir(dataDir);
-	conf.setUserHomeDir(userHomeDir);
-	conf.setUserDataDir(userDataDir);
 	conf.setLang(lang);
 	conf.setArgs(args);
 	this.classLoader = this.getClass().getClassLoader();
@@ -61,7 +59,7 @@ final class Launch
     void run()
     {
 	try {
-	    final Configs configs = new Configs(new File(userDataDir, "conf"));
+	    final Configs configs = new Configs(new File(conf.getUserDataDir(), "conf"));
 	    conf.setConfigs(configs);
 	    try {
 		try {

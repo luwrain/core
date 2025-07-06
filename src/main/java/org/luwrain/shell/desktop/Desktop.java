@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,12 +14,14 @@
    General Public License for more details.
 */
 
-package org.luwrain.core.shell.desktop;
+package org.luwrain.shell.desktop;
 
 import  com.google.auto.service.*;
 
 import org.luwrain.core.*;
-import org.luwrain.core.shell.*;
+import org.luwrain.shell.*;
+
+import static java.util.Objects.*;
 
 @AutoService(org.luwrain.core.Desktop.class)
 public final class Desktop implements org.luwrain.core.Desktop
@@ -32,8 +34,7 @@ public final class Desktop implements org.luwrain.core.Desktop
 
     @Override public InitResult onLaunchApp(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	this.luwrain = luwrain;
+	this.luwrain = requireNonNull(luwrain, "luwrain can't be null");
 	final Object o = luwrain.i18n().getStrings(Strings.NAME);
 	if (o == null || !(o instanceof Strings))
 	    return new InitResult(InitResult.Type.NO_STRINGS_OBJ, Strings.NAME);

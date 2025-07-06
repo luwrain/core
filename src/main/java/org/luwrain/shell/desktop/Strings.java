@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-20255 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,21 +14,13 @@
    General Public License for more details.
 */
 
-package org.luwrain.core;
+package org.luwrain.shell.desktop;
 
-import java.io.*;
-import lombok.*;
-
-@Data
-@NoArgsConstructor
-public final class Config
+public interface Strings
 {
-    File appDir, dataDir, userHomeDir, userDataDir, configsDir;
-    File jsDir, packsDir, soundsDir;
-    String lang;
-    Args args;
-    Configs configs;
-    ClassLoader coreClassLoader;
-    Interaction interaction;
-    OperatingSystem operatingSystem;
+    static final String NAME = "luwrain.desktop";
+
+    String deleteItemsPopupName();
+    String deleteSingleItemPopup(String itemName);
+    String deleteItemsPopup(Integer count);
 }

@@ -27,6 +27,7 @@ import org.luwrain.core.queries.*;
 import org.luwrain.i18n.*;
 import org.luwrain.script.core.MapScriptObject;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.Base.*;
 import static org.luwrain.core.NullCheck.*;
 import static org.luwrain.script.Hooks.*;
@@ -38,6 +39,17 @@ final class LuwrainImpl implements Luwrain
     {
 	notNull(core, "core");
 	this.core = core;
+    }
+
+    @Override public <E> void saveConf(E conf)
+    {
+	core.configs.save(requireNonNull(conf, "conf can't be null"));
+    }
+
+    @Override public <E> E loadConf(Class<E> cl)
+    {
+	requireNonNull(cl, "cl can't be null");
+	return core.configs.load(cl);
     }
 
     @Override public String getActiveAreaText(AreaTextType type, boolean issueErrorMessages)

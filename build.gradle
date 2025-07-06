@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
   implementation libraries.base
+  annotationProcessor libraries.autoService
   implementation libraries.graalvm
   implementation libraries.h2
   implementation libraries.mcp

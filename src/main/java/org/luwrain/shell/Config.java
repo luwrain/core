@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,13 +14,15 @@
    General Public License for more details.
 */
 
-package org.luwrain.core.shell.desktop;
+package org.luwrain.shell;
 
-public interface Strings
+import lombok.*;
+
+@Data
+@NoArgsConstructor
+public final class Config
 {
-    static final String NAME = "luwrain.desktop";
-
-    String deleteItemsPopupName();
-    String deleteSingleItemPopup(String itemName);
-    String deleteItemsPopup(Integer count);
+    String desktopEscapeCommand, desktopTitle, windowTitle;
+    String desktopContent, mainMenuContent;
+    boolean filePopupSkipHidden;
 }

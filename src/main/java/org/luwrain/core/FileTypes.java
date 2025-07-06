@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -21,37 +21,28 @@ import java.util.regex.*;
 import java.net.*;
 import java.io.*;
 import java.nio.file.*;
+import org.apache.logging.log4j.*;
 
 import com.google.gson.*;
-import com.google.gson.annotations.*;
+//import com.google.gson.annotations.*;
+
+import static java.util.Objects.*;
 
 final class FileTypes
 {
-    static private final String
-	LOG_COMPONENT = Base.LOG_COMPONENT,
-	JOB_PREFIX = "job:";
+    static private final Logger log = LogManager.getLogger();
+    	static private final String JOB_PREFIX = "job:";
 
     private final Gson gson = new Gson();
     private final Map<String, String> fileTypes = new HashMap<>();
 
-    void load(Registry registry)
+    void load(Configs configs)
     {
-	NullCheck.notNull(registry, "registry");
-	registry.addDirectory(Settings.FILE_TYPES_PATH);
-	final String[] values= registry.getValues(Settings.FILE_TYPES_PATH);
-	for(String v: values)
-	{
-	    final String valuePath = Registry.join(Settings.FILE_TYPES_PATH, v);
-	    if (registry.getTypeOf(valuePath) != Registry.STRING)
-	    {
-		Log.warning(LOG_COMPONENT, "the registry value " + valuePath + " is not a string");
-		continue;
-	    }
-	    final String value = registry.getString(valuePath).trim();
-	    if (value.isEmpty())
-		continue;
-	    fileTypes.put(v.trim().toLowerCase(), value);
-	}
+	requireNonNull(configs, "configs");
+	fileTypes.clear();
+	final var conf = configs.load(Config.class);
+	if (conf != null && conf.fileTypes != null)
+	    fileTypes.putAll(conf.fileTypes);
     }
 
     void launch(Core core, Registry registry, String[] files)
@@ -94,7 +85,7 @@ final class FileTypes
 		    }
 		    catch(java.net.MalformedURLException exc)
 		    {
-			Log.warning(LOG_COMPONENT, "unable to generate URL for path " + toOpen[i] + " which is requested to open");
+			log.warn("Unable to generate URL for path " + toOpen[i] + " which is requested to open");
 		    }
 		}
 	    if (!takesMultiple)
@@ -116,12 +107,12 @@ final class FileTypes
 	final JobValue jobValue = gson.fromJson(exp.substring(JOB_PREFIX.length()), JobValue.class);
 						if (jobValue == null)
 						{
-						    Log.warning(LOG_COMPONENT, "unable to parse a job value for file types: " + exp.substring(JOB_PREFIX.length()));
+						    log.warn("Unable to parse a job value for file types: " + exp.substring(JOB_PREFIX.length()));
 						    return false;
 						}
 						if (jobValue.name == null || jobValue.name.trim().isEmpty())
 						{
-						    Log.warning(LOG_COMPONENT, "no job value in file types job expression: " + exp.substring(JOB_PREFIX.length()));
+						    log.warn("No job value in file types job expression: " + exp.substring(JOB_PREFIX.length()));
 						    return false;
 						}
 						if (jobValue.escaping == null)
@@ -204,5 +195,10 @@ final class FileTypes
 	    name = null,
 	    escaping = null;
 	String[] args = null;
+    }
+
+    static private final class Config
+    {
+	Map<String, String> fileTypes;
     }
 }

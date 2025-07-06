@@ -39,7 +39,7 @@ final class Commands
 
     static private final Set<String> osCmdHistory = new HashSet<>();
 
-    static Command[] getCommands(Core core, org.luwrain.core.shell.Conversations conversations)
+    static Command[] getCommands(Core core, org.luwrain.shell.Conversations conversations)
     {
 	notNull(core, "core");
 	notNull(conversations, "conversations");
@@ -49,7 +49,7 @@ final class Commands
 	    new Cmd(
 		    "main-menu", luwrain->{
 	core.mainCoreThreadOnly();
-	final var mainMenu = org.luwrain.core.shell.MainMenu.newMainMenu(core.luwrain);
+	final var mainMenu = org.luwrain.shell.MainMenu.newMainMenu(core.luwrain);
 	if (mainMenu == null)
 	    return;
 	core.popup(null, mainMenu, Popup.Position.LEFT, ()->mainMenu.closing.continueEventLoop(), EnumSet.of(Popup.Flags.NO_MULTIPLE_COPIES));
@@ -293,7 +293,7 @@ final class Commands
 	    core.areaInaccessibleMessage();
 	    return;
 	}
-	final var menu = new org.luwrain.core.shell.ContextMenu(core.luwrain, act.get());
+	final var menu = new org.luwrain.shell.ContextMenu(core.luwrain, act.get());
 	core.popup(null, menu, Popup.Position.RIGHT, ()->menu.isPopupActive(), EnumSet.of(Popup.Flags.NO_MULTIPLE_COPIES));
 	if (menu.wasCancelled())
 	    return;
@@ -539,7 +539,7 @@ final class Commands
 	};    
     }
 
-    static Command[] getNonStandaloneCommands(Core core, org.luwrain.core.shell.Conversations conversations)
+    static Command[] getNonStandaloneCommands(Core core, org.luwrain.shell.Conversations conversations)
     {
 	return new Command[]{
 

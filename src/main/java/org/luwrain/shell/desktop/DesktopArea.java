@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-20255 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,14 +14,14 @@
    General Public License for more details.
 */
 
-package org.luwrain.core.shell.desktop;
+package org.luwrain.shell.desktop;
 
 import java.util.*;
 
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
-import org.luwrain.core.shell.*;
+import org.luwrain.shell.*;
 import org.luwrain.io.json.*;
 
 final class DesktopArea extends EditableListArea<DesktopItem> implements EditableListArea.ClickHandler<DesktopItem>
@@ -44,7 +44,7 @@ final class DesktopArea extends EditableListArea<DesktopItem> implements Editabl
 	final EditableListArea.Params<DesktopItem> params = new EditableListArea.Params<>();
 	params.context = new DefaultControlContext(luwrain);
 	params.model = new Model(luwrain);
-	params.appearance = new org.luwrain.core.shell.desktop.Appearance(luwrain);
+	params.appearance = new org.luwrain.shell.desktop.Appearance(luwrain);
 	params.name = areaName;
 	params.clipboardSaver = (area, model, appearance, fromIndex, toIndex, clipboard)->{
 	    final List<UniRefInfo> u = new ArrayList<>();

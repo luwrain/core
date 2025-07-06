@@ -68,6 +68,8 @@ public interface Luwrain extends PropertiesBase, HookContainer
     public enum AreaAttr { DIRECTORY, UNIREF, URL, UNIREF_UNDER_HOT_POINT, URL_UNDER_HOT_POINT};
     public enum JobFlags { TRACKING };
 
+    <E> void saveConf(E conf);
+    <E> E loadConf(Class<E> cl);
     void announceActiveArea();
     Object callUiSafely(java.util.concurrent.Callable callable);
     void closeApp();
