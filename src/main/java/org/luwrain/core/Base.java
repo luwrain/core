@@ -83,7 +83,7 @@ abstract class Base implements EventConsumer
 	this.helpSects = new HelpSections(configs);
 	this.speech = new Speech(args, configs, extensions);
 	this.sounds = new org.luwrain.core.sound.SoundIcons(configs);
-	this.soundManager = new org.luwrain.core.sound.Manager(objRegistry, luwrain, new File(conf.getDataDir(), "sounds").toPath());
+	this.soundManager = new org.luwrain.core.sound.Manager(objRegistry, luwrain, configs, );
 	this.mainCoreThread = Thread.currentThread();
     }
 
@@ -124,6 +124,7 @@ abstract class Base implements EventConsumer
 	eventQueue.putEvent(e);
     }
 
+    /*
     final void playSound(Sounds sound)
     {
 	if (sound == null)
@@ -131,7 +132,7 @@ abstract class Base implements EventConsumer
 	    sounds.stop();
 	    return;
 	}
-	final String volumeStr = "50";//FIXME:
+	final String volumeStr = "100";//FIXME:
 	int volume = 100;
 	try {
 	    if (!volumeStr.trim().isEmpty())
@@ -141,10 +142,8 @@ abstract class Base implements EventConsumer
 	{
 	    volume = 100;
 	}
-	if (volume < 0)
-	    volume = 0;
-	if (volume > 100)
-	    volume = 100;
+	volume = Math.max(volume, 0);
+	volume = Math.min(volume, 1100);
 	sounds.play(sound, volume);
     }
 
@@ -167,6 +166,7 @@ abstract class Base implements EventConsumer
 	    volume = 100;
 	sounds.play(file, volume);
     }
+    */
 
     protected void noAppsMessage()
     {

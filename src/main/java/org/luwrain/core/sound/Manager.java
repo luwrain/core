@@ -27,16 +27,17 @@ import static java.util.Objects.*;
 public final class Manager
 {
     private final ExtObjects extObjs;
+    private final SoundIcons icons;
     private final Settings.BackgroundSounds sett;
     private final Path soundsDir;
     private BkgPlayer bkgPlayer = null;
     private boolean startingMode = false;
 
-    public Manager(ExtObjects extObjs, Luwrain luwrain, Path soundsDir)
+    public Manager(ExtObjects extObjs, Luwrain luwrain, Configs configs, Path soundsDir)
     {
 requireNonNull(extObjs, "extObjs can't be null");
 requireNonNull(luwrain, "luwrain can't be null");
-	this.extObjs = extObjs;
+this.extObjs = requireNonNull(extObjs, "");
 	this.sett = null;//FIXME:newreg Settings.createBackgroundSounds(luwrain.getRegistry());
 	this.soundsDir = requireNonNull(soundsDir, "soundsDir can't be null");
     }

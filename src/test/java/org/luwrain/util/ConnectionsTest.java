@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -17,14 +17,15 @@
 
 package org.luwrain.util;
 
-import java.io.*;
-import java.net.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.*;
+import java.net.*;
 
 import org.luwrain.core.*;
 
+@Disabled
 public class ConnectionsTest
 {
     static private final String url = "http://download.luwrain.org/pdf/presentation-HongKongOSConference-en-2015-06-27.pdf";
