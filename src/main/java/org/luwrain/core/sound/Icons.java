@@ -125,9 +125,4 @@ requireNonNull(sound, "sound can't benull");
 		}
 		cache.put(sound, os.toByteArray());
     }
-
-    static final class Config
-    {
-	Map<Sounds, String> icons;
-    }
 }

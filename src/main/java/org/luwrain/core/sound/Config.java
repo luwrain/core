@@ -14,16 +14,15 @@
    General Public License for more details.
 */
 
-package org.luwrain.core;
+package org.luwrain.core.sound;
 
-public enum BkgSounds
+import java.util.*;
+
+
+import org.luwrain.core.*;
+
+public final class Config
 {
-    FETCHING,
-    POPUP,
-    PROGRESS,
-    WIFI,
-    PROPERTIES,
-    SEARCH,
-    STARTING,
-    MAIN_MENU,
-};
+    Map<Sounds, String> icons;
+    Map<BkgSounds, String> bkg;
+}

@@ -26,19 +26,19 @@ import static java.util.Objects.*;
 
 public final class Manager
 {
+    private final Configs configs;
     private final ExtObjects extObjs;
     private final Icons icons;
-    private final Settings.BackgroundSounds sett;
     private final Path soundsDir;
     private BkgPlayer bkgPlayer = null;
     private boolean startingMode = false;
 
     public Manager(ExtObjects extObjs, Luwrain luwrain, Configs configs, Path soundsDir)
     {
-requireNonNull(extObjs, "extObjs can't be null");
+
 requireNonNull(luwrain, "luwrain can't be null");
 this.extObjs = requireNonNull(extObjs, "");
-	this.sett = null;//FIXME:newreg Settings.createBackgroundSounds(luwrain.getRegistry());
+this.configs = requireNonNull(configs, "configs can't be null");
 	this.soundsDir = requireNonNull(soundsDir, "soundsDir can't be null");
 	this.icons = new Icons(configs);
     }
@@ -89,42 +89,27 @@ this.extObjs = requireNonNull(extObjs, "");
     {
 	icons.stop();
     }
-    public void playBackground(String url)
+
+    public void playBackground(BkgSounds sound)
     {
-	NullCheck.notNull(url, "url");
+	requireNonNull(sound, "sound can't be null");
 		stopBackground();
-	if (url.isEmpty())
-	    return;
-	this.bkgPlayer = new BkgPlayer(this.extObjs, url);
+		final var conf = configs.load(Config.class);
+		if (conf == null || conf.bkg == null || !conf.bkg.containsKey(sound))
+		    return;
+		this.bkgPlayer = new BkgPlayer(this.extObjs, conf.bkg.get(sound));
 	this.bkgPlayer.start();
     }
 
-    public void playBackground(BkgSounds bkgSound)
+
+        public void playBackground(String sound)
     {
-	NullCheck.notNull(bkgSound, "bkgSound");
-	if (startingMode)
-	    return;
-	switch(bkgSound)
-	{
-	case STARTING:
-	    playBackground(getFileUrl(sett.getStarting("")));
-	    return;
-	case POPUP:
-	    playBackground(getFileUrl(sett.getPopup("")));
-	    return;
-	case FETCHING:
-	    playBackground(getFileUrl(sett.getFetching("")));
-	    return;
-	case MAIN_MENU:
-	    playBackground(getFileUrl(sett.getMainMenu("")));
-	    return;
-	case WIFI:
-	    playBackground(getFileUrl(sett.getWifi("")));
-	    return;
-	case SEARCH:
-	    playBackground(getFileUrl(sett.getSearch("")));
-	    return;
-	}
+	requireNonNull(sound, "sound can't be null");
+		stopBackground();
+		if (sound.isEmpty())
+		    return;
+		this.bkgPlayer = new BkgPlayer(this.extObjs, sound);
+	this.bkgPlayer.start();
     }
 
     public void stopBackground()

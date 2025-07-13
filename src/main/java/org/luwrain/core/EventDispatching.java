@@ -37,7 +37,7 @@ abstract class EventDispatching extends Areas
     protected EventDispatching(Config conf)
     {
 	super(conf);
-	this.globalKeys = new GlobalKeys(configs);
+	this.globalKeys = new GlobalKeys(args, configs);
     }
 
     abstract protected void onBeforeEventProcessing();

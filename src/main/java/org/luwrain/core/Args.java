@@ -23,6 +23,11 @@ final class Args
 	       required = false)
 	String appDir;
 
+    @Parameter(names = "--std-keys",
+	       description = "Use the standard global keys layout",
+	       required = false)
+	       boolean stdGlobalKeys;
+
         @Parameter(names = {"--print-dirs"},
 	       description = "Print directories information and exit",
 	       required = false)

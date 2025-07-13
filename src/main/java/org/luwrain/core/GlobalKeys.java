@@ -26,20 +26,24 @@ import static org.luwrain.core.events.InputEvent.*;
 final class GlobalKeys
 {
     static final HotKey[] DEFAULT_KEYMAP = {
+	cmd(Special.ESCAPE, "close"),
 	cmd(Special.F2, "save"),
 	cmd(Special.F3, "open"),
 
 	//text editing
 	cmd('c', Modifiers.CONTROL, "copy"),
+		cmd('a', Modifiers.CONTROL, "copy-all"),
 	cmd(Special.ALTERNATIVE_DELETE, "clear"),
 	cmd(Special.DELETE, Modifiers.SHIFT, "clear-region")
     };
-    
+
+    private final Args args;
     private final List<HotKey> keys = new ArrayList<>();
     private final Configs configs;
 
-    GlobalKeys(Configs configs)
+    GlobalKeys(Args args, Configs configs)
     {
+	this.args = args;
 	this.configs = requireNonNull(configs, "configs");
     }
 
@@ -55,6 +59,11 @@ final class GlobalKeys
     void load()
     {
 	keys.clear();
+	if (args.stdGlobalKeys)
+	{
+	    keys.addAll(List.of(DEFAULT_KEYMAP));
+	    return ;
+	}
 	var conf = configs.load(Config.class);
 	if (conf != null && conf.keys != null)
 	    keys.addAll(conf.keys);
