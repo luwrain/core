@@ -60,7 +60,7 @@ boolean standalone;
 	Hooks.chainOfResponsibilityNoExc(luwrain, Hooks.STARTUP, new Object[0]);
 	eventLoop(mainStopCondition);
 	workers.finish();
-	playSound(Sounds.SHUTDOWN);
+	soundManager.playIcon(Sounds.SHUTDOWN);
 	    try {
 		Thread.sleep(3000);//FIXME:
 	    } catch (InterruptedException ie)
@@ -626,7 +626,7 @@ onNewAreasLayout();
 	    return;
 	this.announcement = null;
 	if (sound != null)
-	    playSound(sound);
+	    soundManager.playIcon(sound);
 	speech.speak(i18n.getSpeakableText(text, Luwrain.SpeakableTextType.NATURAL), Speech.PITCH_MESSAGE, 0);
 	interaction.startDrawSession();
 	interaction.clearRect(0, interaction.getHeightInCharacters() - 1, interaction.getWidthInCharacters() - 1, interaction.getHeightInCharacters() - 1);

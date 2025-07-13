@@ -70,7 +70,7 @@ final class Commands
 					  return new Search(areaToWrap, core, disabling);
 				      }
 				  }))
-	    core.playSound(Sounds.INACCESSIBLE);
+	    core.soundManager.playIcon(Sounds.INACCESSIBLE);
 	core.onNewAreasLayout();
 		    }),
 
@@ -158,7 +158,7 @@ final class Commands
 			if (area == null)
 			    return;
 			if (area.onSystemEvent(new SystemEvent(SystemEvent.Code.CLIPBOARD_COPY)))
-			    core.playSound(Sounds.COPIED); else
+			    core.soundManager.playIcon(Sounds.COPIED); else
 			    core.eventNotProcessedMessage();
 		    }),
 
@@ -186,7 +186,7 @@ final class Commands
 			if (area == null)
 			    return;
 			if (area.onSystemEvent(new SystemEvent(SystemEvent.Code.CLIPBOARD_CUT)))
-			    core.playSound(Sounds.CUT);else
+			    core.soundManager.playIcon(Sounds.CUT);else
 			    core.eventNotProcessedMessage();
 		    }),
 
@@ -197,7 +197,7 @@ final class Commands
 			if (area == null)
 			    return;
 			if (area.onSystemEvent(new SystemEvent(SystemEvent.Code.CLEAR_REGION)))
-			    core.playSound(Sounds.DELETED); else
+			    core.soundManager.playIcon(Sounds.DELETED); else
 			    core.eventNotProcessedMessage();
 		    }),
 
@@ -213,7 +213,7 @@ final class Commands
 			if (area == null)
 			    return;
 			if (area.onSystemEvent(new SystemEvent(SystemEvent.Code.CLIPBOARD_PASTE)))
-			    core.playSound(Sounds.PASTE); else
+			    core.soundManager.playIcon(Sounds.PASTE); else
 			    core.eventNotProcessedMessage();
 		    }),
 

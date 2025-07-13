@@ -83,7 +83,7 @@ abstract class Base implements EventConsumer
 	this.helpSects = new HelpSections(configs);
 	this.speech = new Speech(args, configs, extensions);
 	this.sounds = new org.luwrain.core.sound.SoundIcons(configs);
-	this.soundManager = new org.luwrain.core.sound.Manager(objRegistry, luwrain, configs, );
+	this.soundManager = new org.luwrain.core.sound.Manager(objRegistry, luwrain, configs, conf.getSoundsDir().toPath());
 	this.mainCoreThread = Thread.currentThread();
     }
 
@@ -171,20 +171,20 @@ abstract class Base implements EventConsumer
     protected void noAppsMessage()
     {
 	speech.silence(); 
-	playSound(Sounds.NO_APPLICATIONS);
+	soundManager.playIcon(Sounds.NO_APPLICATIONS);
 	speech.speak(i18n.getStaticStr("NoLaunchedApps"), 0, 0);
     }
 
     protected void areaInaccessibleMessage()
     {
 	speech.silence();
-	playSound(Sounds.INACCESSIBLE);
+	soundManager.playIcon(Sounds.INACCESSIBLE);
     }
 
     void eventNotProcessedMessage()
     {
 	speech.silence();
-	playSound(Sounds.INACCESSIBLE);
+	soundManager.playIcon(Sounds.INACCESSIBLE);
     }
 
     protected void printMemInfo()

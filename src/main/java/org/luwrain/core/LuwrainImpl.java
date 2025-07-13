@@ -402,13 +402,13 @@ final class LuwrainImpl implements Luwrain
     //sound can be null, means to stop a playback
     @Override public void playSound(Sounds sound)
     {
-	runUiSafely(()->core.playSound(sound));
+	runUiSafely(()->core.soundManager.playIcon(sound));
     }
 
         @Override public void playSound(File file)
     {
 	NullCheck.notNull(file, "file");
-	runUiSafely(()->core.playSound(file));
+	runUiSafely(()->core.soundManager.playIcon(file));
     }
 
 

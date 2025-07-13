@@ -45,7 +45,7 @@ public class Search implements Area
 	if (hotPointY < 0)
 	    hotPointY = 0;
 	core.message(core.i18n.getStaticStr("SearchMode"), Luwrain.MessageType.NONE);
-	core.playSound(Sounds.SEARCH);
+	core.soundManager.playIcon(Sounds.SEARCH);
     }
 
     @Override public String getAreaName()
@@ -130,7 +130,7 @@ public class Search implements Area
 	}
 	if (hotPointY > getLineCount())
 	{
-	    core.playSound(Sounds.BLOCKED);
+	    core.soundManager.playIcon(Sounds.BLOCKED);
 	    return true;
 	}
 	String line = getLine(hotPointY);
@@ -164,7 +164,7 @@ public class Search implements Area
 	    core.windowManager.redraw();
 	    return true;
 	}
-	core.playSound(Sounds.BLOCKED);
+	core.soundManager.playIcon(Sounds.BLOCKED);
 	return true;
     }
 
@@ -177,7 +177,7 @@ public class Search implements Area
 	    core.setAreaIntroduction();
 	} else
 	    core.message("Поиск отменён", Luwrain.MessageType.NONE);
-	core.playSound(Sounds.CANCEL);
+	core.soundManager.playIcon(Sounds.CANCEL);
 disabling.disableAreaWrapper();
 	core.onNewAreasLayout();
 	return true;

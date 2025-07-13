@@ -40,6 +40,17 @@ requireNonNull(luwrain, "luwrain can't be null");
 this.extObjs = requireNonNull(extObjs, "");
 	this.sett = null;//FIXME:newreg Settings.createBackgroundSounds(luwrain.getRegistry());
 	this.soundsDir = requireNonNull(soundsDir, "soundsDir can't be null");
+	this.icons = new SoundIcons(configs);
+    }
+
+
+    public void playIcon(Sounds sound)
+    {
+    }
+
+
+    public void playIcon(File file)
+    {
     }
 
     public void playBackground(String url)

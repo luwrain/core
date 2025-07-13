@@ -138,7 +138,7 @@ return;
 			break;
 		    }
 		if (!activeArea.onInputEvent(event))
-		    playSound(Sounds.INACCESSIBLE);
+		    soundManager.playIcon(Sounds.INACCESSIBLE);
 		installIdleEvent();
 	    });
     }
@@ -214,7 +214,7 @@ return;
 	if (processed.get())
 	    return;
 	    if (event.getCode() != SystemEvent.Code.IDLE)
-		playSound(Sounds.INACCESSIBLE);
+		soundManager.playIcon(Sounds.INACCESSIBLE);
     }
 
     private void onBroadcastSystemEvent(SystemEvent event)
@@ -251,7 +251,7 @@ if (layout.get() != null)
 	sound = Sounds.AREA_LAYOUT_TRIPLE;
 	break;
     }
-	playSound(sound);
+	soundManager.playIcon(sound);
 	speech.speak(name.get(), 0, 0);
     }
 
@@ -268,7 +268,7 @@ if (layout.get() != null)
 	if (res.get() != null && ((Boolean)res.get()).booleanValue())
 	    return;
 	speech.silence();
-	playSound(activeArea instanceof Popup?Sounds.POPUP:Sounds.INTRO_REGULAR);
+	soundManager.playIcon(activeArea instanceof Popup?Sounds.POPUP:Sounds.INTRO_REGULAR);
 	unsafeAreaOperation(()->{
 		final String value = activeArea.getAreaName();
 		if (value != null)
