@@ -181,7 +181,7 @@ return;
 	    if (code == InputEvent.Special.CONTROL)
 	    {
 		speech.silence();
-		sounds.stop();
+		soundManager.cancelIcon();
 		soundManager.stopStartingMode();
 		return true;
 	    }

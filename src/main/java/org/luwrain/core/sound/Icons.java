@@ -26,7 +26,7 @@ import static java.util.Objects.*;
 import static org.luwrain.util.StreamUtils.*;
 import static org.luwrain.core.NullCheck.*;
 
-public final class SoundIcons
+final class Icons
 {
     static private final Logger log = LogManager.getLogger();
 
@@ -35,12 +35,12 @@ public final class SoundIcons
         private final Map<Sounds, byte[]> cache = new HashMap<>();
     private WavePlayers.Simple previous = null;
 
-    public SoundIcons(Configs configs)
+    Icons(Configs configs)
     {
 	this.configs = requireNonNull(configs, "configs can't be null");
     }
 
-    public void load()
+    void load()
     {
 	cache.clear();
 	soundFiles.clear();
@@ -50,25 +50,30 @@ public final class SoundIcons
 		soundFiles.put(e.getKey(), e.getValue());
     }
 
-    public void play(Sounds sound, int volumePercent)
+    void play(Sounds sound, int volumePercent)
     {
 requireNonNull(sound, "sound can't be null");
-/*
 	final File soundFile;
 	if (!soundFiles.containsKey(sound))
 	{
-	    soundFile = getSoundFile(sound);
-	    if (soundFile == null)
-	    {
-		//Trying to load the sound file from resources
-		loadToCache(sound);
-		if (cache.containsKey(sound))
+	    loadToCacheFromResource(sound);
+	}
+
+			if (cache.containsKey(sound))
 		{
 			    	if (previous != null)
 	    previous.stopPlaying();
 		previous = new WavePlayers.Simple(new ByteArrayInputStream(cache.get(sound)), volumePercent);
 	new Thread(previous).start();
-		} else
+		} 
+
+			    
+	/*
+	    soundFile = getSoundFile(sound);
+	    if (soundFile == null)
+	    {
+		//Trying to load the sound file from resources
+		loadToCache(sound);
 		log.error("No sound file specified for Sounds." + sound.toString());
 		return;
 	    }
@@ -82,7 +87,7 @@ requireNonNull(sound, "sound can't be null");
 */
     }
 
-        public void play(File file, int volumePercent)
+        void play(File file, int volumePercent)
     {
 requireNonNull(file, "file can't be null");
 	if (previous != null)
@@ -91,13 +96,13 @@ requireNonNull(file, "file can't be null");
 	new Thread(previous).start();
     }
 
-    public void stop()
+    void stop()
     {
 	if (previous != null)
 	    previous.stopPlaying();
     }
 
-    private void loadToCache(Sounds sound)
+    private void loadToCacheFromResource(Sounds sound)
     {
 requireNonNull(sound, "sound can't benull");
 	if (cache.containsKey(sound))
@@ -109,7 +114,7 @@ requireNonNull(sound, "sound can't benull");
 		final var os = new ByteArrayOutputStream();
 		try {
 		try (final var is = new BufferedInputStream(s)){
-		    copyAllBytes(is, os);
+		    copyAllBytes(is, os);//FIXME: IOUtils
 		}
 		os.flush();
 		}

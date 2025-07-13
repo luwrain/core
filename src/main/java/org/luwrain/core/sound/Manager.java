@@ -27,7 +27,7 @@ import static java.util.Objects.*;
 public final class Manager
 {
     private final ExtObjects extObjs;
-    private final SoundIcons icons;
+    private final Icons icons;
     private final Settings.BackgroundSounds sett;
     private final Path soundsDir;
     private BkgPlayer bkgPlayer = null;
@@ -40,19 +40,55 @@ requireNonNull(luwrain, "luwrain can't be null");
 this.extObjs = requireNonNull(extObjs, "");
 	this.sett = null;//FIXME:newreg Settings.createBackgroundSounds(luwrain.getRegistry());
 	this.soundsDir = requireNonNull(soundsDir, "soundsDir can't be null");
-	this.icons = new SoundIcons(configs);
+	this.icons = new Icons(configs);
     }
-
 
     public void playIcon(Sounds sound)
     {
+	if (sound == null)
+	{
+	    icons.stop();
+	    return;
+	}
+	final String volumeStr = "100";//FIXME:
+	int volume = 100;
+	try {
+	    if (!volumeStr.trim().isEmpty())
+		volume = Integer.parseInt(volumeStr);
+	}
+	catch(NumberFormatException e)
+	{
+	    volume = 100;
+	}
+	volume = Math.max(volume, 0);
+	volume = Math.min(volume, 1100);
+	icons.play(sound, volume);
     }
-
 
     public void playIcon(File file)
     {
+	requireNonNull(file, "file can't be null");
+	final String volumeStr = "50";//FIXME:
+	int volume = 100;
+	try {
+	    if (!volumeStr.trim().isEmpty())
+		volume = Integer.parseInt(volumeStr);
+	}
+	catch(NumberFormatException e)
+	{
+	    volume = 100;
+	}
+	if (volume < 0)
+	    volume = 0;
+	if (volume > 100)
+	    volume = 100;
+	icons.play(file, volume);
     }
 
+    public void cancelIcon()
+    {
+	icons.stop();
+    }
     public void playBackground(String url)
     {
 	NullCheck.notNull(url, "url");
