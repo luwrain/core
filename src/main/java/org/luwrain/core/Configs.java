@@ -59,6 +59,15 @@ this.mvMap = store.openMap("main");
 	mvMap.put(obj.getClass().getName(), gson.toJson(obj));
         }
 
+    public synchronized <C> void update(Class<C> configClass, ConfigUpdate<C> func)
+{
+    requireNonNull(configClass, "configClass can't be null");
+    requireNonNull(func, "func can't be null");
+    final C conf = load(configClass);
+    func.update(conf);
+    save(conf);
+}
+
     @Override public synchronized void close()
     {
 		log.trace("Closing configs session in " + configsDir.getAbsolutePath());

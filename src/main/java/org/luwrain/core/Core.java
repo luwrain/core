@@ -37,7 +37,6 @@ boolean standalone;
     org.luwrain.player.Player player = null;
         private Application desktop = null;
     final WavePlayers.Player wavePlayer = new WavePlayers.Player();
-    Settings.UserInterface uiSettings;//FIXME:final 
     private volatile boolean wasInputEvents = false;
     final UniRefProcManager uniRefProcs = new UniRefProcManager();//FIXME:
 

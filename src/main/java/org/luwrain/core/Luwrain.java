@@ -72,6 +72,7 @@ public interface Luwrain extends PropertiesBase, HookContainer
 
     <E> void saveConf(E conf);
     <E> E loadConf(Class<E> cl);
+    <C> void updateConf(Class<C> configClass, ConfigUpdate<C> func);
     void announceActiveArea();
     Object callUiSafely(java.util.concurrent.Callable callable);
     void closeApp();

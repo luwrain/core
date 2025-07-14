@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2021 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -32,14 +32,15 @@ import org.luwrain.cpanel.*;
 import org.luwrain.util.*;
 import org.luwrain.io.json.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.DefaultEventResponse.*;
 
 final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
 {
-    private final Gson gson = new Gson();
+    //    private final Gson gson = new Gson();
     private final ControlPanel controlPanel;
     private final Luwrain luwrain;
-    private final Settings.UserInterface sett;
+    //    private final CommonSettings sett;
 
     MainMenu(ControlPanel controlPanel, EditableListArea.Params<UniRefInfo> params)
     {
@@ -48,16 +49,16 @@ final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
 	NullCheck.notNull(params, "params");
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
-	this.sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
+	//	this.sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
     }
 
-        @Override public boolean saveSectionData()
+    @Override public boolean saveSectionData()
     {
 	final ListArea.Model<UniRefInfo> model = getListModel();
-	final List<MainMenuItem> items = new ArrayList<>();
+	final var items = new ArrayList<MainMenuItem>();
 	for(int i = 0;i < model.getItemCount();i++)
 	    items.add(new MainMenuItem(MainMenuItem.TYPE_UNIREF, model.getItem(i).getValue()));
-	sett.setMainMenuContent(gson.toJson(items));
+	luwrain.updateConf(CommonSettings.class, c -> c.setMainMenuItems(items));
 	return true;
     }
 
@@ -80,10 +81,13 @@ final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
 
     static MainMenu create(ControlPanel controlPanel)
     {
-	NullCheck.notNull(controlPanel, "controlPanel");
-	final Luwrain luwrain = controlPanel.getCoreInterface();
-	final Settings.UserInterface sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
-	final List<MainMenuItem> items = new Gson().fromJson(sett.getMainMenuContent(""), MainMenuItem.LIST_TYPE);
+	//	requireNonNull(controlPanel, "controlPanel");
+	final Luwrain luwrain = requireNonNull(controlPanel, "controlPanel can't be null").getCoreInterface();
+	//	final Settings.UserInterface sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
+	final var items = new ArrayList<MainMenuItem>();
+	final var conf = luwrain.loadConf(CommonSettings.class);
+	if (conf != null)
+	    items.addAll(requireNonNullElse(conf.getMainMenuItems(), List.of()));
 	final List<UniRefInfo> uniRefs = new ArrayList<>();
 	if (items != null)
 	    for(MainMenuItem item: items)

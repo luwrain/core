@@ -14,16 +14,9 @@
    General Public License for more details.
 */
 
-package org.luwrain.io.json;
+package  org.luwrain.core;
 
-import java.util.*;
-import lombok.*;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public final class CommonSettings
+public interface ConfigUpdate<C>
 {
-    String desktopTitle, desktopEscapeCommand, windowTitle, timeZone;
-    List<MainMenuItem> mainMenuItems;
+    void update(C conf);
 }

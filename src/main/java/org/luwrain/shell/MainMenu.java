@@ -26,6 +26,7 @@ import org.luwrain.popups.*;
 //import org.luwrain.util.*;
 import org.luwrain.io.json.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.DefaultEventResponse.*;
 
 public final class MainMenu extends ListArea<MainMenuItem> implements PopupClosingTranslator.Provider
@@ -117,13 +118,15 @@ public final class MainMenu extends ListArea<MainMenuItem> implements PopupClosi
 
     static public MainMenu newMainMenu(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	final Settings.UserInterface ui = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
-	final MainMenuItem[] items = MainMenuItem.fromJson(ui.getMainMenuContent(""));
-	final ListArea.Params<MainMenuItem> params = new ListArea.Params<>();
+	requireNonNull(luwrain, "luwrain can't be null");
+	final var items = new ArrayList<MainMenuItem>();
+	final var conf = luwrain.loadConf(CommonSettings.class);
+	if (conf != null)
+	    items.addAll(requireNonNullElse(conf.getMainMenuItems(), new ArrayList<>()));
+	final var params = new ListArea.Params<MainMenuItem>();
 	params.context = new DefaultControlContext(luwrain);
 	final Appearance appearance = new Appearance(params.context);
-	params.model = new ListUtils.FixedModel<>(items);
+	params.model = new ListUtils.ListModel<>(items);
 	params.appearance = appearance;
 	params.transition = new Transition(params.model, (Appearance)params.appearance);
 	params.name = luwrain.i18n().getStaticStr("MainMenuName");

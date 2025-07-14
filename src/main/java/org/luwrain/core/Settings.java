@@ -37,6 +37,7 @@ public interface Settings
 	BACKGROUND_SOUNDS_PATH = "/org/luwrain/sounds/background",
 	DESKTOP_UNIREFS_PATH = "/org/luwrain/desktop/unirefs";
 
+    /*
     public interface UserInterface
     {
 	String getDesktopEscapeCommand(String defValue);
@@ -58,6 +59,7 @@ public interface Settings
 	NullCheck.notNull(registry, "registry");
 	return RegistryProxy.create(registry, UI_PATH, UserInterface.class);
     }
+    */
 
 
     public interface PersonalInfo

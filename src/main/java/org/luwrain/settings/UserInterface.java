@@ -20,29 +20,32 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.cpanel.*;
+import org.luwrain.io.json.*;
+
+import static java.util.Objects.*;
 
 final class UserInterface extends FormArea implements SectionArea
 {
     private final ControlPanel controlPanel;
     private final Luwrain luwrain;
-    private final Settings.UserInterface sett;
 
     UserInterface(ControlPanel controlPanel)
     {
 	super(new DefaultControlContext(controlPanel.getCoreInterface()),
 	      controlPanel.getCoreInterface().i18n().getStaticStr("CpUiGeneral"));
-	NullCheck.notNull(controlPanel, "controlPanel");
-	this.controlPanel = controlPanel;
+	//	NullCheck.notNull(controlPanel, "controlPanel");
+	this.controlPanel = requireNonNull(controlPanel, "controlPanel can't be null");
 	this.luwrain = controlPanel.getCoreInterface();
-	this.sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
+	//	this.sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
 	fillForm();
     }
 
     private void fillForm()
     {
-	addEdit("desktop-title", luwrain.i18n().getStaticStr("CpUiDesktopTitle"), sett.getDesktopTitle(""));
-	addEdit("window-title", luwrain.i18n().getStaticStr("CpUiWindowTitle"), sett.getWindowTitle(""));
-	addEdit("desktop-escape-command", luwrain.i18n().getStaticStr("CpUiDesktopEscapeCommand"), sett.getDesktopEscapeCommand(""));
+	final var conf = requireNonNullElse(luwrain.loadConf(CommonSettings.class), new CommonSettings());
+	addEdit("desktop-title", luwrain.i18n().getStaticStr("CpUiDesktopTitle"), requireNonNullElse(conf.getDesktopTitle(), ""));
+	addEdit("window-title", luwrain.i18n().getStaticStr("CpUiWindowTitle"), requireNonNullElse(conf.getWindowTitle(), ""));
+	addEdit("desktop-escape-command", luwrain.i18n().getStaticStr("CpUiDesktopEscapeCommand"), requireNonNullElse(conf.getDesktopEscapeCommand(), ""));
     }
 
     @Override public boolean saveSectionData()

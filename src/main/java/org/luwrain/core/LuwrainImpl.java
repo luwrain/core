@@ -52,6 +52,13 @@ final class LuwrainImpl implements Luwrain
 	return core.configs.load(cl);
     }
 
+        @Override public <C> void updateConf(Class<C> configClass, ConfigUpdate<C> func);
+    {
+	requireNonNull(configClass, "configClass can't be null");
+	requireNonNull(func, "func can't be null");
+	core.configs.update(configClass, func);
+    }
+
     @Override public String getActiveAreaText(AreaTextType type, boolean issueErrorMessages)
     {
 	notNull(type, "type");

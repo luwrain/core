@@ -105,18 +105,16 @@ requireNonNull(areaName, "areaName can't be null");
 
     @Override public boolean onListClick(ListArea area, int index, DesktopItem item)
     {
-	NullCheck.notNull(item, "item");
+	requireNonNull(item, "item can't be null");
 	    final UniRefInfo uniRefInfo = item.getUniRefInfo(luwrain);
 	    return luwrain.openUniRef(uniRefInfo.getValue());
     }
 
     private boolean onEscape()
     {
-	if (luwrain == null)
-	    return false;
-	final Settings.UserInterface sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
-	final String cmdName = sett.getDesktopEscapeCommand("");
-	if (cmdName.trim().isEmpty())
+	final var conf = luwrain.loadConf(CommonSettings.class);
+	final String cmdName = conf.getDesktopEscapeCommand();
+	if (cmdName != null || cmdName.trim().isEmpty())
 	    return false;
 	return luwrain.runCommand(cmdName.trim());
     }
