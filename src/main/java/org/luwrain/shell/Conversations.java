@@ -30,7 +30,6 @@ import static java.util.Objects.*;
 public final class Conversations
 {
     private final Luwrain luwrain;
-
     public Conversations(Luwrain luwrain)
     {
 	this.luwrain = requireNonNull(luwrain, "luwrain can't be null");
@@ -40,12 +39,12 @@ public final class Conversations
     {
 	final var current = new File(luwrain.getActiveAreaAttr(Luwrain.AreaAttr.DIRECTORY));
 	final var popup = new FilePopup(luwrain, 
-					      luwrain.i18n().getStaticStr("OpenPopupName"), luwrain.i18n().getStaticStr("OpenPopupPrefix"), 
+					luwrain.i18n().getStaticStr("OpenPopupName"), luwrain.i18n().getStaticStr("OpenPopupPrefix"), 
 					null, current, new File(luwrain.getDir("~")),
-					      Popups.loadFilePopupFlags(luwrain), Popups.DEFAULT_POPUP_FLAGS){
+					Popups.loadFilePopupFlags(luwrain), Popups.DEFAULT_POPUP_FLAGS){
 		@Override public boolean onInputEvent(InputEvent event)
 		{
-		    NullCheck.notNull(event, "event");
+		    requireNonNull(event, "event can't be null");
 		    if (event.isSpecial() && !event.isModified())
 			switch(event.getSpecial())
 			{
@@ -69,7 +68,7 @@ public final class Conversations
 			}
 		    return super.onInputEvent(event);
 		}
-				@Override public boolean onAreaQuery(AreaQuery query)
+		@Override public boolean onAreaQuery(AreaQuery query)
 		{
 		    NullCheck.notNull(query, "query");
 		    switch(query.getQueryCode())
@@ -78,9 +77,9 @@ public final class Conversations
 			{
 			    final File f = FileUtils.ifNotAbsolute(luwrain.getFileProperty("luwrain.dir.userhome"), text);
 			    if (f.getAbsolutePath().isEmpty())
-			    return false;
-			((UniRefAreaQuery)query).answer("file:" + f.getAbsolutePath());
-			return true;
+				return false;
+			    ((UniRefAreaQuery)query).answer("file:" + f.getAbsolutePath());
+			    return true;
 			}
 		    default:
 			return super.onAreaQuery(query);
@@ -95,7 +94,7 @@ public final class Conversations
 
     public String command(String[] allCommands)
     {
-	NullCheck.notNullItems(allCommands, "allCommands");
+	requireNonNull(allCommands, "allCommands can't be null");
 	final EditListPopup popup = new EditListPopup(luwrain, new EditListPopupUtils.FixedModel(allCommands), new EditListPopupUtils.DefaultAppearance(luwrain, Luwrain.SpeakableTextType.PROGRAMMING),
 						      luwrain.i18n().getStaticStr("CommandPopupName"), luwrain.i18n().getStaticStr("CommandPopupPrefix"), "", EnumSet.noneOf(Popup.Flags.class)){
 		@Override public boolean onOk()
@@ -114,7 +113,7 @@ public final class Conversations
 		}
 		@Override public boolean onAreaQuery(AreaQuery query)
 		{
-		    NullCheck.notNull(query, "query");
+		    requireNonNull(query, "query can't be null");
 		    switch(query.getQueryCode())
 		    {
 		    case AreaQuery.UNIREF_AREA:
@@ -133,11 +132,10 @@ public final class Conversations
 	return !popup.text().isEmpty()?popup.text():null;
     }
 
-
     public boolean deleteDesktopItemConfirmation(String name)
     {
-	NullCheck.notNull(name, "name");
-	final YesNoPopup popup = new YesNoPopup(luwrain, 
+	requireNonNull(name, "name can't be null");
+	final var popup = new YesNoPopup(luwrain, 
 						"Удаление элемента",//FIXME:
 						"Вы действительно хотите удалить элемент \"" + name + "\" с рабочего стола?",//FIXME:
 						false,

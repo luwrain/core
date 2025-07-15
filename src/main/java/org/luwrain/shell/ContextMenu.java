@@ -57,17 +57,17 @@ public final class ContextMenu extends ListPopup<Action>
 	    NullCheck.notNull(flags, "flags");
 	    luwrain.silence();
 	    luwrain.playSound(Sounds.MAIN_MENU_ITEM);
-	    if (action.inputEvent() != null)
-		luwrain.speak(action.title() + " " + luwrain.getSpeakableText(action.inputEvent().toString(), Luwrain.SpeakableTextType.PROGRAMMING)); else
-		luwrain.speak(action.title());
+	    if (action.inputEvent != null)
+		luwrain.speak(action.title + " " + luwrain.getSpeakableText(action.inputEvent.toString(), Luwrain.SpeakableTextType.PROGRAMMING)); else
+		luwrain.speak(action.title);
 	}
 	@Override public String getScreenAppearance(Action action, Set<Flags> flags)
 	{
 	    NullCheck.notNull(action, "action");
 	    NullCheck.notNull(flags, "flags");
-	    if (action.inputEvent() != null)
-		return action.title() + " (" + action.inputEvent() + ")"; else
-		return action.title();
+	    if (action.inputEvent != null)
+		return action.title + " (" + action.inputEvent + ")"; else
+		return action.title;
 	}
     }
 

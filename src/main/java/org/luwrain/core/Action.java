@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,38 +14,31 @@
    General Public License for more details.
 */
 
-//LWR_API 1.0
-
 package org.luwrain.core;
 
 import org.luwrain.core.events.InputEvent;
 
+import static java.util.Objects.*;
+
 public final class Action
 {
-    private final String name;
-    private final String title;
-    private final InputEvent event;
+    public final String name;
+    public final String title;
+    public final InputEvent inputEvent;
 
     public Action(String name, String title)
     {
-		NullCheck.notEmpty(name, "name");
-	NullCheck.notEmpty(title, "title");
-	this.name = name;
-	this.title = title;
-	this.event = null;
-    }
+	this(name, title, null);
+	    }
 
     public Action(String name, String title, InputEvent event)
     {
-		NullCheck.notEmpty(name, "name");
-	NullCheck.notEmpty(title, "title");
-	NullCheck.notEmpty(event, "event");
-	this.name = name;
-	this.title = title;
-	this.event = event;
+	this.name = requireNonNull(name, "name can' tbe null");
+	this.title = requireNonNull(title, "title can't be null");
+	this.inputEvent = event;
+	if (name.isEmpty())
+	    throw new IllegalArgumentException("name can't be empty");
+	if (title.isEmpty())
+	    throw new IllegalArgumentException("title can't be empt ");
     }
-
-    public String name() {return name;}
-    public String title() { return title; }
-    public InputEvent inputEvent() { return event; }
 }

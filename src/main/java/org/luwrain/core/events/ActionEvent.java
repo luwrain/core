@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -37,7 +37,7 @@ public class ActionEvent extends SystemEvent
 
     public String getActionName()
     {
-	return action.name();
+	return action.name;
     }
 
     static public boolean isAction(Event event, String actionName)

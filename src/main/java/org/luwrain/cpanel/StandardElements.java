@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -16,7 +16,7 @@
 
 package org.luwrain.cpanel;
 
-public class StandardElements
+public final class StandardElements
 {
     static public final Element
 	ROOT = new SimpleElement(null, SimpleElement.class.getName() + ":ROOT"),

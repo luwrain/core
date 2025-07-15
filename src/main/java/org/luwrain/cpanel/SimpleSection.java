@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -21,6 +21,8 @@ import java.util.*;
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 
+import static java.util.Objects.*;
+
 public class SimpleSection implements Section
 {
     public interface AreaFactory
@@ -28,53 +30,49 @@ public class SimpleSection implements Section
 	SectionArea newSectionArea(ControlPanel controlPanel);
     }
 
-public interface ActionHandler
-{
-    boolean onSectionActionEvent(ControlPanel controlPanel, ActionEvent event);
-}
+    public interface ActionHandler
+    {
+	boolean onSectionActionEvent(ControlPanel controlPanel, ActionEvent event);
+    }
 
-    protected Element element;
-    protected String name;
-    protected AreaFactory areaFactory = null;
-    protected ActionHandler actionHandler = null;
-    protected Action[] actions = new Action[0];
+    protected final Element element;
+    protected final String name;
+    protected final AreaFactory areaFactory;
+    protected final ActionHandler actionHandler;
+    protected final Action[] actions;
 
     private SectionArea area = null;
 
     public SimpleSection(Element element, String name)
     {
-	NullCheck.notNull(element, "element");
-	NullCheck.notNull(name, "name");
-	this.element = element;
-	this.name = name;
+	this.element = requireNonNull(element, "element can't be null");
+	this.name = requireNonNull(name, "name can't be null");
+	this.areaFactory = null;
+	this.actionHandler = null;
+	this.actions = new Action[0];
     }
 
-    public SimpleSection(Element element, String name,
-			 AreaFactory areaFactory)
+    public SimpleSection(Element element, String name, AreaFactory areaFactory)
     {
-	NullCheck.notNull(element, "element");
-	NullCheck.notNull(name, "name");
-	this.element = element;
-	this.name = name;
+	this.element = requireNonNull(element, "element can't be null");
+	this.name = requireNonNull(name, "name can't be null");
 	this.areaFactory = areaFactory;
+	this.actionHandler = null;
+	this.actions = new Action[0];
     }
 
-    public SimpleSection(Element element, String name,
-			 AreaFactory areaFactory, Action[] actions, ActionHandler actionHandler)
+    public SimpleSection(Element element, String name, AreaFactory areaFactory, Action[] actions, ActionHandler actionHandler)
     {
-	NullCheck.notNull(element, "element");
-	NullCheck.notNull(name, "name");
-	NullCheck.notNullItems(actions, "actions");
-	this.element = element;
-	this.name = name;
-	this.areaFactory = areaFactory;
-	this.actions = actions;
+	this.element = requireNonNull(element, "element can't be null");
+	this.name = requireNonNull(name, "name can't be null");
+		this.areaFactory = areaFactory;
+		this.actions = requireNonNullElse(actions, new Action[0]);
 	this.actionHandler = actionHandler;
     }
 
     @Override public SectionArea getSectionArea(ControlPanel controlPanel)
     {
-	NullCheck.notNull(controlPanel, "controlPanel");
+	requireNonNull(controlPanel, "controlPanel can't be null");
 	if (area != null)
 	    return area;
 	if (areaFactory == null)
@@ -90,13 +88,13 @@ public interface ActionHandler
 
     @Override public Action[] getSectionActions()
     {
-	return actions;
+	return actions.clone();
     }
 
     @Override public boolean onSectionActionEvent(ControlPanel controlPanel, ActionEvent event)
     {
-	NullCheck.notNull(controlPanel, "controlPanel");
-	NullCheck.notNull(event, "event");
+	requireNonNull(controlPanel, "controlPanel can't be null");
+	requireNonNull(event, "event can't be null");
 	if (actionHandler == null)
 	    return false;
 	return actionHandler.onSectionActionEvent(controlPanel, event);

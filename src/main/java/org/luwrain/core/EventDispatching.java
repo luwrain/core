@@ -130,7 +130,7 @@ return;
 		if (actions != null)
 		    for(Action a: actions)
 		    {
-			final InputEvent actionEvent = a.inputEvent();
+			final InputEvent actionEvent = a.inputEvent;
 			if (actionEvent == null || !actionEvent.equals(event))
 			    continue;
 			if (activeArea.onSystemEvent(new ActionEvent(a)))

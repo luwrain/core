@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -16,19 +16,20 @@
 
 package org.luwrain.cpanel;
 
-import static org.luwrain.core.NullCheck.*;
+//import static org.luwrain.core.NullCheck.*;
+import static java.util.Objects.*;
 
 public class SimpleElement implements Element
 {
-    protected Element parent;
-    protected String value;
+    protected final Element parent;
+    protected final String value;
 
     public SimpleElement(Element parent, String value)
     {
-	notNull(parent, "parent");
-	notEmpty(value, "value");
-	this.parent = parent;
-	this.value = value;
+	this.parent = requireNonNull(parent, "parent can't be null");
+	this.value = requireNonNull(value, "value can't be null");
+	if (value.isEmpty())
+	    throw new IllegalArgumentException("value can't be empty");
     }
 
     @Override public Element getParentElement()
@@ -43,9 +44,9 @@ public class SimpleElement implements Element
 
     @Override public boolean equals(Object o)
     {
-	if (o == null || !(o instanceof SimpleElement))
+	if (o != null && o instanceof SimpleElement el)
+	return value.equals(el.value);
 	    return false;
-	return value == ((SimpleElement)o).value;
     }
 
     @Override public int hashCode()
