@@ -14,17 +14,22 @@
    General Public License for more details.
 */
 
-package org.luwrain.io.json;
+package org.luwrain.core;
 
 import java.util.*;
-import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public final class CommonSettings
+import java.net.*;
+
+
+public interface UriProc
 {
-    String desktopTitle, desktopEscapeCommand, windowTitle, timeZone;
-    boolean filePopupSkipHidden;
-    List<MainMenuItem> mainMenuItems;
+    String getUriType();
+    Instance process(URI uri, Luwrain luwrain);
+
+    public interface Instance
+    {
+	String getTitle();
+	void announce();
+	void activate();
+    }
 }

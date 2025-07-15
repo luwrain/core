@@ -50,9 +50,11 @@ final class UserInterface extends FormArea implements SectionArea
 
     @Override public boolean saveSectionData()
     {
-	sett.setDesktopTitle(getEnteredText("desktop-title"));
-	sett.setWindowTitle(getEnteredText("window-title"));
-	sett.setDesktopEscapeCommand(getEnteredText("desktop-escape-command"));
+	luwrain.updateConf(CommonSettings.class, conf -> {
+	conf.setDesktopTitle(getEnteredText("desktop-title"));
+	conf.setWindowTitle(getEnteredText("window-title"));
+	conf.setDesktopEscapeCommand(getEnteredText("desktop-escape-command"));
+	    });
 	return true;
     }
 

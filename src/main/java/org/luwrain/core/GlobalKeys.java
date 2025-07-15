@@ -26,6 +26,10 @@ import static org.luwrain.core.events.InputEvent.*;
 final class GlobalKeys
 {
     static final HotKey[] DEFAULT_KEYMAP = {
+	    //Basic
+    cmd('q', Modifiers.ALT, "quit"),
+
+
 	cmd(Special.ESCAPE, "close"),
 	cmd(Special.F2, "save"),
 	cmd(Special.F3, "open"),

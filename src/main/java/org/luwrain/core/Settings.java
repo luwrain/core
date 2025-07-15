@@ -37,30 +37,6 @@ public interface Settings
 	BACKGROUND_SOUNDS_PATH = "/org/luwrain/sounds/background",
 	DESKTOP_UNIREFS_PATH = "/org/luwrain/desktop/unirefs";
 
-    /*
-    public interface UserInterface
-    {
-	String getDesktopEscapeCommand(String defValue);
-	void setDesktopEscapeCommand(String value);
-	String getDesktopTitle(String defValue);
-	void setDesktopTitle(String value);
-	String getDesktopContent(String defValue);
-	    void setDesktopContent(String defValue);
-	boolean getFilePopupSkipHidden(boolean defValue);
-	void setFilePopupSkipHidden(boolean value);
-	String getMainMenuContent(String defValue);
-	void setMainMenuContent(String value);
-	String getWindowTitle(String defValue);
-	void setWindowTitle(String value);
-    }
-
-        static public UserInterface createUserInterface(Registry registry)
-    {
-	NullCheck.notNull(registry, "registry");
-	return RegistryProxy.create(registry, UI_PATH, UserInterface.class);
-    }
-    */
-
 
     public interface PersonalInfo
     {

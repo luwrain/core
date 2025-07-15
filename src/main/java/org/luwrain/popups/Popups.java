@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2021 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,8 +14,6 @@
    General Public License for more details.
 */
 
-//LWR_API 1.0
-
 package org.luwrain.popups;
 
 import java.util.*;
@@ -26,8 +24,11 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.core.queries.*;
 import org.luwrain.controls.*;
-import org.luwrain.io.*;
 import org.luwrain.util.*;
+import org.luwrain.io.json.*;
+
+
+import static java.util.Objects.*;
 
 public final class Popups
 {
@@ -38,7 +39,7 @@ public final class Popups
 			      String name, String prefix, String text,
 			      StringAcceptance acceptance, Luwrain.SpeakableTextType speakableTextType)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNull(name, "name");
 	NullCheck.notNull(prefix, "prefix");
 	NullCheck.notNull(text, "text");
@@ -64,7 +65,7 @@ public final class Popups
     static public String text(Luwrain luwrain, String name, String prefix,
 			      String text, StringAcceptance acceptance)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNull(name, "name");
 	NullCheck.notNull(prefix, "prefix");
 	NullCheck.notNull(text, "text");
@@ -73,7 +74,7 @@ public final class Popups
 
     static public String text(Luwrain luwrain, String name, String prefix, String text)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNull(name, "name");
 	NullCheck.notNull(prefix, "prefix");
 	NullCheck.notNull(text, "text");
@@ -82,7 +83,7 @@ public final class Popups
 
     static public String textNotEmpty(Luwrain luwrain, String name, String prefix, String text)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notEmpty(name, "name");
 	NullCheck.notEmpty(prefix, "prefix");
 	NullCheck.notNull(text, "text");
@@ -100,7 +101,7 @@ public final class Popups
 					 String name, String prefix, String text, 
 					 Set<String> history, Set<Popup.Flags> popupFlags)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNull(name, "name");
 	NullCheck.notNull(prefix, "prefix");
 	NullCheck.notNull(text, "text");
@@ -119,7 +120,7 @@ public final class Popups
     static public String editWithHistory(Luwrain luwrain, String name,
 					 String prefix, String text, Set<String> history)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNull(name, "name");
 	NullCheck.notNull(prefix, "prefix");
 	NullCheck.notNull(text, "text");
@@ -131,7 +132,7 @@ public final class Popups
 				   String name, final Object[] items,
 				   Set<Popup.Flags> popupFlags)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNull(name, "name");
 	NullCheck.notNullItems(items, "items");
 	NullCheck.notNull(popupFlags, "popupFlags");
@@ -157,7 +158,7 @@ public final class Popups
     static public Object fixedList(Luwrain luwrain,
 				   String name, Object[] items)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNull(name, "name");
 	NullCheck.notNullItems(items, "items");
 	return fixedList(luwrain, name, items, DEFAULT_POPUP_FLAGS);
@@ -165,7 +166,7 @@ public final class Popups
 
     static public File path(Luwrain luwrain, String name, String prefix, File startFrom, FileAcceptance acceptance)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notEmpty(name, "name");
 	NullCheck.notEmpty(prefix, "prefix");
 	final FilePopup popup = new FilePopup(luwrain, name, prefix,
@@ -223,7 +224,7 @@ public final class Popups
 
         static public File path(Luwrain luwrain, String name, String prefix, FileAcceptance acceptance)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notEmpty(name, "name");
 	NullCheck.notNull(prefix, "prefix");
 		return path(luwrain, name, prefix, null, acceptance);
@@ -231,7 +232,7 @@ public final class Popups
 
     static public File path(Luwrain luwrain, String name, String prefix)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notEmpty(name, "name");
 	NullCheck.notEmpty(prefix, "prefix");
 	return path(luwrain, name, prefix, null);
@@ -239,13 +240,13 @@ public final class Popups
 
     static public File existingFile(Luwrain luwrain, String name, File startWith, String[] extensions)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notEmpty(name, "name");
 	NullCheck.notNull(startWith, "startWith");
 	NullCheck.notNullItems(extensions, "extensions");
-	final Settings.UserInterface sett = null;//Settings.createUserInterface(luwrain.getRegistry());
+	//	final Settings.UserInterface sett = null;//Settings.createUserInterface(luwrain.getRegistry());
 	final CommanderArea.Filter<File> filter;
-	if (sett.getFilePopupSkipHidden(false))
+	if (getFilePopupSkipHidden(luwrain))
 	    filter = CommanderPopup.FILTER_NO_HIDDEN; else
 	    filter = CommanderPopup.FILTER_ALL;
 	final AtomicReference<Object> res = new AtomicReference<>(null);
@@ -293,18 +294,18 @@ public final class Popups
 
     static public File existingFile(Luwrain luwrain, String name)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notEmpty(name, "name");
 	return Popups.existingFile(luwrain, name, getUserHome(luwrain), new String[0]);
     }
 
     static public File existingDir(Luwrain luwrain, String name, File startWith)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notEmpty(name, "name");
-	final Settings.UserInterface sett = null;//Settings.createUserInterface(luwrain.getRegistry());
+	//	final Settings.UserInterface sett = null;//Settings.createUserInterface(luwrain.getRegistry());
 	final CommanderArea.Filter<File> filter;
-	if (sett.getFilePopupSkipHidden(false))
+	if (getFilePopupSkipHidden(luwrain))
 	    filter = CommanderPopup.FILTER_NO_HIDDEN; else
 	    filter = CommanderPopup.FILTER_ALL;
 	final AtomicReference<Object> res = new AtomicReference<>(null);
@@ -352,14 +353,14 @@ public final class Popups
 
     static public File existingDir(Luwrain luwrain, String name)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notEmpty(name, "name");
 	return existingDir(luwrain, name, getUserHome(luwrain));
     }
 
     static boolean mkdir(Luwrain luwrain, File createIn)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNull(createIn, "createIn");
 	final FilePopup newDirPopup = new FilePopup(luwrain, "Новый каталог", "Имя нового каталога:",
 						    null, new File(""), createIn, loadFilePopupFlags(luwrain), DEFAULT_POPUP_FLAGS){
@@ -380,7 +381,7 @@ public final class Popups
 
     static public File disks(Luwrain luwrain, String name)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNull(name, "name");
 	final DisksPopup popup = new DisksPopup(luwrain, name, DEFAULT_POPUP_FLAGS);
 	luwrain.popup(popup);
@@ -393,7 +394,7 @@ public final class Popups
 				       String name, String prefix, String text,
 				       String[] items)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNull(name, "name");
 	NullCheck.notNull(prefix, "prefix");
 	NullCheck.notNull(text, "text");
@@ -409,7 +410,7 @@ public final class Popups
     static public boolean confirmDefaultYes(Luwrain luwrain,
 					    String name, String text)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNull(name, "name");
 	NullCheck.notNull(text, "text");
 	final YesNoPopup popup = new YesNoPopup(luwrain, name, text, true, DEFAULT_POPUP_FLAGS);
@@ -422,7 +423,7 @@ public final class Popups
     static public boolean confirmDefaultNo(Luwrain luwrain,
 					   String name, String text)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNull(name, "name");
 	NullCheck.notNull(text, "text");
 	final YesNoPopup popup = new YesNoPopup(luwrain, name, text, false, DEFAULT_POPUP_FLAGS);
@@ -434,16 +435,25 @@ public final class Popups
 
     static private File getUserHome(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	return luwrain.getFileProperty("luwrain.dir.userhome");
     }
 
     static public Set<FilePopup.Flags> loadFilePopupFlags(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	final Settings.UserInterface sett = null;//Settings.createUserInterface(luwrain.getRegistry());
-	if (sett.getFilePopupSkipHidden(false))
+	requireNonNull(luwrain, "luwrain can't be null");
+	//	final Settings.UserInterface sett = null;//Settings.createUserInterface(luwrain.getRegistry());
+	if (getFilePopupSkipHidden(luwrain))
 	    return EnumSet.of(FilePopup.Flags.SKIP_HIDDEN);
 	return EnumSet.noneOf(FilePopup.Flags.class);
+    }
+
+    static boolean getFilePopupSkipHidden(Luwrain luwrain)
+    {
+	requireNonNull(luwrain, "luwrain can't be null");
+	final var conf = luwrain.loadConf(CommonSettings.class);
+	if (conf == null)
+	    return false;
+	return conf.isFilePopupSkipHidden();
     }
 }

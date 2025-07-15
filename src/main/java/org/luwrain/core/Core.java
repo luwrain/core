@@ -154,7 +154,7 @@ boolean standalone;
 	loadPlayer();
 	loadDesktop();
 	//	props.setProviders(objRegistry.getPropertiesProviders());
-	uiSettings = null;//FIXME:newreg Settings.createUserInterface(registry);
+	//	uiSettings = null;//FIXME:newreg Settings.createUserInterface(registry);
     }
 
     String loadScript(ScriptSource script) throws ExtensionException

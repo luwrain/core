@@ -52,7 +52,7 @@ final class LuwrainImpl implements Luwrain
 	return core.configs.load(cl);
     }
 
-        @Override public <C> void updateConf(Class<C> configClass, ConfigUpdate<C> func);
+        @Override public <C> void updateConf(Class<C> configClass, ConfigUpdate<C> func)
     {
 	requireNonNull(configClass, "configClass can't be null");
 	requireNonNull(func, "func can't be null");
