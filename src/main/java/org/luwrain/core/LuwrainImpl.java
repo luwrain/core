@@ -22,6 +22,8 @@ import java.util.concurrent.atomic.*;
 import java.io.*;
 import java.nio.file.*;
 
+import org.apache.logging.log4j.*;
+
 import org.luwrain.core.events.*;
 import org.luwrain.core.queries.*;
 import org.luwrain.i18n.*;
@@ -34,6 +36,7 @@ import static org.luwrain.script.Hooks.*;
 
 final class LuwrainImpl implements Luwrain
 {
+    static private final Logger log = LogManager.getLogger();
     private final Core core;
     LuwrainImpl(Core core)
     {
@@ -52,6 +55,32 @@ final class LuwrainImpl implements Luwrain
 	return core.configs.load(cl);
     }
 
+
+    @Override public String getDir(String type)
+    {
+	requireNonNull(type, "type can't be null");
+	if (type.isEmpty())
+	    throw new IllegalArgumentException("type can't b empty ");
+			if (type.indexOf("/") >= 0)
+	    throw new IllegalArgumentException("type can't contain  slashes");
+
+	if (type.equals("~"))
+	    return core.conf.getUserHomeDir().getAbsolutePath();
+	if (!type.startsWith("var:"))
+	    return null;
+	final Path res = core.conf.getUserVarDir().toPath().resolve(type.substring(4));
+	try {
+	    Files.createDirectories(res);
+	    return res.toString();
+	}
+	catch(IOException ex)
+	{
+	    log.error("Unable to create var dir for '"+ type + "'", ex);
+	    return null;
+	}
+
+    }
+
         @Override public <C> void updateConf(Class<C> configClass, ConfigUpdate<C> func)
     {
 	requireNonNull(configClass, "configClass can't be null");
@@ -61,7 +90,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public String getActiveAreaText(AreaTextType type, boolean issueErrorMessages)
     {
-	notNull(type, "type");
+	requireNonNull(type, "type can't be null");
 	core.mainCoreThreadOnly();
 	final Area activeArea = core.getActiveArea(issueErrorMessages);
 	if (activeArea == null)
@@ -71,18 +100,17 @@ final class LuwrainImpl implements Luwrain
 
     @Override public String getActiveAreaAttr(AreaAttr attr)
     {
-	NullCheck.notNull(attr, "attr");
+	requireNonNull(attr, "attr can't be null");
 	core.mainCoreThreadOnly();
 	final Area area = core.tiles.getActiveArea();
 	if (area == null)
-	    return attr == AreaAttr.DIRECTORY?getFileProperty("luwrain.dir.userhome").getAbsolutePath():null;
+	    return attr == AreaAttr.DIRECTORY?core.conf.getUserHomeDir().getAbsolutePath():null;
 	switch(attr)
 	{
-	case DIRECTORY:
-	    {
-		final CurrentDirQuery query = new CurrentDirQuery();
+	case DIRECTORY: {
+		final var query = new CurrentDirQuery();
 		if (!AreaQuery.ask(area, query))//FIXME:Security wrapper
-		    return getFileProperty("luwrain.dir.userhome").toString();
+		    return core.conf.getUserHomeDir().toString();
 		return query.getAnswer();
 	    }
 	case UNIREF:

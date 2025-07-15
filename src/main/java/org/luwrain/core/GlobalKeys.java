@@ -26,9 +26,14 @@ import static org.luwrain.core.events.InputEvent.*;
 final class GlobalKeys
 {
     static final HotKey[] DEFAULT_KEYMAP = {
-	    //Basic
-    cmd('q', Modifiers.ALT, "quit"),
+	//Basic
+	cmd('q', Modifiers.ALT, "quit"),
+	cmd('u', Modifiers.CONTROL, Modifiers.ALT, "copy-uri-area"),
+        cmd('o', Modifiers.CONTROL, Modifiers.ALT, "copy-uri-hot-point"),
+	cmd('u', Modifiers.CONTROL, "copy-url-area"),
+        cmd('o', Modifiers.CONTROL, "copy-url-hot-point"),
 
+	
 
 	cmd(Special.ESCAPE, "close"),
 	cmd(Special.F2, "save"),
@@ -91,7 +96,7 @@ final class GlobalKeys
 	return key;
     }
 
-        static HotKey cmd(char ch, Modifiers modifier, String cmdName)
+            static HotKey cmd(char ch, Modifiers modifier, String cmdName)
     {
 	requireNonNull(modifier, "modifier can't be null");
 	final var key = new HotKey();
@@ -99,6 +104,19 @@ final class GlobalKeys
 	key.setCommand(requireNonNull(cmdName, "cmdName can't be null"));
 	return key;
     }
+
+
+    static HotKey cmd(char ch, Modifiers modifier1, Modifiers modifier2, String cmdName)
+    {
+	requireNonNull(modifier1, "modifier1 can't be null");
+		requireNonNull(modifier2, "modifier2 can't be null");
+	final var key = new HotKey();
+	key.setInputEvent(new InputEvent(ch, EnumSet.of(modifier1, modifier2)));
+	key.setCommand(requireNonNull(cmdName, "cmdName can't be null"));
+	return key;
+    }
+
+
 
 
 

@@ -1,6 +1,6 @@
 
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,8 +14,6 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    General Public License for more details.
 */
-
-//LWR_API 1.0
 
 package org.luwrain.core;
 
@@ -70,9 +68,10 @@ public interface Luwrain extends PropertiesBase, HookContainer
     public enum AreaAttr { DIRECTORY, UNIREF, URL, UNIREF_UNDER_HOT_POINT, URL_UNDER_HOT_POINT};
     public enum JobFlags { TRACKING };
 
-    <E> void saveConf(E conf);
-    <E> E loadConf(Class<E> cl);
+    <C> void saveConf(C conf);
+    <C> C loadConf(Class<C> cl);
     <C> void updateConf(Class<C> configClass, ConfigUpdate<C> func);
+    String getDir(String type);
     void announceActiveArea();
     Object callUiSafely(java.util.concurrent.Callable callable);
     void closeApp();

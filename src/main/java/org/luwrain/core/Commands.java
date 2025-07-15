@@ -306,11 +306,11 @@ final class Commands
 	    core.areaInaccessibleMessage();
 		    }),
 
-	    //copy-uniref-area
+	    //copy-uri-area
 	    new Command() {
 		@Override public String getName()
 		{
-		    return "copy-uniref-area";
+		    return "copy-uri-area";
 		}
 		@Override public void onCommand(Luwrain luwrain)
 		{
@@ -332,11 +332,11 @@ final class Commands
 		}
 	    },
 
-	    //copy-uniref-hot-point
+	    //copy-uri-hot-point
 	    new Command() {
 		@Override public String getName()
 		{
-		    return "copy-uniref-hot-point";
+		    return "copy-uri-hot-point";
 		}
 		@Override public void onCommand(Luwrain luwrain)
 		{

@@ -25,22 +25,23 @@ import org.luwrain.core.queries.*;
 import org.luwrain.popups.*;
 import org.luwrain.util.*;
 
+import static java.util.Objects.*;
+
 public final class Conversations
 {
     private final Luwrain luwrain;
 
     public Conversations(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	this.luwrain = luwrain;
+	this.luwrain = requireNonNull(luwrain, "luwrain can't be null");
     }
 
     public File open()
     {
-	final File current = new File(luwrain.getActiveAreaAttr(Luwrain.AreaAttr.DIRECTORY));
-	final FilePopup popup = new FilePopup(luwrain, 
+	final var current = new File(luwrain.getActiveAreaAttr(Luwrain.AreaAttr.DIRECTORY));
+	final var popup = new FilePopup(luwrain, 
 					      luwrain.i18n().getStaticStr("OpenPopupName"), luwrain.i18n().getStaticStr("OpenPopupPrefix"), 
-					      null, current, luwrain.getFileProperty("luwrain.dir.userhome"),
+					null, current, new File(luwrain.getDir("~")),
 					      Popups.loadFilePopupFlags(luwrain), Popups.DEFAULT_POPUP_FLAGS){
 		@Override public boolean onInputEvent(InputEvent event)
 		{

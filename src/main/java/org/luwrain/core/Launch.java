@@ -41,6 +41,7 @@ final class Launch
 	conf.setUserHomeDir(requireNonNull(userHomeDir, "userHomeDir can't be null"));
 	conf.setJsDir(new File(appDir, "js"));
 	conf.setPacksDir(new File(userDataDir, "packs"));
+		conf.setUserVarDir(new File(userDataDir, "var"));
 	conf.setSoundsDir(new File(dataDir, "sounds"));
 	log.debug("starting LUWRAIN: Java " + System.getProperty("java.version") + " by " + System.getProperty("java.vendor") + " (installed in " + System.getProperty("java.home") + ")");
 	new JniLoader().autoload(this.getClass().getClassLoader());

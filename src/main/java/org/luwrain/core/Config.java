@@ -24,7 +24,7 @@ import lombok.*;
 public final class Config
 {
     File appDir, dataDir, userHomeDir, userDataDir, configsDir;
-    File jsDir, packsDir, soundsDir;
+    File jsDir, packsDir, soundsDir, userVarDir;
     String lang;
     Args args;
     Configs configs;
