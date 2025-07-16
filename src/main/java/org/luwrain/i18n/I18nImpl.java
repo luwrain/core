@@ -14,16 +14,16 @@
    General Public License for more details.
 */
 
-package org.luwrain.core;
+package org.luwrain.i18n;
 
 import java.util.*;
 import org.apache.logging.log4j.*;
 
-import org.luwrain.i18n.*;
+import org.luwrain.core.*;
 
 import static java.util.Objects.*;
 
-final class I18nImpl implements I18n, I18nExtension
+public final class I18nImpl implements I18n, I18nExtension
 {
     static private final Logger log = LogManager.getLogger();
 
@@ -47,7 +47,7 @@ final class I18nImpl implements I18n, I18nExtension
 	return langs.containsKey(langName)?langs.get(langName):null;
     }
 
-    String getSpeakableText(String text, Luwrain.SpeakableTextType speakableTextType)
+    public String getSpeakableText(String text, Luwrain.SpeakableTextType speakableTextType)
     {
 	NullCheck.notNull(text, "text");
 	NullCheck.notNull(speakableTextType, "speakableTextType");
@@ -211,7 +211,7 @@ final class I18nImpl implements I18n, I18nExtension
 	return true;
     }
 
-    boolean chooseLang(String name)
+    public boolean selectLang(String name)
     {
 	NullCheck.notEmpty(name, "name");
 	if (langs.isEmpty())

@@ -24,6 +24,8 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.core.queries.*;
 
+import static java.util.Objects.*;
+
 abstract public class AppBase<S> extends TaskCancelling implements Application
 {
     private Luwrain luwrain = null;
@@ -44,16 +46,25 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 
     public AppBase(String stringsName, Class<S> stringsClass, String helpSection)
     {
-	NullCheck.notEmpty(stringsName, "stringsName");
-	NullCheck.notNull(stringsClass, "stringsClass");
-	this.stringsName = stringsName;
-	this.stringsClass = stringsClass;
+	this.stringsName = requireNonNull(stringsName, "stringsName");
+	this.stringsClass = requireNonNull(stringsClass, "stringsClass");
 	this.helpSection = helpSection;
     }
 
         public AppBase(String stringsName, Class<S> stringsClass)
     {
 	this(stringsName, stringsClass, null);
+    }
+
+    public AppBase(Class<S> stringsClass, String helpSection)
+    {
+	this(stringsClass.getName(), stringsClass, helpSection);
+    }
+
+
+            public AppBase(Class<S> stringsClass)
+    {
+	this(stringsClass.getName(), stringsClass, null);
     }
 
     abstract protected AreaLayout onAppInit() throws Exception;

@@ -37,7 +37,7 @@ public class I18nExtensionBase extends EmptyExtension
     protected final Map<String, String> staticStrings = new HashMap<>();
     protected final Map<String, String> chars = new HashMap<>();
 
-    public I18nExtensionBase(String langName)
+    protected I18nExtensionBase(String langName)
     {
 	requireNonNull(langName, "langName can't be null");
 	this.classLoader = classLoader;

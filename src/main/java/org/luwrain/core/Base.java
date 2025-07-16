@@ -61,7 +61,7 @@ abstract class Base implements EventConsumer
 
     final WorkersTracking workers = new WorkersTracking();
     final JobsManager jobs = new JobsManager(interfaces.systemObj, extensions);
-    final I18nImpl i18n = new I18nImpl();
+    final org.luwrain.i18n.I18nImpl i18n = new org.luwrain.i18n.I18nImpl();
     final Speech speech;
     final org.luwrain.core.speech.SpeakingText speakingText = new org.luwrain.core.speech.SpeakingText(extensions);
     final BrailleImpl braille = new BrailleImpl();

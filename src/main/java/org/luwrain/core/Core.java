@@ -222,7 +222,7 @@ boolean standalone;
 	    {
 		error(ex, "extension " + e.getClass().getName() + " thrown an exception on i18n");
 	    }
-	if (!i18n.chooseLang(lang))
+	if (!i18n.selectLang(lang))
 	{
 	    Log.fatal("core", "unable to choose matching language for i18n, requested language is \'" + lang + "\'");
 	    return;
