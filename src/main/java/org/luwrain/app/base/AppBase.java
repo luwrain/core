@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2021 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -61,7 +61,6 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 	this(stringsClass.getName(), stringsClass, helpSection);
     }
 
-
             public AppBase(Class<S> stringsClass)
     {
 	this(stringsClass.getName(), stringsClass, null);
@@ -71,12 +70,8 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 
     @Override public InitResult onLaunchApp(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	final Object o = luwrain.i18n().getStrings(stringsName);
-	if (o == null || !stringsClass.isInstance(o))
-	    return new InitResult(InitResult.Type.NO_STRINGS_OBJ, stringsName);
-	this.strings = stringsClass.cast(o);
-	this.luwrain = luwrain;
+	this.luwrain = requireNonNull(luwrain, "luwrain can't be null");
+	this.strings = luwrain.i18n().getStrings(stringsClass);
 	final AreaLayout initialLayout;
 	try {
 	    initialLayout = onAppInit();
@@ -131,8 +126,8 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 
     public boolean onInputEvent(Area area, InputEvent event, Runnable closing)
     {
-	NullCheck.notNull(area, "area");
-	NullCheck.notNull(event, "event");
+	requireNonNull(area, "area can't be null");
+	requireNonNull(event, "event can't be null");
 	if (!event.isSpecial() || event.isModified())
 	    return false;
 	switch(event.getSpecial())

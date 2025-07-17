@@ -27,21 +27,22 @@ final class GlobalKeys
 {
     static final HotKey[] DEFAULT_KEYMAP = {
 	//Basic
-	cmd('q', Modifiers.ALT, "quit"),
+	cmd(Special.ENTER, Modifiers.CONTROL, "ok"),
+	cmd(Special.ENTER, Modifiers.SHIFT, "properties"),
+	cmd(Special.ESCAPE, Modifiers.CONTROL, "close"),
+	cmd(Special.F2, "save"),
+	cmd(Special.F3, "open"),
 	cmd('u', Modifiers.CONTROL, Modifiers.ALT, "copy-uri-area"),
         cmd('o', Modifiers.CONTROL, Modifiers.ALT, "copy-uri-hot-point"),
 	cmd('u', Modifiers.CONTROL, "copy-url-area"),
         cmd('o', Modifiers.CONTROL, "copy-url-hot-point"),
-
-	
-
-	cmd(Special.ESCAPE, "close"),
-	cmd(Special.F2, "save"),
-	cmd(Special.F3, "open"),
+	cmd('q', Modifiers.ALT, "quit"),
 
 	//text editing
 	cmd('c', Modifiers.CONTROL, "copy"),
-		cmd('a', Modifiers.CONTROL, "copy-all"),
+	cmd('a', Modifiers.CONTROL, "copy-all"),
+			cmd('x', Modifiers.CONTROL, "cut"),
+		cmd('v', Modifiers.CONTROL, "paste"),
 	cmd(Special.ALTERNATIVE_DELETE, "clear"),
 	cmd(Special.DELETE, Modifiers.SHIFT, "clear-region")
     };

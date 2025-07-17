@@ -25,6 +25,7 @@ public interface I18n
     String hasSpecialNameOfChar(char ch);
     String getCommandTitle(String command);
     Object getStrings(String component);
+    <E> E getStrings(Class<E> stringsClass);
     String getPastTimeBrief(Date date);
     String getNumberStr(int count, String entities);
     String getExceptionDescr(Exception e);

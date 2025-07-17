@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2021 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,13 +14,14 @@
    General Public License for more details.
 */
 
-//LWR_API 2.0
-
 package org.luwrain.app.base;
 
 import java.util.*;
+import java.util.function.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
+
+import org.apache.logging.log4j.*;
 
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
@@ -29,10 +30,13 @@ import org.luwrain.controls.edit.*;
 import org.luwrain.script.core.*;
 import org.luwrain.script.controls.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.script.Hooks.*;
 
 public class LayoutBase
 {
+    static private final Logger log = LogManager.getLogger();
+
 public interface ActionHandler
 {
     boolean onAction();
@@ -54,25 +58,15 @@ public interface ActionHandler
 	{
 	    NullCheck.notEmpty(name, "name");
 	    NullCheck.notEmpty(title, "title");
-	    NullCheck.notNull(handler, "handler");
 	    this.name = name;
 	    this.title = title;
 	    this.inputEvent = inputEvent;
-	    this.handler = handler;
+	    this.handler = requireNonNull(handler, "handler can't be null");
 	    this.cond = cond;
 	}
-		public ActionInfo(String name, String title, InputEvent inputEvent, ActionHandler handler)
-	{
-	    this(name, title, inputEvent, handler, null);
-	}
-	public ActionInfo(String name, String title, ActionHandler handler, ActionInfoCondition cond)
-	{
-	    this(name, title, null, handler, cond);
-	}
-	public ActionInfo(String name, String title, ActionHandler handler)
-	{
-	    this(name, title, null, handler, null);
-	}
+		public ActionInfo(String name, String title, InputEvent inputEvent, ActionHandler handler) { this(name, title, inputEvent, handler, null); }
+	public ActionInfo(String name, String title, ActionHandler handler, ActionInfoCondition cond) { this(name, title, null, handler, cond); }
+	public ActionInfo(String name, String title, ActionHandler handler) { this(name, title, null, handler, null); }
     }
 
     static public final class Actions
@@ -109,7 +103,7 @@ public interface ActionHandler
 	}
 	boolean onActionEvent(SystemEvent event)
 	{
-	    NullCheck.notNull(event, "event");
+	    requireNonNull(event, "event can't be null");
 	    for(ActionInfo a: actions)
 		if (ActionEvent.isAction(event, a.name))
 		    return a.handler.onAction();
@@ -120,6 +114,7 @@ public interface ActionHandler
     protected final AppBase app;
     protected LayoutControlContext controlContext = null;
     private final Map<Area, Area> areaWrappers = new HashMap<>();
+    private final Map<Area, Supplier<LayoutBase>> propHandlers = new HashMap<>();
     private AreaLayout areaLayout = null;
     private ActionHandler closeHandler = null;
     private ActionHandler okHandler = null;
@@ -149,62 +144,45 @@ public interface ActionHandler
 
     public ActionInfo action(String name, String title, InputEvent inputEvent, ActionHandler handler)
     {
-	NullCheck.notEmpty(name, "name");
-	NullCheck.notEmpty(title, "title");
-	NullCheck.notNull(handler, "handler");
 	return new ActionInfo(name, title, inputEvent, handler);
     }
 
     public ActionInfo action(String name, String title, ActionHandler handler)
     {
-	NullCheck.notEmpty(name, "name");
-	NullCheck.notEmpty(title, "title");
-	NullCheck.notNull(handler, "handler");
 	return new ActionInfo(name, title, handler);
     }
 
     public ActionInfo action(String name, String title, InputEvent inputEvent, ActionHandler handler, ActionInfoCondition cond)
     {
-	NullCheck.notEmpty(name, "name");
-	NullCheck.notEmpty(title, "title");
-	NullCheck.notNull(handler, "handler");
-		NullCheck.notNull(cond, "cond");
 	return new ActionInfo(name, title, inputEvent, handler, cond);
     }
 
     public ActionInfo action(String name, String title, ActionHandler handler, ActionInfoCondition cond)
     {
-	NullCheck.notEmpty(name, "name");
-	NullCheck.notEmpty(title, "title");
-	NullCheck.notNull(handler, "handler");
-	NullCheck.notNull(cond, "cond");
 	return new ActionInfo(name, title, handler, cond);
     }
 
-
     protected void setCloseHandler(ActionHandler closeHandler)
     {
-	NullCheck.notNull(closeHandler, "closeHandler");
-	this.closeHandler = closeHandler;
+	this.closeHandler = requireNonNull(closeHandler, "closeHandler can't be null");
     }
 
         protected void setOkHandler(ActionHandler okHandler)
     {
-	NullCheck.notNull(okHandler, "okHandler");
-	this.okHandler = okHandler;
+	this.okHandler = requireNonNull(okHandler, "okHandler can't be null");
     }
 
         protected Area getWrappingArea(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	return getWrappingArea(area, null);
     }
 
     protected Area getWrappingArea(Area area, Actions actions)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	if (app == null)
-	    throw new IllegalStateException("No app instance, provide it with the corresponding constructor");
+	    throw new IllegalStateException("No app instance, provide it using the corresponding constructor");
 	final Area res = new Area(){
 		@Override public int getLineCount()
 		{
@@ -295,6 +273,19 @@ public interface ActionHandler
 		    try {
 			if (event.getType() == SystemEvent.Type.REGULAR && event.getCode() == SystemEvent.Code.OK && okHandler != null)
 			    return okHandler.onAction();
+			if (app != null && event.getType() == SystemEvent.Type.REGULAR &&
+			    event.getCode() == SystemEvent.Code.PROPERTIES && propHandlers.containsKey(area) &&
+			    propHandlers.get(area) != null)
+						{
+						    final var propLayout = propHandlers.get(area).get();
+						    if (propLayout == null)
+							return false;
+						    app.setAreaLayout(propLayout);
+						    app.getLuwrain().announceActiveArea();
+			    return true;
+						}
+
+			
 			return area.onSystemEvent(event);
 		    }
 		    catch(Throwable e)
@@ -392,7 +383,7 @@ public interface ActionHandler
 
     public int getAreaVisibleWidth(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 			if (app == null)
 	    throw new IllegalStateException("No app instance, provide it with the corresponding constructor");
 		final Area a = areaWrappers.get(area);
@@ -401,11 +392,30 @@ public interface ActionHandler
 
         public int getAreaVisibleHeight(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 			if (app == null)
 	    throw new IllegalStateException("No app instance, provide it with the corresponding constructor");
 		final Area a = areaWrappers.get(area);
 		return app.getLuwrain().getAreaVisibleHeight(a != null?a:area);
+    }
+
+    protected void setPropertiesHandler(Area area, Supplier<LayoutBase> propLayoutSupplier)
+    {
+	requireNonNull(area, "area can't be null");
+	requireNonNull(propLayoutSupplier, "propLayoutSupplier can't be null");
+	propHandlers.put(area, propLayoutSupplier);
+    }
+
+    protected ActionHandler getReturnAction()
+    {
+	if (app == null)
+	    throw new IllegalStateException("No app instance, provide it using the corresponding constructor");
+	return () -> {
+	    app.setAreaLayout(this);
+	    app.getLuwrain().announceActiveArea();
+	    log.debug("Running close");
+	    return true;
+	};
     }
 
     protected interface ListParams<E> { void setListParams(ListArea.Params<E> params); }
@@ -495,7 +505,7 @@ super.onAreaNewHotPoint(getArea(area));
 	}
 	private Area getArea(Area area)
 	{
-	    NullCheck.notNull(area, "area");
+	    requireNonNull(area, "area can't be null");
 	    final Area res = areaWrappers.get(area);
 	    return res != null?res:area;
 	}

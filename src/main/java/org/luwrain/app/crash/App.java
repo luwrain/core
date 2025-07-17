@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2021 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -33,7 +33,7 @@ public final class App extends AppBase<Strings>
 
     public App(Throwable ex, Application srcApp, Area srcArea)
     {
-	super(Strings.NAME, Strings.class, "luwrain.crash");
+	super(Strings.class, "luwrain.crash");
 	NullCheck.notNull(ex, "ex");
 	this.ex = ex;
 	this.srcApp = srcApp;

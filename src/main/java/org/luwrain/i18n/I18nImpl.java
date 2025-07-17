@@ -31,14 +31,14 @@ public final class I18nImpl implements I18n, I18nExtension
 	EN_LANG = "en",
 	NO_CHOSEN_LANG = "#NO CHOSEN LANGUAGE#";
 
-    private Lang chosenLang = null;
-    private String chosenLangName = "";
+    private Lang selectedLang = null;
+    private String selectedLangName = "";
 
     private final List<CommandTitle> commandTitles = new ArrayList<>();
     private final List<StringsObj> stringsObjs = new ArrayList<>();
     private final Map<String, Lang> langs = new HashMap<>();
 
-    @Override public Lang getActiveLang() { return chosenLang;}
+    @Override public Lang getActiveLang() { return selectedLang;}
     @Override public Map<String, Lang> getAllLangs() { return new HashMap<>(langs); }
 
     @Override public Lang getLang(String langName)
@@ -51,10 +51,10 @@ public final class I18nImpl implements I18n, I18nExtension
     {
 	NullCheck.notNull(text, "text");
 	NullCheck.notNull(speakableTextType, "speakableTextType");
-	if (chosenLang == null)
+	if (selectedLang == null)
 	    return NO_CHOSEN_LANG;
 	try {
-	    final String value = chosenLang.getSpeakableText(text, speakableTextType);
+	    final String value = selectedLang.getSpeakableText(text, speakableTextType);
 	    return value != null?value:text;
 	}
 	catch(Throwable e)
@@ -67,9 +67,9 @@ public final class I18nImpl implements I18n, I18nExtension
     @Override public String getPastTimeBrief(Date date)
     {
 	NullCheck.notNull(date, "date");
-	if (chosenLang == null)
+	if (selectedLang == null)
 	    return NO_CHOSEN_LANG;
-	final String value = chosenLang.pastTimeBrief(date);
+	final String value = selectedLang.pastTimeBrief(date);
 	return value != null?value:"";
     }
 
@@ -100,9 +100,9 @@ public final class I18nImpl implements I18n, I18nExtension
     @Override public String getNumberStr(int count, String entities)
     {
 	NullCheck.notNull(entities, "entities");
-	if (chosenLang == null)
+	if (selectedLang == null)
 	    return "#NO CHOSEN LANGUAGE#";
-	final String value = chosenLang.getNumberStr(count, entities);
+	final String value = selectedLang.getNumberStr(count, entities);
 	return value != null?value:"";
     }
 
@@ -115,21 +115,21 @@ public final class I18nImpl implements I18n, I18nExtension
     @Override public String getStaticStr(String id)
     {
 	NullCheck.notNull(id, "id");
-	if (chosenLang == null)
+	if (selectedLang == null)
 	    return NO_CHOSEN_LANG;
-	final String value = chosenLang.getStaticStr(id);
+	final String value = selectedLang.getStaticStr(id);
 	return value != null && !value.isEmpty()?value:"#" + id + "#";
     }
 
     @Override public String hasSpecialNameOfChar(char ch)
     {
-	return chosenLang != null?chosenLang.hasSpecialNameOfChar(ch):null;
+	return selectedLang != null?selectedLang.hasSpecialNameOfChar(ch):null;
     }
 
     @Override public String getCommandTitle(String command)
     {
 	NullCheck.notEmpty(command, "command");
-	String chosenLangValue = null;
+	String selectedLangValue = null;
 	String enLangValue = null;
 	String anyLangValue = null;
 	for(CommandTitle t: commandTitles)
@@ -138,13 +138,13 @@ public final class I18nImpl implements I18n, I18nExtension
 		continue;
 	    if (anyLangValue == null)
 		anyLangValue = t.title;
-	    if (t.lang.equals(chosenLangName))
-		chosenLangValue = t.title;
+	    if (t.lang.equals(selectedLangName))
+		selectedLangValue = t.title;
 	    if (t.lang.equals(EN_LANG))
 		enLangValue = t.title;
 	}
-	if (chosenLangValue != null)
-	    return chosenLangValue;
+	if (selectedLangValue != null)
+	    return selectedLangValue;
 	if (enLangValue != null)
 	    return enLangValue;
 	return anyLangValue != null?anyLangValue:command;
@@ -164,7 +164,7 @@ public final class I18nImpl implements I18n, I18nExtension
     @Override public Object getStrings(String component)
     {
 	NullCheck.notEmpty(component, "component");
-	Object chosenLangObj = null;
+	Object selectedLangObj = null;
 	Object enLangObj = null;
 	Object anyLangObj = null;
 	for(StringsObj o: stringsObjs)
@@ -173,17 +173,41 @@ public final class I18nImpl implements I18n, I18nExtension
 		continue;
 	    if (anyLangObj == null)
 		anyLangObj = o.obj;
-	    if (o.lang.equals(chosenLangName))
-		chosenLangObj = o.obj;
+	    if (o.lang.equals(selectedLangName))
+		selectedLangObj = o.obj;
 	    if (o.lang.equals(EN_LANG))
 		enLangObj = o.obj;
 	}
-	if (chosenLangObj != null)
-	    return chosenLangObj;
+	if (selectedLangObj != null)
+	    return selectedLangObj;
 	if (enLangObj != null)
 	    return enLangObj;
-	return anyLangObj != null?anyLangObj:null;
+	return anyLangObj;
     }
+
+        @Override public <E> E getStrings(Class<E> stringsClass)
+    {
+	requireNonNull(stringsClass, "stringsClass");
+	Object selectedLangObj = new EmptyStringsObj().create(stringsClass.getClassLoader(), stringsClass);
+	Object enLangObj = null;
+	Object anyLangObj = null;
+	for(StringsObj o: stringsObjs)
+	{
+	    if (!o.component.equals(stringsClass.getName()))
+		continue;
+	    anyLangObj = o.obj;
+	    if (o.lang.equals(selectedLangName))
+		selectedLangObj = o.obj;
+	    if (o.lang.equals(EN_LANG))
+		enLangObj = o.obj;
+	}
+	if (selectedLangObj != null)
+	    return (E)selectedLangObj;
+	if (enLangObj != null)
+	    return (E)enLangObj;
+	return (E)anyLangObj;
+    }
+
 
     @Override public void addStrings(String lang, String component, Object obj)
     {
@@ -247,25 +271,25 @@ public final class I18nImpl implements I18n, I18nExtension
 	    log.warn("English language not found");
 	if (desiredLang != null)
 	{
-	    chosenLang = desiredLang;
-	    chosenLangName = desiredLangName;
+	    selectedLang = desiredLang;
+	    selectedLangName = desiredLangName;
 	} else
 	    if (enLang != null)
 	    {
-		chosenLang = enLang;
-		chosenLangName = EN_LANG;
+		selectedLang = enLang;
+		selectedLangName = EN_LANG;
 	    } else
 	    {
-		chosenLang = anyLang;
-		chosenLangName = anyLangName;
+		selectedLang = anyLang;
+		selectedLangName = anyLangName;
 	    }
-	Log.debug("core", "the chosen language is \'" + chosenLangName + "\'");
+	Log.debug("core", "the chosen language is \'" + selectedLangName + "\'");
 	return true;
     }
 
     String getChosenLangName()
     {
-	return chosenLangName;
+	return selectedLangName;
     }
 
     static private String convertStaticValueName(String name)

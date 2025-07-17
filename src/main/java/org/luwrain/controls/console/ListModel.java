@@ -14,25 +14,31 @@
    General Public License for more details.
 */
 
-package org.luwrain.i18n;
+package org.luwrain.controls.console;
 
-import java.lang.reflect.*;
+import java.util.*;
+
+//import org.luwrain.core.*;
+import org.luwrain.controls.*;
+
 import static java.util.Objects.*;
 
-public final class EmptyStringsObj implements InvocationHandler
+public class ListModel<E> implements ConsoleArea.Model<E>
 {
-    @SuppressWarnings("unchecked")
-    public <T> T create(ClassLoader classLoader, Class stringsClass)
+    protected final List<E> source;
+    public ListModel(List<E> source)
     {
-	requireNonNull(stringsClass, "stringsClass can't be null");
-	return (T) java.lang.reflect.Proxy.newProxyInstance(classLoader, new Class[]{stringsClass}, this);
+	this.source = requireNonNull(source, "source can't be null");
     }
 
-    @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable 
+    @Override public int getItemCount()
     {
-	final String name = method.getName();
-	if (name.length() > 1)
-	    return Character.toUpperCase(name.charAt(0)) + name.substring(1);
-	return name;
+	return source.size();
+    }
+    @Override public E getItem(int index)
+    {
+	if (index < 0 || index >= source.size())
+	    throw new IllegalArgumentException("Illegal index: " + String.valueOf(index));
+	return source.get(index);
     }
 }
