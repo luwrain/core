@@ -39,6 +39,7 @@ final class GlobalKeys
 	cmd('q', Modifiers.ALT, "quit"),
 
 	//text editing
+		cmd(' ', Modifiers.CONTROL, "region-point"),
 	cmd('c', Modifiers.CONTROL, "copy"),
 	cmd('a', Modifiers.CONTROL, "copy-all"),
 			cmd('x', Modifiers.CONTROL, "cut"),

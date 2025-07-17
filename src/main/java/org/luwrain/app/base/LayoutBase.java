@@ -33,6 +33,11 @@ import org.luwrain.script.controls.*;
 import static java.util.Objects.*;
 import static org.luwrain.script.Hooks.*;
 
+/**
+ * The main class for working with layouts in the LUWRAIN application. 
+ * This class provides methods for creating and managing layouts, as well as handling input events and system events. 
+ * It serves as a simplified interface for developing applications in LUWRAIN.
+ */
 public class LayoutBase
 {
     static private final Logger log = LogManager.getLogger();
