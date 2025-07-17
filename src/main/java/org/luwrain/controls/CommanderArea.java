@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,20 +14,24 @@
    General Public License for more details.
 */
 
-//LWR_API 1.0
-
 package org.luwrain.controls;
 
 import java.util.*;
 import java.util.concurrent.*;
+
+import org.apache.logging.log4j.*;
 
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.core.queries.*;
 import org.luwrain.util.*;
 
+import static java.util.Objects.*;
+
 public class CommanderArea<E> extends ListArea<CommanderArea.Wrapper<E>>
 {
+    static private final Logger log = LogManager.getLogger();
+
     static public final String PARENT_DIR = "..";
     public enum Flags {MARKING};
     public enum EntryType {REGULAR, DIR, PARENT, SYMLINK, SYMLINK_DIR, ARCHIVE, SPECIAL};
@@ -218,14 +222,14 @@ protected Wrapper<E> getSelectedWrapper()
 
     public boolean open(E entry)
     {
-	NullCheck.notNull(entry, "entry");
+	requireNonNull(entry, "entry can't be null");
 	return open(entry, null, true);
     }
 
     //If no desiredSelected found, area tries to leave selection unchanged
     public boolean open(E entry, String desiredSelected)
     {
-	NullCheck.notNull(entry, "entry ");
+	requireNonNull(entry, "entry  can't be null");
 	return open(entry, desiredSelected, true);
     }
 
@@ -256,22 +260,30 @@ protected Wrapper<E> getSelectedWrapper()
 		    final E[] res = model.getEntryChildren(newCurrent);
 		    if (res != null)
 		    {
+		    log.trace("The model returned " + res.length + " children");			
 			wrappers = new ArrayList<>();
 			final ArrayList<E> filtered = new ArrayList<>();
 			filtered.ensureCapacity(res.length);
 			for(E e: res)
 			    if (filter == null || filter.commanderEntrySuits(e))
 				filtered.add(e);
+			//			log.trace("Have " + filtered.size() + " entries after filtering");
 			wrappers.ensureCapacity(filtered.size());
-			for(int i = 0;i < filtered.size();++i)
+			for(var e: filtered)
 			{
-			    final EntryType entryType = model.getEntryType(newCurrent, filtered.get(i));
-			    wrappers.add(new Wrapper<E>(filtered.get(i), entryType, appearance.getEntryText(filtered.get(i), entryType, false)));
+			    //			    log.debug("Determining the entry type for " + e);
+			    final EntryType entryType = model.getEntryType(newCurrent, e);
+			    //			    log.debug("Creating wrapper for " + e);
+			    wrappers.add(new Wrapper<E>(e, entryType, appearance.getEntryText(e, entryType, false)));
 			}
+			//			log.trace("Starting sorting");
 			if (comparator != null)
 			    Collections.sort(wrappers, comparator);
 		    } else
+		    {
+			log.trace("The model returned null");
 			wrappers = null;
+		    }
 		    //Trying to find what to select after opening
 		    int index = -1;
 		    if (desiredSelected != null && !desiredSelected.isEmpty())
@@ -308,7 +320,9 @@ protected Wrapper<E> getSelectedWrapper()
 		}
 		catch (Throwable e)
 		{
-		    throw new RuntimeException(e);
+		    		    log.error("Unable to open " + entry, e);
+				    //		    throw new RuntimeException(e);
+				    		    context.runUiSafely(()->acceptNewLocation(newCurrent, null, 0, announce));
 		}
 	    }, null);
 	context.executeBkg(task);
