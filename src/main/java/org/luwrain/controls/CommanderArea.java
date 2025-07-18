@@ -321,7 +321,6 @@ protected Wrapper<E> getSelectedWrapper()
 		catch (Throwable e)
 		{
 		    		    log.error("Unable to open " + entry, e);
-				    //		    throw new RuntimeException(e);
 				    		    context.runUiSafely(()->acceptNewLocation(newCurrent, null, 0, announce));
 		}
 	    }, null);

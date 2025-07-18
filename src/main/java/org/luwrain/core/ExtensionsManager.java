@@ -95,7 +95,6 @@ public final class ExtensionsManager implements AutoCloseable
 	return res;
     }
 
-
     @Override public void close()
     {
 	for(Entry e: extensions)
@@ -111,7 +110,6 @@ public final class ExtensionsManager implements AutoCloseable
 	}
 	extensions = null;
     }
-
 
     public <E extends ExtensionObject> List<E> getLoadedExtObjects(Class<E> c)
     {

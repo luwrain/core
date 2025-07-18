@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -34,12 +34,22 @@ final class MainLayout extends LayoutBase
     {
 	super(app);
 	this.app = app;
-	this.jobsArea = new ListArea<Entry>(listParams((params)->{
-		    params.model = new ListUtils.ListModel<Entry>(app.jobs.entries);
-		    params.appearance = new Appearance();
-		    params.name = app.getStrings().appName();
+	this.jobsArea = new ListArea<Entry>(listParams(p ->{
+		    		    p.name = app.getStrings().appName();
+		    p.model = new ListUtils.ListModel<Entry>(app.jobs.entries);
+		    p.appearance = new ListUtils.AbstractAppearance<Entry>(){
+	@Override public void announceItem(Entry entry, Set<Flags> flags)
+	{
+	    final Sounds sound;
+	    if (entry.getStatus() == Job.Status.FINISHED)
+		sound = entry.isFinishedSuccessfully()?Sounds.SELECTED:Sounds.ATTENTION; else
+				sound = Sounds.LIST_ITEM;
+	    app.setEventResponse(DefaultEventResponse.listItem(sound, entry.getInstanceName(), null));
+	}
+			};
+
 		}));
-	final Actions jobsActions = actions(
+	final var jobsActions = actions(
 					    action("stop", app.getStrings().actionStop(), new InputEvent(InputEvent.Special.F5), this::actStop)
 					    );
 	setAreaLayout(jobsArea, jobsActions);
@@ -56,20 +66,5 @@ final class MainLayout extends LayoutBase
 	e.stop();
 	app.getLuwrain().playSound(Sounds.OK);
 	return true;
-	
-    }
-
-    private final class Appearance extends ListUtils.AbstractAppearance<Entry>
-    {
-	@Override public void announceItem(Entry entry, Set<Flags> flags)
-	{
-	    NullCheck.notNull(entry, "entry");
-	    NullCheck.notNull(flags, "flags");
-	    final Sounds sound;
-	    if (entry.getStatus() == Job.Status.FINISHED)
-		sound = entry.isFinishedSuccessfully()?Sounds.SELECTED:Sounds.ATTENTION; else
-				sound = Sounds.LIST_ITEM;
-	    app.setEventResponse(DefaultEventResponse.listItem(sound, entry.getInstanceName(), null));
-	}
     }
 }

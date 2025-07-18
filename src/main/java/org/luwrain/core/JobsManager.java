@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -17,14 +17,16 @@
 package org.luwrain.core;
 
 import java.util.*;
+import org.apache.logging.log4j.*;
 
 import org.luwrain.core.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.NullCheck.*;
 
 public final class JobsManager 
 {
-    static private final String LOG_COMPONENT = Core.LOG_COMPONENT;
+    static private final Logger log = LogManager.getLogger();
 
     private final Luwrain luwrain;
     private final ExtensionsManager ext;
@@ -32,19 +34,17 @@ public final class JobsManager
 
     JobsManager(Luwrain luwrain, ExtensionsManager ext)
     {
-	notNull(luwrain, "luwrain");
-	notNull(ext, "ext");
-	this.luwrain = luwrain;
-	this.ext = ext;
+	this.luwrain = requireNonNull(luwrain, "luwrain can't be null");
+	this.ext = requireNonNull(ext, "ext can't be null");
     }
 
     Job run(String name, String[] args, String dir, Job.Listener listener)
     {
 	notEmpty(name, "name");
 	notNullItems(args, "args");
-	notNull(dir, "dir");
-	notNull(listener, "listener");
-	final var j = ext.getLoadedExtObjects(JobLauncher.class).stream().filter(o -> o.getExtObjName().equals(name)).findFirst();
+	requireNonNull(dir, "dir can't be null");
+	requireNonNull(listener, "listener can't be null");
+	final var j = ext.load(JobLauncher.class).stream().filter(o -> o.getExtObjName().equals(name)).findFirst();
 	if (!j.isPresent())
 	    	    throw new IllegalArgumentException("No such job: " + name);
 	final JobLauncher job = j.get();

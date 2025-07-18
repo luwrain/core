@@ -478,10 +478,10 @@ final class LuwrainImpl implements Luwrain
 
     @Override public Job newJob(String name, String[] args, String dir, Set<JobFlags> flags, Job.Listener listener)
     {
-	notNull(name, "name");
-	notNullItems(args, "args");
-	notNull(dir, "dir");
-	notNull(flags, "flags");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(args, "args can't be null");
+	requireNonNull(dir, "dir can't be null");
+	requireNonNull(flags, "flags can't be null");
 	core.mainCoreThreadOnly();
 	return core.jobs.run(name, args, dir, listener != null?listener:new EmptyJobListener());
     }

@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2021 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -24,16 +24,17 @@ import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.app.base.*;
 
-public final class App extends AppBase<Strings>
+import static java.util.Objects.*;
+
+public final class App extends AppBase<Strings> implements MonoApp
 {
     final JobsManager jobs;
     private MainLayout mainLayout = null;
 
     public App(JobsManager jobs)
     {
-    super(Strings.NAME, Strings.class);
-    NullCheck.notNull(jobs, "jobs");
-    this.jobs = jobs;
+    super(Strings.class);
+    this.jobs = requireNonNull(jobs, "jobs can't be null");
     }
 
 @Override protected AreaLayout onAppInit()
@@ -47,5 +48,10 @@ return this.mainLayout.getAreaLayout();
     {
 	closeApp();
 	return true;
+    }
+
+        @Override public MonoApp.Result onMonoAppSecondInstance(Application app)
+    {
+	return MonoApp.Result.BRING_FOREGROUND;
     }
 }

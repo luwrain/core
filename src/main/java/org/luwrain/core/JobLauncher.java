@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -22,7 +22,7 @@ public interface JobLauncher extends ExtensionObject
 {
     public enum Flags {WITH_SHORTCUT, INTERACTIVE_SHORTCUT};
 
-    
+
     public enum Status {RUNNING, FINISHED};
 
         Job launch(Job.Listener listener, String[] args, String dir);

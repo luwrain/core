@@ -30,6 +30,7 @@ final class GlobalKeys
 	cmd(Special.ENTER, Modifiers.CONTROL, "ok"),
 	cmd(Special.ENTER, Modifiers.SHIFT, "properties"),
 	cmd(Special.ESCAPE, Modifiers.CONTROL, "close"),
+	cmd(Special.F10, Modifiers.SHIFT, "context-menu"),
 	cmd(Special.F2, "save"),
 	cmd(Special.F3, "open"),
 	cmd('u', Modifiers.CONTROL, Modifiers.ALT, "copy-uri-area"),
@@ -38,14 +39,18 @@ final class GlobalKeys
         cmd('o', Modifiers.CONTROL, "copy-url-hot-point"),
 	cmd('q', Modifiers.ALT, "quit"),
 
-	//text editing
-		cmd(' ', Modifiers.CONTROL, "region-point"),
+	//Text editing
+	cmd(' ', Modifiers.CONTROL, "region-point"),
 	cmd('c', Modifiers.CONTROL, "copy"),
 	cmd('a', Modifiers.CONTROL, "copy-all"),
-			cmd('x', Modifiers.CONTROL, "cut"),
-		cmd('v', Modifiers.CONTROL, "paste"),
+	cmd('x', Modifiers.CONTROL, "cut"),
+	cmd('v', Modifiers.CONTROL, "paste"),
 	cmd(Special.ALTERNATIVE_DELETE, "clear"),
-	cmd(Special.DELETE, Modifiers.SHIFT, "clear-region")
+	cmd(Special.DELETE, Modifiers.SHIFT, "clear-region"),
+
+		//Basic apps
+	cmd('j', Modifiers.SHIFT, Modifiers.ALT, "jobs"),
+	cmd('p', Modifiers.SHIFT, Modifiers.ALT, "control-panel"),
     };
 
     private final Args args;

@@ -19,6 +19,7 @@ package org.luwrain.core;
 import java.util.*;
 import org.apache.logging.log4j.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.NullCheck.*;
 
 final class ObjRegistry implements ExtObjects
@@ -192,9 +193,8 @@ final class ObjRegistry implements ExtObjects
 
     static private <E> void removeEntriesByExt(Map<String, Entry<E>> map, Extension ext)
     {
-	NullCheck.notNull(map, "map");
-	NullCheck.notNull(ext, "ext");
-	//	final Map<String, org.luwrain.core.ObjRegistry.Entry> entryMap = (Map<String, Entry>)map;
+	requireNonNull(map, "map can't be null");
+	requireNonNull(ext, "ext can't be null");
 	final List<String> deleting = new ArrayList<>();
 	for(Map.Entry<String, org.luwrain.core.ObjRegistry.Entry<E>> e: map.entrySet())
 	if (e.getValue().ext == ext)
@@ -202,59 +202,4 @@ final class ObjRegistry implements ExtObjects
     for(String s: deleting)
 	map.remove(s);
     }
-
-    /*
-    static private final class JobCommand implements Command
-    {
-	private final String name;
-	private final JobLauncher job;
-	private final boolean showResultMessage;
-
-	JobCommand(String name, Job job, boolean showResultMessage)
-	{
-	    NullCheck.notEmpty(name, "name");
-	    NullCheck.notNull(job, "job");
-	    this.name = name;
-	    this.job = job;
-	    this.showResultMessage = showResultMessage;
-	}
-
-	@Override public String getName()
-	{
-	    return name;
-	}
-
-	@Override public void onCommand(Luwrain luwrain)
-	{
-	    notNull(luwrain, "luwrain");
-	}
-    }
-
-    static private final class JobShortcut implements Shortcut
-    {
-	private final String name;
-	private final Job job;
-	private final boolean showResultMessage;
-
-	JobShortcut(String name, Job job, boolean showResultMessage)
-	{
-	    notEmpty(name, "name");
-	    notNull(job, "job");
-	    this.name = name;
-	    this.job = job;
-	    this.showResultMessage = showResultMessage;
-	}
-
-	@Override public String getExtObjName()
-	{
-	    return name;
-	}
-
-	@Override public Application[] prepareApp(String[] args)
-	{
-	    notNullItems(args, "args");
-	    return null;
-	}
-    }
-    */
 }

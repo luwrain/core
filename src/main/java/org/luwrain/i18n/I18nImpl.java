@@ -283,7 +283,7 @@ public final class I18nImpl implements I18n, I18nExtension
 		selectedLang = anyLang;
 		selectedLangName = anyLangName;
 	    }
-	Log.debug("core", "the chosen language is \'" + selectedLangName + "\'");
+	log.debug("the selected language is \'" + selectedLangName + "\'");
 	return true;
     }
 
