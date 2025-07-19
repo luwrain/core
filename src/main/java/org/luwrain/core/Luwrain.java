@@ -1,4 +1,3 @@
-
 /*
    Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
@@ -25,32 +24,24 @@ import org.luwrain.core.events.*;
 import org.luwrain.speech.Channel;
 
 /**
- * The main bridge for applications and extensions purposed for communication with
- * LUWRAIN core. This class is a central object to be used by
- * applications and extensions to call system routines. Applications and
- * extensions never have the access with the level deeper than this
- * class. The packages like {@code org.luwrain.controls} or 
- * {@code org.luwrain.popups} always wrap the instance of {@code Luwrain} class
- * (meaning, are unable to give more access to system core than provided
- * with given instance of {@code Luwrain} class).
+ * The main bridge for applications and extensions to communicate with the LUWRAIN core.
+ * This class serves as the central hub for applications and extensions to invoke system routines.
+ * It ensures that applications and extensions never gain access deeper than what this class provides.
+ * Packages like {@link org.luwrain.controls} and {@link org.luwrain.popups} always encapsulate an instance of the {@code Luwrain} class,
+ * guaranteeing that they cannot offer more access to the system core than allowed by the provided {@code Luwrain} instance.
  * <p>
- * The core creates new instance of this class for each newly launched
- * application or loaded extension. Therefore, the environment is always
- * aware which application oor extension has issued the particular
- * request. Applications get the object associated with them through
- * {@code onLaunch()} method. Extensions get the corresponding instance
- * through the argument for the methods they override (it is always the
- * same instance provided this way just for convenience). Everybody is
- * encouraged to keep provided instance in secret. 
+ * The core generates a new instance of this class for each newly launched application or loaded extension.
+ * This mechanism enables the environment to identify which application or extension has initiated a specific request.
+ * Applications receive their associated object through the {@code onLaunch()} method,
+ * while extensions obtain the corresponding instance through the arguments of the methods they override.
+ * It is crucial to keep the provided instance confidential.
  * <p>
- * It could be slightly confusing that the extension and the applications
- * launched by this extension get different instances of {@code Luwrain}
- * class, but it's necessary to distinguish multiple instances of the
- * particular application (while an extension can be loaded only once).
+ * It might seem slightly confusing that an extension and the applications launched by it receive different instances of the {@code Luwrain} class.
+ * However, this distinction is necessary to differentiate multiple instances of the same application,
+ * as an extension can be loaded only once.
  * <p>
- * Various instance of {@code Luwrain} class may provide different level
- * of access.  It is necessary to make extensions using more accurate and
- * transparent.
+ * Different instances of the {@code Luwrain} class may offer varying levels of access.
+ * This design is essential to ensure that extensions are more precise and transparent in their operations.
  */
 public interface Luwrain extends PropertiesBase, HookContainer
 {
