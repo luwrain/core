@@ -36,6 +36,7 @@ public interface Job
 
     public interface Listener
     {
+	//The job must provide the new instance 
 	void onStatusChange(Job job);
 	void onInfoChange(Job job, String infoType, List<String> value);
     }

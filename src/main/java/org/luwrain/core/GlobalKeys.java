@@ -30,9 +30,11 @@ final class GlobalKeys
 	cmd(Special.ENTER, Modifiers.CONTROL, "ok"),
 	cmd(Special.ENTER, Modifiers.SHIFT, "properties"),
 	cmd(Special.ESCAPE, Modifiers.CONTROL, "close"),
-	cmd(Special.F10, Modifiers.SHIFT, "context-menu"),
+
 	cmd(Special.F2, "save"),
 	cmd(Special.F3, "open"),
+		cmd(Special.F10, Modifiers.SHIFT, "context-menu"),
+		cmd('r', Modifiers.ALT, "run"),
 	cmd('u', Modifiers.CONTROL, Modifiers.ALT, "copy-uri-area"),
         cmd('o', Modifiers.CONTROL, Modifiers.ALT, "copy-uri-hot-point"),
 	cmd('u', Modifiers.CONTROL, "copy-url-area"),

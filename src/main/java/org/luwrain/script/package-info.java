@@ -45,15 +45,5 @@
  *     <li><code>controls</code>: Contains classes for handling user interface controls such as wizard areas and edit areas,
  *     along with hooks for edit correctors.</li>
  * </ul>
- *
- * <h2>Machine Learning Support</h2>
- * <ul>
- *     <li><code>ml</code>: Includes classes for integrating machine learning capabilities, such as handling JSoup nodes
- *     and documents.</li>
- * </ul>
- *
- * <p>Overall, the <code>org.luwrain.script</code> package is a powerful tool for developers looking to incorporate
- * dynamic scripting features into their applications, leveraging the capabilities of GraalVM and primarily supporting
- * JavaScript.</p>
  */
 package org.luwrain.script;
