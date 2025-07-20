@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-20255 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -113,8 +113,10 @@ requireNonNull(areaName, "areaName can't be null");
     private boolean onEscape()
     {
 	final var conf = luwrain.loadConf(CommonSettings.class);
-	final String cmdName = conf.getDesktopEscapeCommand();
-	if (cmdName != null || cmdName.trim().isEmpty())
+	if (conf == null)
+	    return false;
+	final String cmdName = requireNonNullElse(conf.getDesktopEscapeCommand(), "");
+	if (cmdName.trim().isEmpty())
 	    return false;
 	return luwrain.runCommand(cmdName.trim());
     }

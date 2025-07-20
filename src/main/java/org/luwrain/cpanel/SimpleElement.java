@@ -26,7 +26,7 @@ public class SimpleElement implements Element
 
     public SimpleElement(Element parent, String value)
     {
-	this.parent = requireNonNull(parent, "parent can't be null");
+	this.parent = parent;
 	this.value = requireNonNull(value, "value can't be null");
 	if (value.isEmpty())
 	    throw new IllegalArgumentException("value can't be empty");

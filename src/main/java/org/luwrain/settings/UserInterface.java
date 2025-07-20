@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2021 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -27,21 +27,18 @@ import static java.util.Objects.*;
 final class UserInterface extends FormArea implements SectionArea
 {
     private final ControlPanel controlPanel;
-    private final Luwrain luwrain;
 
     UserInterface(ControlPanel controlPanel)
     {
 	super(new DefaultControlContext(controlPanel.getCoreInterface()),
 	      controlPanel.getCoreInterface().i18n().getStaticStr("CpUiGeneral"));
-	//	NullCheck.notNull(controlPanel, "controlPanel");
 	this.controlPanel = requireNonNull(controlPanel, "controlPanel can't be null");
-	this.luwrain = controlPanel.getCoreInterface();
-	//	this.sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
 	fillForm();
     }
 
     private void fillForm()
     {
+	final var luwrain = controlPanel.getCoreInterface();
 	final var conf = requireNonNullElse(luwrain.loadConf(CommonSettings.class), new CommonSettings());
 	addEdit("desktop-title", luwrain.i18n().getStaticStr("CpUiDesktopTitle"), requireNonNullElse(conf.getDesktopTitle(), ""));
 	addEdit("window-title", luwrain.i18n().getStaticStr("CpUiWindowTitle"), requireNonNullElse(conf.getWindowTitle(), ""));
@@ -50,6 +47,7 @@ final class UserInterface extends FormArea implements SectionArea
 
     @Override public boolean saveSectionData()
     {
+		final var luwrain = controlPanel.getCoreInterface();
 	luwrain.updateConf(CommonSettings.class, conf -> {
 	conf.setDesktopTitle(getEnteredText("desktop-title"));
 	conf.setWindowTitle(getEnteredText("window-title"));

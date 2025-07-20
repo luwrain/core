@@ -63,7 +63,15 @@ this.mvMap = store.openMap("main");
 {
     requireNonNull(configClass, "configClass can't be null");
     requireNonNull(func, "func can't be null");
-    final C conf = load(configClass);
+C conf = load(configClass);
+try {
+if (conf == null)
+    conf = configClass.newInstance();
+}
+catch(InstantiationException | IllegalAccessException ex)
+{
+    throw new RuntimeException(ex);
+}
     func.update(conf);
     save(conf);
 }

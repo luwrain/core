@@ -21,28 +21,30 @@ import java.util.*;
 import org.luwrain.core.*;
 import org.luwrain.cpanel.*;
 
+import static java.util.Objects.*;
+
 public final class StandardFactory implements Factory
 {
-    static private final String ELEMENT_PREFIX = "org.luwrain.settings.StandardFactory:";
-    static private final Element personalInfo = new SimpleElement(StandardElements.ROOT, ELEMENT_PREFIX + "PersonalInfo");
-    static private final Element uiGeneral = new SimpleElement(StandardElements.UI, ELEMENT_PREFIX + "UIGeneral");
-    static private final Element hotKeys = new SimpleElement(StandardElements.UI, ELEMENT_PREFIX + "HotKeys");
-    static private final Element fileTypes = new SimpleElement(StandardElements.UI, ELEMENT_PREFIX + "FileTypes");
-    static private final Element mainMenu = new SimpleElement(StandardElements.UI, ELEMENT_PREFIX + "MainMenu");
-    static private final Element hardwareCpuMem = new SimpleElement(StandardElements.HARDWARE, ELEMENT_PREFIX + "HardwareCpuMem");
-    static private final Element hardwareSysDevices = new SimpleElement(StandardElements.HARDWARE, ELEMENT_PREFIX + "HardwareSysDevices");
-    static private final Element version = new SimpleElement(StandardElements.ROOT, ELEMENT_PREFIX + "Version");
-    static private final Element dateTime = new SimpleElement(StandardElements.ROOT, ELEMENT_PREFIX + "DateTime");
-    static private final Element speechGeneral = new SimpleElement(StandardElements.SPEECH, ELEMENT_PREFIX + "SpeechCurrent");
-    static private final Element soundsList = new SimpleElement(StandardElements.UI, ELEMENT_PREFIX + "SoundsList");
-    static private final Element soundSchemes = new SimpleElement(StandardElements.UI, ELEMENT_PREFIX + "SoundSchemes");
+    static private final String ELEMENT_PREFIX = StandardFactory.class.getName() + ".";
+    static private final Element
+	personalInfo = new SimpleElement(StandardElements.ROOT, ELEMENT_PREFIX + "PersonalInfo"),
+	uiGeneral = new SimpleElement(StandardElements.UI, ELEMENT_PREFIX + "UIGeneral"),
+	hotKeys = new SimpleElement(StandardElements.UI, ELEMENT_PREFIX + "HotKeys"),
+	fileTypes = new SimpleElement(StandardElements.UI, ELEMENT_PREFIX + "FileTypes"),
+	mainMenu = new SimpleElement(StandardElements.UI, ELEMENT_PREFIX + "MainMenu"),
+	hardwareCpuMem = new SimpleElement(StandardElements.HARDWARE, ELEMENT_PREFIX + "HardwareCpuMem"),
+	hardwareSysDevices = new SimpleElement(StandardElements.HARDWARE, ELEMENT_PREFIX + "HardwareSysDevices"),
+	version = new SimpleElement(StandardElements.ROOT, ELEMENT_PREFIX + "Version"),
+	dateTime = new SimpleElement(StandardElements.ROOT, ELEMENT_PREFIX + "DateTime"),
+	speechGeneral = new SimpleElement(StandardElements.SPEECH, ELEMENT_PREFIX + "SpeechCurrent"),
+	soundsList = new SimpleElement(StandardElements.UI, ELEMENT_PREFIX + "SoundsList"),
+	soundSchemes = new SimpleElement(StandardElements.UI, ELEMENT_PREFIX + "SoundSchemes");
 
     private final Luwrain luwrain;
 
     public StandardFactory(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	this.luwrain = luwrain;
+	this.luwrain = requireNonNull(luwrain, "luwrain can't be null");
     }
 
     @Override public Element[] getElements()
@@ -83,7 +85,7 @@ public final class StandardFactory implements Factory
 
     @Override public org.luwrain.cpanel.Section createSection(Element el)
     {
-	NullCheck.notNull(el, "el");
+	requireNonNull(el, "el can't be null");
 	if (el.equals(hardwareSysDevices))
 	    return new SimpleSection(hardwareSysDevices, "Системные устройства");
 	if (el.equals(StandardElements.ROOT))

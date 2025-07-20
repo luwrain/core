@@ -83,7 +83,13 @@ final class GlobalKeys
 	    return ;
 	}
 	var conf = configs.load(Config.class);
-	if (conf != null && conf.keys != null)
+	if (conf == null || conf.keys == null)
+	{
+	    conf = new Config();
+	    conf.keys = List.of(DEFAULT_KEYMAP);
+	    configs.save(conf);
+	    keys.addAll(conf.keys);
+	}
 	    keys.addAll(conf.keys);
     }
 
