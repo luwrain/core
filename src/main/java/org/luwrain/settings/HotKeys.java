@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2023 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -22,10 +22,12 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.cpanel.*;
-import org.luwrain.registry.*;
+//import org.luwrain.registry.*;
 
-import static org.luwrain.core.NullCheck.*;
-import static org.luwrain.core.Registry.*;
+//import static org.luwrain.core.NullCheck.*;
+//import static org.luwrain.core.Registry.*;
+
+import static java.util.Objects.*;
 
 final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
 {
@@ -34,8 +36,7 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
     HotKeys(ControlPanel controlPanel, ListArea.Params<Item> params)
     {
 	super(params);
-	notNull(controlPanel, "controlPanel");
-	this.controlPanel = controlPanel;
+	this.controlPanel = requireNonNull(controlPanel, "controlPanel can't be empty");
 	setListClickHandler((area, index, item)->editItem(item));
     }
 
@@ -79,9 +80,9 @@ return toSort;
 
     static HotKeys create(ControlPanel controlPanel)
     {
-	notNull(controlPanel, "controlPanel");
-	final Luwrain luwrain = controlPanel.getCoreInterface();
-	final ListArea.Params<Item> params = new ListArea.Params<>();
+	requireNonNull(controlPanel, "controlPanel can't be null");
+	final var luwrain = controlPanel.getCoreInterface();
+	final var params = new ListArea.Params<Item>();
 	params.context = new DefaultControlContext(luwrain);
 	params.appearance = new ListUtils.DefaultAppearance<>(params.context, Suggestions.LIST_ITEM);
 	params.name = "Общие горячие клавиши";//FIXME:
@@ -91,19 +92,15 @@ return toSort;
 
         static final class Item implements Comparable
     {
-		final Settings.HotKey sett;
-	final String path, command, title;
-	final HotKeyEntry entry;
+	final String command, title;
 	final InputEvent[] events;
 	Item(Luwrain luwrain, String command)
 	{
-	    this.path = join(Settings.GLOBAL_KEYS_PATH, command);
-	    this.sett = null;//FIXME:newreg Settings.createHotKey(luwrain.getRegistry(), path);
-	    this.entry = null;//FIXME:newreg new HotKeyEntry(luwrain.getRegistry(), path);
 	    	    this.command = command;
-	    this.events = entry.getKeys();
+		    this.events = new InputEvent[0];
 	    this.title = luwrain.i18n().getCommandTitle(command);
 	}
+
 	@Override public String toString()
 	{
 	    if (events.length == 0)
@@ -114,15 +111,17 @@ return toSort;
 		b.append(hotKeyToString(e));
 	    return new String(b);
 	}
+
 	@Override public int compareTo(Object o)
 	{
-	    if (o == null || !(o instanceof Item))
-		return 0;
-	    return command.compareTo(((Item)o).command);
+	    if (o != null && o instanceof Item item)
+	    return command.compareTo(item.command);
+	    return 0;
 	}
+
     static private String hotKeyToString(InputEvent event)
     {
-	final StringBuilder b = new StringBuilder();
+	final var b = new StringBuilder();
 	if (event.withControl())
 	    b.append("Ctrl+");
 	if (event.withAlt())
