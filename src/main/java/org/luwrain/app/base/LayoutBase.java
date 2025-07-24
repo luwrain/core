@@ -47,6 +47,11 @@ public interface ActionHandler
     boolean onAction();
 }
 
+    public interface PropertiesHandler
+    {
+	LayoutBase onProperties(Area area);
+    }
+
     protected interface ActionInfoCondition
     {
 	boolean isActionInfoEnabled();
@@ -119,7 +124,7 @@ public interface ActionHandler
     protected final AppBase app;
     protected LayoutControlContext controlContext = null;
     private final Map<Area, Area> areaWrappers = new HashMap<>();
-    private final Map<Area, Supplier<LayoutBase>> propHandlers = new HashMap<>();
+    private final Map<Area, PropertiesHandler> propHandlers = new HashMap<>();
     private AreaLayout areaLayout = null;
     private ActionHandler closeHandler = null;
     private ActionHandler okHandler = null;
@@ -282,7 +287,7 @@ public interface ActionHandler
 			    event.getCode() == SystemEvent.Code.PROPERTIES && propHandlers.containsKey(area) &&
 			    propHandlers.get(area) != null)
 						{
-						    final var propLayout = propHandlers.get(area).get();
+						    final var propLayout = propHandlers.get(area).onProperties(area);
 						    if (propLayout == null)
 							return false;
 						    app.setAreaLayout(propLayout);
@@ -404,11 +409,11 @@ public interface ActionHandler
 		return app.getLuwrain().getAreaVisibleHeight(a != null?a:area);
     }
 
-    protected void setPropertiesHandler(Area area, Supplier<LayoutBase> propLayoutSupplier)
+    protected void setPropertiesHandler(Area area, PropertiesHandler handler)
     {
 	requireNonNull(area, "area can't be null");
-	requireNonNull(propLayoutSupplier, "propLayoutSupplier can't be null");
-	propHandlers.put(area, propLayoutSupplier);
+	requireNonNull(handler, "handler can't be null");
+	propHandlers.put(area, handler);
     }
 
     protected ActionHandler getReturnAction()
