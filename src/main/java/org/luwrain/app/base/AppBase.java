@@ -223,7 +223,7 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 
     private boolean runTask(FutureTask task)
     {
-	NullCheck.notNull(task, "task");
+	requireNonNull(task, "task can't be null");
 	if (isBusy())
 	    return false;
 	this.task = task;
@@ -235,8 +235,8 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 
     public boolean runTask(TaskId taskId, TaskRunnable runnable)
     {
-	NullCheck.notNull(taskId, "taskId");
-	NullCheck.notNull(runnable, "runnable");
+	requireNonNull(taskId, "taskId can't be null");
+	requireNonNull(runnable, "runnable can't be null");
 	return runTask(new FutureTask<>(()->{
 		    try {
 			try {
@@ -255,8 +255,8 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 
     public synchronized void finishedTask(TaskId taskId, Runnable runnable)
     {
-	NullCheck.notNull(taskId, "taskId");
-	NullCheck.notNull(runnable, "runnable");
+	requireNonNull(taskId, "taskId can't be null");
+	requireNonNull(runnable, "runnable can't be null");
 	if (!isBusy() || !taskId.finish())
 	    return;
 	luwrain.runUiSafely(()->{
@@ -304,7 +304,7 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 
     public void setAreaLayout(LayoutBase layout)
     {
-	NullCheck.notNull(layout, "layout");
+	requireNonNull(layout, "layout can't be null");
 	getLayout().setBasicLayout(layout.getAreaLayout());
     }
 

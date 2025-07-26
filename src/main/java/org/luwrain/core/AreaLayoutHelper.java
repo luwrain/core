@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -17,6 +17,8 @@
 //LWR_API 1.0
 
 package org.luwrain.core;
+
+import static java.util.Objects.*;
 
 public class AreaLayoutHelper
 {
@@ -59,7 +61,7 @@ public class AreaLayoutHelper
 
     public void setBasicArea(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	this.basicArea = area;
 	this.basicLayout = null;
 	notification.onLayoutUpdate();
@@ -67,7 +69,7 @@ public class AreaLayoutHelper
 
     public void setBasicLayout(AreaLayout layout)
     {
-	NullCheck.notNull(layout, "layout");
+	requireNonNull(layout, "layout can't be null");
 	this.basicLayout = layout;
 	this.basicArea = null;
 	notification.onLayoutUpdate();

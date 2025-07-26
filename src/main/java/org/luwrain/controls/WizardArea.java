@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -23,6 +23,8 @@ import java.util.*;
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.util.*;
+
+import static java.util.Objects.*;
 
 public class WizardArea extends FormArea
 {
@@ -130,7 +132,7 @@ public interface WizardItem
 	public Frame addClickable(String text, WizardClickHandler handler)
 	{
 	    NullCheck.notEmpty(text, "text");
-	    NullCheck.notNull(handler, "handler");
+	    requireNonNull(handler, "handler can't be null");
 	    items.add(new WizardClickable(text, handler));
 	    return this;
 	}

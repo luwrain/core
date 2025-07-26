@@ -52,7 +52,7 @@ public interface ActionHandler
 	LayoutBase onProperties(Area area);
     }
 
-    protected interface ActionInfoCondition
+    public interface ActionInfoCondition
     {
 	boolean isActionInfoEnabled();
     }
@@ -172,23 +172,23 @@ public interface ActionHandler
 	return new ActionInfo(name, title, handler, cond);
     }
 
-    protected void setCloseHandler(ActionHandler closeHandler)
+    public void setCloseHandler(ActionHandler closeHandler)
     {
 	this.closeHandler = requireNonNull(closeHandler, "closeHandler can't be null");
     }
 
-        protected void setOkHandler(ActionHandler okHandler)
+        public void setOkHandler(ActionHandler okHandler)
     {
 	this.okHandler = requireNonNull(okHandler, "okHandler can't be null");
     }
 
-        protected Area getWrappingArea(Area area)
+        public Area getWrappingArea(Area area)
     {
 	requireNonNull(area, "area can't be null");
 	return getWrappingArea(area, null);
     }
 
-    protected Area getWrappingArea(Area area, Actions actions)
+    public Area getWrappingArea(Area area, Actions actions)
     {
 	requireNonNull(area, "area can't be null");
 	if (app == null)
@@ -294,8 +294,6 @@ public interface ActionHandler
 						    app.getLuwrain().announceActiveArea();
 			    return true;
 						}
-
-			
 			return area.onSystemEvent(event);
 		    }
 		    catch(Throwable e)
@@ -333,29 +331,29 @@ public interface ActionHandler
 	return res;
     }
 
-    protected void clearAreaWrappers()
+    public void clearAreaWrappers()
     {
 	areaWrappers.clear();
     }
 
-    protected void setAreaLayout(Area area, Actions actions)
+    public void setAreaLayout(Area area, Actions actions)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	this.areaLayout = new AreaLayout(getWrappingArea(area, actions));
     }
 
-    protected void setAreaLayout(AreaLayout.Type type, Area area1, Actions actions1, Area area2, Actions actions2)
+    public void setAreaLayout(AreaLayout.Type type, Area area1, Actions actions1, Area area2, Actions actions2)
     {
-	NullCheck.notNull(area1, "area1");
-	NullCheck.notNull(area2, "area2");
+	requireNonNull(area1, "area1 can't be null");
+	requireNonNull(area2, "area2 can't be null");
 	this.areaLayout = new AreaLayout(type, getWrappingArea(area1, actions1), getWrappingArea(area2, actions2));
     }
 
-    protected void setAreaLayout(AreaLayout.Type type, Area area1, Actions actions1, Area area2, Actions actions2, Area area3, Actions actions3)
+    public void setAreaLayout(AreaLayout.Type type, Area area1, Actions actions1, Area area2, Actions actions2, Area area3, Actions actions3)
     {
-	NullCheck.notNull(area1, "area1");
-	NullCheck.notNull(area2, "area2");
-		NullCheck.notNull(area3, "area3");
+	requireNonNull(area1, "area1 can't be null");
+	requireNonNull(area2, "area2 can't be null");
+		requireNonNull(area3, "area3 can't be null");
 		this.areaLayout = new AreaLayout(type, getWrappingArea(area1, actions1), getWrappingArea(area2, actions2), getWrappingArea(area3, actions3));
     }
 
@@ -366,7 +364,7 @@ public interface ActionHandler
 	return this.areaLayout;
     }
 
-    protected ControlContext getControlContext()
+    public ControlContext getControlContext()
     {
 	if (app == null)
 	    throw new IllegalStateException("No app instance, provide it with the corresponding constructor");
@@ -375,7 +373,7 @@ public interface ActionHandler
 	return this.controlContext;
     }
 
-    protected Luwrain getLuwrain()
+    public Luwrain getLuwrain()
     {
 		if (app == null)
 	    throw new IllegalStateException("No app instance, provide it with the corresponding constructor");
@@ -384,7 +382,7 @@ public interface ActionHandler
 
     public void setActiveArea(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 		if (app == null)
 	    throw new IllegalStateException("No app instance, provide it with the corresponding constructor");
 		final Area a = areaWrappers.get(area);
@@ -409,29 +407,28 @@ public interface ActionHandler
 		return app.getLuwrain().getAreaVisibleHeight(a != null?a:area);
     }
 
-    protected void setPropertiesHandler(Area area, PropertiesHandler handler)
+    public void setPropertiesHandler(Area area, PropertiesHandler handler)
     {
 	requireNonNull(area, "area can't be null");
 	requireNonNull(handler, "handler can't be null");
 	propHandlers.put(area, handler);
     }
 
-    protected ActionHandler getReturnAction()
+    public ActionHandler getReturnAction()
     {
 	if (app == null)
 	    throw new IllegalStateException("No app instance, provide it using the corresponding constructor");
 	return () -> {
 	    app.setAreaLayout(this);
 	    app.getLuwrain().announceActiveArea();
-	    log.debug("Running close");
 	    return true;
 	};
     }
 
-    protected interface ListParams<E> { void setListParams(ListArea.Params<E> params); }
-    protected <E> ListArea.Params<E> listParams(ListParams<E> l)
+    public interface ListParams<E> { void setListParams(ListArea.Params<E> params); }
+    public <E> ListArea.Params<E> listParams(ListParams<E> l)
     {
-	NullCheck.notNull(l, "l");
+	requireNonNull(l, "l can't be null");
 	final ListArea.Params<E> params = new ListArea.Params<>();
 	params.context = getControlContext();
 	params.appearance = new ListUtils.DefaultAppearance<E>(getControlContext());
@@ -439,7 +436,7 @@ public interface ActionHandler
 	return params;
     }
 
-        protected interface EditParams { void setEditParams(EditArea.Params params); }
+        public interface EditParams { void setEditParams(EditArea.Params params); }
     protected EditArea.Params editParams(EditParams l)
     {
 	NullCheck.notNull(l, "l");
@@ -450,7 +447,7 @@ public interface ActionHandler
 	return params;
     }
 
-    protected interface ConsoleParams<E> { void setConsoleParams(ConsoleArea.Params<E> params); }
+    public interface ConsoleParams<E> { void setConsoleParams(ConsoleArea.Params<E> params); }
     protected <E> ConsoleArea.Params<E> consoleParams(ConsoleParams<E> l)
     {
 	NullCheck.notNull(l, "l");
@@ -460,8 +457,8 @@ public interface ActionHandler
 	return params;
     }
 
-        protected interface TreeParams<E> { void setTreeParams(TreeArea.Params params); }
-    protected <E> TreeArea.Params treeParams(TreeParams<E> l)
+        public interface TreeParams<E> { void setTreeParams(TreeArea.Params params); }
+    public <E> TreeArea.Params treeParams(TreeParams<E> l)
     {
 	NullCheck.notNull(l, "l");
 	final TreeArea.Params params = new TreeArea.Params();
@@ -470,12 +467,12 @@ public interface ActionHandler
 	return params;
     }
 
-    protected org.luwrain.script.Hooks getHooks()
+    public org.luwrain.script.Hooks getHooks()
     {
 	return new org.luwrain.script.Hooks();
     }
 
-    protected EditArea.InputEventListener createEditAreaInputEventHook()
+    public EditArea.InputEventListener createEditAreaInputEventHook()
     {
 	return (edit, event)->edit.update((lines, hotPoint)->chainOfResponsibilityNoExc(getLuwrain(), EDIT_INPUT, new Object[]{
 		    new EditAreaObj(edit, lines),
