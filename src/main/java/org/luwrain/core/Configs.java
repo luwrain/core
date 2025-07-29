@@ -16,6 +16,8 @@
 
 package  org.luwrain.core;
 
+//https://javadoc.io/static/com.h2database/h2-mvstore/1.4.193/org/h2/mvstore/MVMap.html
+
 import java.util.*;
 import java.io.*;
 import org.apache.logging.log4j.*;

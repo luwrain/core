@@ -217,9 +217,21 @@ final class LuwrainImpl implements Luwrain
 	case PATH_SYS_DATA_DIR:
 	    return core.conf.getDataDir().getAbsolutePath();
 	}
+	if (pathId.startsWith("var:") || pathId.startsWith("VAR:") && pathId.length() >= 5)
+	{
+	    final var f = new File(core.conf.userVarDir, pathId.substring(4));
+	    try {
+		Files.createDirectories(f.toPath());
+	    }
+	    catch(IOException e)
+	    {
+		throw new RuntimeException(e);
+	    }
+	    return f.getAbsolutePath();
+	}
 	return null;
     }
-    
+
     @Override public I18n i18n()
     {
 	return core.i18n;
