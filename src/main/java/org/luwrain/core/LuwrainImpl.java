@@ -299,18 +299,18 @@ final class LuwrainImpl implements Luwrain
 	    });
     }
 
-    @Override public Object newExtObject(String  name)
-						{
-						notEmpty(name, "name");
-						final var factories = core.extensions.getLoadedExtObjects(ObjFactory.class);
-						for(ObjFactory f: factories)
-						{
-						final Object res = f.newObject(name);
-						if (res != null)
-						return res;
-						}
-						return null;
-						}
+    @Override public <T> T createInstance(Class<T> c)
+    {
+	requireNonNull(c, "c can't be null");
+	final var factories = core.extensions.getLoadedExtObjects(ObjFactory.class);
+	for(ObjFactory f: factories)
+	{
+	    final Object res = f.newObject(c.getName());
+	    if (res != null)
+		return (T)res;
+	}
+	return null;
+    }
 
         @Override public FileFetcher[] findFetchers(String url)
     {

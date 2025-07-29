@@ -185,7 +185,7 @@ else refresh();
     static private Disk[] getDisks(Luwrain luwrain)
     {
 	NullCheck.notNull(luwrain, "luwrain");
-	final Factory factory = (Factory)luwrain.newExtObject(luwrain.getProperty(PROP_FACTORY_CLASS));
+	final Factory factory = (Factory)luwrain.createInstance(Factory.class);
 	if (factory  == null)
 	{
 	    Log.error(LOG_COMPONENT, "no disks popup factory");
