@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -27,6 +27,8 @@ import org.luwrain.controls.*;
 import org.luwrain.script.*;
 
 import static org.luwrain.core.NullCheck.*;
+
+import static java.util.Objects.*;
 
 public class EditArea extends NavigationArea
 {
@@ -85,9 +87,9 @@ public interface Appearance extends MultilineEdit.Appearance
     public EditArea(Params params)
     {
 	super(params.context);
-	NullCheck.notNull(params, "params");
-	NullCheck.notNull(params.appearance, "params.appearance");
-	NullCheck.notNull(params.name, "params.name");
+	requireNonNull(params, "params can't be null");
+	requireNonNull(params.appearance, "params.appearance can't be null");
+	requireNonNull(params.name, "params.name can't be null");
 	this.areaName = params.name;
 	this.content = params.content != null?params.content:new MutableMarkedLinesImpl();
 	this.appearance = params.appearance;
@@ -112,16 +114,16 @@ this.changeListeners.addAll(listeners);
 	NullCheck.notNull(areaParams, "areaParams");
 	if (areaParams.editFactory != null)
 	{
-	    final MultilineEdit.Params params = new MultilineEdit.Params();
+	    final var params = new MultilineEdit.Params();
 	    params.context = context;
 	    params.model = translator;
 	    params.appearance = areaParams.appearance;
 	    params.regionPoint = regionPoint;
-	    final MultilineEdit edit = areaParams.editFactory.newMultilineEdit(params);
+	    final var edit = areaParams.editFactory.newMultilineEdit(params);
 	    if (edit != null)
 		return edit;
 	}
-	final MultilineEdit.Params params = new MultilineEdit.Params();
+	final var params = new MultilineEdit.Params();
 	params.context = context;
 	params.model = translator;
 	params.appearance = areaParams.appearance;
@@ -152,7 +154,7 @@ this.changeListeners.addAll(listeners);
 
     public void setLine(int index, String line)
     {
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	if (index < 0)
 	    throw new IllegalArgumentException("index (" + index + ") may not be negative");
 	content.setLine(index, line);
@@ -169,6 +171,11 @@ this.changeListeners.addAll(listeners);
 	NullCheck.notNull(areaName, "areaName");
 	this.areaName = areaName;
 	context.onAreaNewName(this);
+    }
+
+    public List<String> getTextAsList()
+    {
+	return Arrays.asList(content.getLines());
     }
 
     public String[] getText()
@@ -229,7 +236,7 @@ return true;
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (inputEventListeners != null)
 	    for(InputEventListener l: inputEventListeners)
 		if (l.onEditAreaInputEvent(this, event))
@@ -263,7 +270,7 @@ return true;
 
     @Override public boolean onAreaQuery(AreaQuery query)
     {
-	NullCheck.notNull(query, "query");
+	requireNonNull(query, "query can't be null");
 	if (edit.onAreaQuery(query))
 	    return true;
 	return super.onAreaQuery(query);

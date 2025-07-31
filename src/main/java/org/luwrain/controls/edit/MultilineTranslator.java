@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -22,8 +22,9 @@ import org.luwrain.core.*;
 import org.luwrain.controls.edit.MultilineEdit.ModificationResult;
 import org.luwrain.util.*;
 import org.luwrain.controls.edit.MultilineCorrector.*;
-    
-import static org.luwrain.core.NullCheck.*;
+
+//import static org.luwrain.core.NullCheck.*;
+import static java.util.Objects.*;
 
 // Expects that hot point is not related to the content 
 // Hot point position may be adjusted to the content changes only on endEditTrans 
@@ -37,8 +38,8 @@ public class MultilineTranslator
 
     MultilineTranslator(MutableLines lines, HotPointControl hotPoint, boolean adjustHotPoint)
     {
-	notNull(lines, "lines");
-	notNull(hotPoint, "hotPoint");
+	requireNonNull(lines, "lines can't be empty");
+	requireNonNull(hotPoint, "hotPoint can't be empty");
 	this.lines = lines;
 	this.hotPoint = hotPoint;
 	this.adjustHotPoint = adjustHotPoint;
@@ -52,9 +53,9 @@ public class MultilineTranslator
     /*
     public MultilineTranslator(MutableLines lines, HotPointControl hotPoint, String tabSeq)
     {
-	notNull(lines, "lines");
-	notNull(hotPoint, "hotPoint");
-	notNull(tabSeq, "tabSeq");
+	requireNonNUll(lines, "lines");
+	requireNonNUll(hotPoint, "hotPoint");
+	requireNonNUll(tabSeq, "tabSeq");
 	this.lines = lines;
 	this.hotPoint = hotPoint;
 	this.tabSeq = tabSeq;
@@ -63,7 +64,7 @@ public class MultilineTranslator
 
     public void change(MultilineCorrector.Change c)
     {
-	notNull(c, "c");
+	requireNonNull(c, "c can't be empty");
 	if (c instanceof DeleteCharChange dc)
 	{
 	    dc.setResult(deleteChar(dc.getLine(), dc.getPos()));
@@ -119,7 +120,7 @@ public class MultilineTranslator
 	if (fromY == toY)
 	{
 	    final String line = lines.getLine(fromY);
-	    NullCheck.notNull(line, "line");
+	    requireNonNull(line, "line can't be empty");
 	    if (line.isEmpty())
 		return new ModificationResult(false);
 	    final int fromPos = Math.min(fromX, line.length());
@@ -139,10 +140,10 @@ public class MultilineTranslator
 	    return new ModificationResult(true);
 	}
 	final String firstLine = lines.getLine(fromY);
-	NullCheck.notNull(firstLine, "firstLine");
+	requireNonNull(firstLine, "firstLine");
 	final int fromPos = Math.min(fromX, firstLine.length());
 	final String endingLine = lines.getLine(toY);
-	NullCheck.notNull(endingLine, "endingLine");
+	requireNonNull(endingLine, "endingLine");
 	final int toPos = Math.min(toX, endingLine.length());
 	try (var op = operation(true)){
 	    lines.setLine(fromY, firstLine.substring(0, fromPos) + endingLine.substring(toPos));
@@ -169,7 +170,7 @@ public class MultilineTranslator
     ModificationResult insertRegion(int line, int pos, List<String> text)
     {
 	/*
-	NullCheck.notNull(text, "text");
+	NullCheck.requireNonNUll(text, "text");
 	checkPos(pos, line);
 	if (text.isEmpty())
 	    return new ModificationResult(true);
@@ -222,7 +223,7 @@ public class MultilineTranslator
     //??Adds empty line with pos=0 and line=0 if previously there were no lines at all
     private ModificationResult insertChars(int line , int pos, String str)
     {
-	notNull(str, "str");
+	requireNonNull(str, "str");
 	checkPos(pos, line);
 	try (var op = operation(false)){
 	    if (pos == 0 && line == 0 && lines.getLineCount() == 0)
@@ -258,7 +259,7 @@ public class MultilineTranslator
 	    throw new IllegalArgumentException("firstLine (" + String.valueOf(firstLine) + ") + 1 must be less than the number of lines (" + String.valueOf(lineCount) + ")");
 	try (var op = operation(true)) {
 	    final String line = lines.getLine(firstLine);
-	    NullCheck.notNull(line, "line");
+	    requireNonNull(line, "line");
 	    final int origLineLen = line.length();
 	    lines.setLine(firstLine, line + lines.getLine(firstLine + 1));
 	    lines.removeLine(firstLine + 1);
@@ -284,7 +285,7 @@ public class MultilineTranslator
 	    if (line >= lineCount)
 		throw new IllegalArgumentException("The index of the line to split (" + String.valueOf(line) + ") must be less than the number of lines (" + String.valueOf(lineCount) + ")");
 	    final String l = lines.getLine(line);
-	    NullCheck.notNull(l, "l");
+	    requireNonNull(l, "l");
 	    if (pos > l.length())
 		throw new IllegalArgumentException("pos (" + String.valueOf(pos) + ") can't be greater than the length of the line (" + String.valueOf(l.length()) + ")");
 	    lines.setLine(line, l.substring(0, pos));
@@ -348,7 +349,7 @@ public class MultilineTranslator
 	if (lineIndex >= lines.getLineCount())
 	    throw new IllegalArgumentException("lineIndex (" + lineIndex + ") may not be equal or greater than " + lines.getLineCount());
 	final String line = lines.getLine(lineIndex);
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line");
 	if (pos > line.length())
 	    throw new IllegalArgumentException("pos (" + pos + ") may not be greater than " + line.length());
     }

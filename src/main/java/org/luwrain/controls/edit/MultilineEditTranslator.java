@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -20,6 +20,8 @@ import org.luwrain.core.*;
 import org.luwrain.controls.edit.MultilineEdit.ModificationResult;
 import org.luwrain.util.*;
 
+import static java.util.Objects.*;
+
 // Expects that hot point is not related to the content 
 // Hot point position may be adjusted to the content changes only on endEditTrans 
 
@@ -33,8 +35,8 @@ public class MultilineEditTranslator implements MultilineEditCorrector
 
     public MultilineEditTranslator(MutableLines lines, HotPointControl hotPoint)
     {
-	NullCheck.notNull(lines, "lines");
-	NullCheck.notNull(hotPoint, "hotPoint");
+	requireNonNull(lines, "lines can't be null");
+	requireNonNull(hotPoint, "hotPoint can't be null");
 	this.lines = lines;
 	this.hotPoint = hotPoint;
     }
@@ -42,9 +44,9 @@ public class MultilineEditTranslator implements MultilineEditCorrector
     public MultilineEditTranslator(MutableLines lines, HotPointControl hotPoint,
 					String tabSeq)
     {
-	NullCheck.notNull(lines, "lines");
-	NullCheck.notNull(hotPoint, "hotPoint");
-	NullCheck.notNull(tabSeq, "tabSeq");
+	requireNonNull(lines, "lines can't be null");
+	requireNonNull(hotPoint, "hotPoint can't be null");
+	requireNonNull(tabSeq, "tabSeq can't be null");
 	this.lines = lines;
 	this.hotPoint = hotPoint;
 	this.tabSeq = tabSeq;

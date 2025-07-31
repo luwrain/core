@@ -437,9 +437,9 @@ public interface ActionHandler
     }
 
         public interface EditParams { void setEditParams(EditArea.Params params); }
-    protected EditArea.Params editParams(EditParams l)
+    public EditArea.Params editParams(EditParams l)
     {
-	NullCheck.notNull(l, "l");
+	requireNonNull(l, "l can't be null");
 	final EditArea.Params params = new EditArea.Params(getControlContext());
 	params.inputEventListeners = new ArrayList<>();
 	params.inputEventListeners.add(createEditAreaInputEventHook());
@@ -448,7 +448,7 @@ public interface ActionHandler
     }
 
     public interface ConsoleParams<E> { void setConsoleParams(ConsoleArea.Params<E> params); }
-    protected <E> ConsoleArea.Params<E> consoleParams(ConsoleParams<E> l)
+    public <E> ConsoleArea.Params<E> consoleParams(ConsoleParams<E> l)
     {
 	NullCheck.notNull(l, "l");
 	final ConsoleArea.Params<E> params = new ConsoleArea.Params<E>();
@@ -460,7 +460,7 @@ public interface ActionHandler
         public interface TreeParams<E> { void setTreeParams(TreeArea.Params params); }
     public <E> TreeArea.Params treeParams(TreeParams<E> l)
     {
-	NullCheck.notNull(l, "l");
+	requireNonNull(l, "l can't be null");
 	final TreeArea.Params params = new TreeArea.Params();
 	l.setTreeParams(params);
 	params.context = getControlContext();

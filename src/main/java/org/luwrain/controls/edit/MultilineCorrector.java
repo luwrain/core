@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,21 +14,20 @@
    General Public License for more details.
 */
 
-//LWR_API 1.0
-
 package org.luwrain.controls.edit;
 
 import java.util.*;
 import org.luwrain.core.*;
-import static org.luwrain.core.NullCheck.*;
+
+import static java.util.Objects.*;
 
 public interface MultilineCorrector
 {
     public enum ChangeType {
-	DELETE_CHAR,
-	DELETE_FRAGMENT ,
 	INSERT_CHARS,
+	DELETE_CHAR,
 	INSERT_FRAGMENT,
+	DELETE_FRAGMENT ,
 	MERGE_LINES,
 	SPLIT_LINE};
 
@@ -46,7 +45,7 @@ public interface MultilineCorrector
 	protected MultilineEdit.ModificationResult result = null;
 	public Change(ChangeType type, int line, int pos)
 	{
-	    notNull(type, "type");
+	    requireNonNull(type, "type can't be null");
 	    if (line < 0)
 		throw new IllegalArgumentException("line can't be negative (" + String.valueOf(line) + ")");
 	    if (pos < 0)
@@ -95,7 +94,9 @@ public interface MultilineCorrector
 	    public InsertCharsChange(int line, int pos, String chars)
 	    {
 		super(ChangeType.INSERT_CHARS, line, pos);
-		notEmpty(chars, "chars");
+		requireNonNull(chars, "chars can't be null");
+		if (chars.isEmpty())
+		    throw new IllegalArgumentException("chars can't be empty");
 		this.chars = chars;
 	    }
 	    public String getChars() { return chars; }
