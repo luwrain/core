@@ -441,9 +441,11 @@ public interface ActionHandler
     {
 	requireNonNull(l, "l can't be null");
 	final EditArea.Params params = new EditArea.Params(getControlContext());
-	params.inputEventListeners = new ArrayList<>();
-	params.inputEventListeners.add(createEditAreaInputEventHook());
+	//	params.inputEventListeners = new ArrayList<>();
+	//	params.inputEventListeners.add(createEditAreaInputEventHook());
 	l.setEditParams(params);
+	if (params.inputEventListeners != null)
+	    log.debug(String.valueOf(params.inputEventListeners.size()) + " edit input listeners");
 	return params;
     }
 
@@ -472,6 +474,7 @@ public interface ActionHandler
 	return new org.luwrain.script.Hooks();
     }
 
+    /*
     public EditArea.InputEventListener createEditAreaInputEventHook()
     {
 	return (edit, event)->edit.update((lines, hotPoint)->chainOfResponsibilityNoExc(getLuwrain(), EDIT_INPUT, new Object[]{
@@ -479,6 +482,7 @@ public interface ActionHandler
 		    new InputEventObj(event)
 		}));
     }
+    */
 
     protected final class LayoutControlContext extends WrappingControlContext
     {
@@ -509,6 +513,10 @@ super.onAreaNewHotPoint(getArea(area));
 	    @Override public void onAreaNewBackgroundSound(Area area)
 	{
 	    super.onAreaNewBackgroundSound(getArea(area));
+	}
+	    @Override public boolean runHooks(String hookName, HookRunner runner)
+	{
+	    return getLuwrain().runHooks(hookName, runner);
 	}
 	private Area getArea(Area area)
 	{

@@ -169,13 +169,13 @@ public class MultilineTranslator
 
     ModificationResult insertRegion(int line, int pos, List<String> text)
     {
-	/*
-	NullCheck.requireNonNUll(text, "text");
+	requireNonNull(text, "text can't be null");
 	checkPos(pos, line);
 	if (text.isEmpty())
 	    return new ModificationResult(true);
-	final String firstLine = text.get(0);
-	final String lastLine = text.get(text.size() - 1);
+	final String
+	firstLine = text.get(0),
+lastLine = text.get(text.size() - 1);
 	if (line == 0 && pos == 0 && lines.getLineCount() == 0)
 	{
 	    try (var op = operation(false)){
@@ -186,20 +186,22 @@ public class MultilineTranslator
 	    }
 	    return new ModificationResult(true);
 	} //no previous content
-	//here to continue
+
 	//Checking if there is no need to split the line
-	if (text.length == 1)
+	if (text.size() == 1)
 	{
-	    final String line = lines.getLine(y);
+	    final String l = lines.getLine(line);
 	    //If the insertion happens before the current position of the hot point
-	    final boolean needToMoveHotPoint = (hotPoint.getHotPointY() == y && x <= hotPoint.getHotPointX());
-	    beginEditTrans();
-	    lines.setLine(y, line.substring(0, x) + firstLine + line.substring(x));
+	    final boolean needToMoveHotPoint = (hotPoint.getHotPointY() == line && pos <= hotPoint.getHotPointX());
+	    	    try (var op = operation(false)){
+	    lines.setLine(line, l.substring(0, pos) + firstLine + l.substring(pos));
 	    if (needToMoveHotPoint)
 		hotPoint.setHotPointX(hotPoint.getHotPointX() + firstLine.length());
-	    endEditTrans(false);
+		    }
 	    return new ModificationResult(true);
 	}
+
+	/*
 	//The new text has multiple lines
 	final String line = lines.getLine(y);
 	beginEditTrans();

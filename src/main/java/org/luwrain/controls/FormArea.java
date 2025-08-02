@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -22,6 +22,7 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.edit.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.DefaultEventResponse.*;
 
 /**
@@ -76,7 +77,7 @@ public class FormArea  extends NavigationArea
     public FormArea(ControlContext context)
     {
 	super(context);
-	NullCheck.notNull(context, "context");
+	requireNonNull(context, "context can't be null");
 	this.context = context;
 	this.name = "";
     }
@@ -84,8 +85,8 @@ public class FormArea  extends NavigationArea
     public FormArea(ControlContext context, String name)
     {
 	super(context);
-	NullCheck.notNull(context, "context");
-	NullCheck.notNull(name, "name");
+	requireNonNull(context, "context can't be null");
+	requireNonNull(name, "name can't be null");
 	this.context = context;
 	this.name = name;
     }
@@ -93,12 +94,11 @@ public class FormArea  extends NavigationArea
     public FormArea(ControlContext context, String name, int textLenLimit)
     {
 	super(context);
-	NullCheck.notNull(context, "context");
-	NullCheck.notNull(name, "name");
+	requireNonNull(context, "context can't be null");
+	requireNonNull(name, "nam ecan't be null");
 	this.context = context;
 	this.name = name;
     }
-
 
     public void clear()
     {
@@ -170,15 +170,15 @@ public class FormArea  extends NavigationArea
     public boolean addEdit(String itemName, String caption)
     {
 	NullCheck.notEmpty(itemName, "itemName");
-	NullCheck.notNull(caption, "caption");
+	requireNonNull(caption, "caption can't be null");
 	return addEdit(itemName, caption, "");
     }
 
     public boolean addEdit(String itemName, String caption, String initialText)
     {
 	NullCheck.notEmpty(itemName, "itemName");
-	NullCheck.notNull(caption, "caption");
-	NullCheck.notNull(initialText, "initialText");
+	requireNonNull(caption, "caption can't be null");
+	requireNonNull(initialText, "initialText can't be null");
 	return addEdit(itemName, caption, initialText, null, true);
     }
 
@@ -186,9 +186,9 @@ public class FormArea  extends NavigationArea
 			   String initialText, Object obj, boolean enabled)
     {
 	NullCheck.notEmpty(itemName, "itemName");
-	NullCheck.notNull(caption, "caption");
-	NullCheck.notNull(initialText, "initialText");
-	final Item item = new Item(context, this, Type.EDIT, itemName);
+	requireNonNull(caption, "caption can't be null");
+	requireNonNull(initialText, "initialText can't be null");
+	final var item = new Item(context, this, Type.EDIT, itemName);
 	item.caption = caption;
 	item.enteredText = initialText;
 	item.obj = obj;
@@ -229,7 +229,6 @@ public class FormArea  extends NavigationArea
 	return true;
     }
 
-
     public void setEnteredText(String itemName, String newText)
     {
 	NullCheck.notNull(itemName, "itemName");
@@ -259,50 +258,6 @@ public class FormArea  extends NavigationArea
 	final Item i = items.get(lineIndex);
 	if (i.type == Type.EDIT)
 	    return i.enteredText;
-	return null;
-    }
-
-    public boolean addUniRef(String itemName, String caption,
-			   String initialUniRef, Object obj, boolean enabled)
-    {
-	NullCheck.notEmpty(itemName, "itemName");
-	NullCheck.notNull(caption, "caption");
-	final Item item = new Item(context, this, Type.UNIREF, itemName);
-	item.caption = caption;
-	if (initialUniRef != null && !initialUniRef.trim().isEmpty())
-	{
-	    item.uniRefInfo = context.getUniRefInfo(initialUniRef);
-	    if (item.uniRefInfo == null)
-		return false;
-	} else
-	    item.uniRefInfo = null;
-	item.obj = obj;
-	item.enabled = enabled;
-	items.add(item);
-	updateItems();
-	context.onAreaNewContent(this);
-	context.onAreaNewHotPoint(this);
-	return true;
-    }
-
-    public UniRefInfo getUniRefInfo(String itemName)
-    {
-	NullCheck.notNull(itemName, "itemName");
-	if (itemName.trim().isEmpty())
-	    return null;
-	for(Item i: items)
-	    if (i.type == Type.UNIREF && i.name.equals(itemName))
-		return i.uniRefInfo;
-	return null;
-    }
-
-    public UniRefInfo getUniRefInfo(int lineIndex)
-    {
-	if (lineIndex < 0 || lineIndex > items.size())
-	    return null;
-	final Item i = items.get(lineIndex);
-	if (i.type == Type.UNIREF)
-	    return i.uniRefInfo;
 	return null;
     }
 
@@ -405,7 +360,6 @@ public class FormArea  extends NavigationArea
 	return addStatic(getItemNewAutoName(), caption, "");
     }
 
-
     public boolean isMultilineEditActivated()
     {
 	return mlEdit != null;
@@ -423,9 +377,9 @@ public class FormArea  extends NavigationArea
 
     public MultilineEdit.Params createMultilineEditParams(ControlContext context, MutableLines lines)
     {
-	NullCheck.notNull(context, "context");
-	NullCheck.notNull(lines, "lines");
-	final MultilineEdit.Params params = new MultilineEdit.Params();
+	requireNonNull(context, "context can't be null");
+	requireNonNull(lines, "lines can't be null");
+	final var params = new MultilineEdit.Params();
 	params.context = context;
 	params.model = new EditUtils.CorrectorChangeListener(new MultilineEditTranslator(lines, mlEditHotPoint)){
 		@Override public void onMultilineEditChange()
@@ -460,8 +414,8 @@ public class FormArea  extends NavigationArea
     {
 	NullCheck.notNull(caption, "caption");
 	NullCheck.notNullItems(text, "text");
-final MutableMarkedLines content = new MutableMarkedLinesImpl(text);
-final MultilineEdit.Params params = createMultilineEditParams(context, content);
+final var content = new MutableMarkedLinesImpl(text);
+final var params = createMultilineEditParams(context, content);
 return activateMultilineEdit(caption, content, params, enabled);
     }
 

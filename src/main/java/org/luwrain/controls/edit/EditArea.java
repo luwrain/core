@@ -20,18 +20,23 @@ package org.luwrain.controls.edit;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;
+import org.apache.logging.log4j.*;
 
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
-import org.luwrain.script.*;
+import org.luwrain.script.core.*;
+import org.luwrain.script.controls.*;
 
 import static org.luwrain.core.NullCheck.*;
 
 import static java.util.Objects.*;
+import static org.luwrain.script.Hooks.*;
 
 public class EditArea extends NavigationArea
 {
+    static private final Logger log = LogManager.getLogger();
+
 public interface Appearance extends MultilineEdit.Appearance
 {
     void announceLine(int index, String line);
@@ -62,9 +67,14 @@ public interface Appearance extends MultilineEdit.Appearance
 	public Params() {}
 	public Params(ControlContext context)
 	{
-	    notNull(context, "context");
+	    requireNonNull(context, "context can't be null");
 	    this.context = context;
 	    this.appearance = new EditUtils.DefaultEditAreaAppearance(context);
+	    this.inputEventListeners = new ArrayList<>();
+	    this.inputEventListeners.add( (edit, event) -> edit.update( (lines, hotPoint) -> chainOfResponsibilityNoExc(context, EDIT_INPUT, new Object[]{
+			    new EditAreaObj(edit, lines),
+			    new InputEventObj(event)
+			})));
 	}
 
 	public ControlContext context = null;
@@ -72,8 +82,8 @@ public interface Appearance extends MultilineEdit.Appearance
 	public String name = "";
 	public MutableMarkedLines content = null;
 	public List<ChangeListener> changeListeners = null;
+		public List<InputEventListener> inputEventListeners = null;
 	public EditFactory editFactory = null;
-	public List<InputEventListener> inputEventListeners = null;
     }
 
     protected final MutableMarkedLines content;
@@ -104,7 +114,7 @@ public interface Appearance extends MultilineEdit.Appearance
 
 public void setChangeListeners(List<ChangeListener> listeners)
 {
-NullCheck.notNull(listeners, "listeners");
+requireNonNull(listeners, "listeners can't be null");
 this.changeListeners.clear();
 this.changeListeners.addAll(listeners);
 }
@@ -194,7 +204,6 @@ this.changeListeners.addAll(listeners);
 	return new String(b);
     }
 
-
     public void setText(String[] lines)
     {
 	NullCheck.notNullItems(lines, "lines");
@@ -205,7 +214,7 @@ this.changeListeners.addAll(listeners);
 
     public boolean update(EditUpdating updating)
     {
-	NullCheck.notNull(updating, "updating");
+	requireNonNull(updating, "updating can't be null");
 	if (!updating.editUpdate(content, this))
 	{
 	    redraw();
@@ -239,8 +248,14 @@ return true;
 	requireNonNull(event, "event can't be null");
 	if (inputEventListeners != null)
 	    for(InputEventListener l: inputEventListeners)
+	    {
+		log.debug("Running edit input event listener");
 		if (l.onEditAreaInputEvent(this, event))
+		{
+		    log.debug("true result");
 		    return true;
+		}
+	    }
 	if (edit.onInputEvent(event))
 	{
 	    if (translator.commit())

@@ -19,53 +19,46 @@ package org.luwrain.script.controls;
 import java.util.*;
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.proxy.*;
+import org.luwrain.controls.*;
 
-import org.luwrain.core.*;
-import org.luwrain.controls.edit.*;
-import org.luwrain.script.core.*;
+import static java.util.Objects.*;
 
-public final class EditAreaObj implements ProxyObject
+public final class SingleLineEditModelObj implements ProxyObject
 {
     static private String[] KEYS = new String[]{
 	"hotPoint",
-	"lines",
+	"line",
     };
     static private final Set<String> KEYS_SET = new HashSet<>(Arrays.asList(KEYS));
     static private final ProxyArray KEYS_ARRAY = ProxyArray.fromArray((Object[])KEYS);
 
-    protected final EditArea area;
-    protected final MutableLinesArray lines;
-    protected final HotPointObj hotPoint;
+    protected final SingleLineEdit.Model model;
 
-    public EditAreaObj(EditArea area, MutableLines lines)
+    public SingleLineEditModelObj(SingleLineEdit.Model model)
     {
-	NullCheck.notNull(area, "area");
-	NullCheck.notNull(lines, "lines");
-	this.area = area;
-	this.lines = new MutableLinesArray(lines);
-	this.hotPoint = new HotPointObj(area);
-    }
-
-    public EditAreaObj(EditArea area)
-    {
-	this(area, area.getContent());
+	this.model = requireNonNull(model, "model can't be null");
     }
 
     @Override public Object getMember(String name)
     {
-	NullCheck.notNull(name, "name");
+	requireNonNull(name, "name can't be null");
 	switch(name)
 	{
-	case "lines":
-	    return this.lines;
+	case "line":
+	    return model.getLine();
 	case "hotPoint":
-	    return this.hotPoint;
+	    return Integer.valueOf(model.getHotPointX());
 	default:
 	    return null;
 	}
     }
 
+    @Override public void putMember(String name, Value value)
+    {
+	throw new RuntimeException("The edit object doesn't support updating of its variables");
+    }
+
     @Override public boolean hasMember(String name) { return KEYS_SET.contains(name); }
     @Override public Object getMemberKeys() { return KEYS_ARRAY; }
-    @Override public void putMember(String name, Value value) { throw new RuntimeException("The edit object doesn't support updating of its variables"); }
+
 }

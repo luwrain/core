@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -26,6 +26,7 @@ import org.luwrain.script.hooks.ProviderHook;
 import org.luwrain.script.hooks.TransformerHook;
 import org.luwrain.script.hooks.CollectorHook;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.NullCheck.*;
 
 public final class Hooks
@@ -65,8 +66,9 @@ URL_OPEN = "luwrain.url.open";
 
         static public boolean chainOfResponsibilityNoExc(HookContainer container, String hookName, Object[] args)
     {
-	notNull(container, "container");
+	requireNonNull(container, "container can't be null");
 	notEmpty(hookName, "hookName");
+	log.debug("Running the " + hookName + " hook");
 	try {
 	    return new ChainOfResponsibilityHook(container).run(hookName, args);
 	}
@@ -76,7 +78,6 @@ URL_OPEN = "luwrain.url.open";
 	    return false;
 	}
     }
-
 
     //Throws RuntimeException, returns true if all hooks returned true
         static public boolean permission(HookContainer container, String hookName, Object[] args)

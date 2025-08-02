@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -28,6 +28,7 @@ import org.luwrain.core.*;
 import org.luwrain.script.*;
 import org.luwrain.util.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.script.ScriptUtils.*;
 import static org.luwrain.core.NullCheck.*;
 
@@ -46,9 +47,9 @@ public final class LuwrainObj extends LuwrainObjBase
     LuwrainObj(Luwrain luwrain, Object syncObj, Module module)
     {
 	super(module, luwrain);
-	notNull(luwrain, "luwrain");
-	notNull(syncObj, "syncObj");
-	notNull(module, "module");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(syncObj, "syncObj can't be null");
+	requireNonNull(module, "module can't be null");
 	this.syncObj = syncObj;
 	//	this.module = module;
 	this.log = new LogObj(luwrain);
@@ -80,8 +81,6 @@ public final class LuwrainObj extends LuwrainObjBase
 	new File(fileName).delete();
 	return true;
 	    }
-
-
 
     @HostAccess.Export public final ProxyExecutable addCommand = this::addCommandImpl;
             private Object addCommandImpl(Value[] args)

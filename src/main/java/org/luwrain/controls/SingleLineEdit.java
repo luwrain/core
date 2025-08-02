@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,8 +14,6 @@
    General Public License for more details.
 */
 
-//LWR_API 1.0
-
 package org.luwrain.controls;
 
 import java.util.*;
@@ -23,6 +21,8 @@ import java.util.*;
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.util.*;
+
+import static java.util.Objects.*;
 
 /**
  * Implementation of editing behaviour for the line of text. This class
@@ -44,6 +44,19 @@ public class SingleLineEdit implements ClipboardTranslator.Provider, RegionTextQ
 	String getTabSeq();
     }
 
+        public interface InputEventListener
+    {
+	boolean onEditInputEvent(Model model, InputEvent event);
+    }
+
+    public static final class Params
+    {
+	ControlContext context;
+	Model model;
+	AbstractRegionPoint regionPoint;
+	List<InputEventListener> inputEventListeners;
+    }
+
     protected final ControlContext context;
         protected final Model model;
     protected final AbstractRegionPoint regionPoint;
@@ -52,9 +65,9 @@ public class SingleLineEdit implements ClipboardTranslator.Provider, RegionTextQ
 
     public SingleLineEdit(ControlContext context, Model model, AbstractRegionPoint regionPoint)
     {
-	NullCheck.notNull(context, "context");
-	NullCheck.notNull(model, "model");
-	NullCheck.notNull(regionPoint, "regionPoint");
+	requireNonNull(context, "context can't be null");
+	requireNonNull(model, "model can't be null");
+	requireNonNull(regionPoint, "regionPoint can't be null");
 	this.context = context;
 	this.model = model;
 	this.regionPoint = regionPoint;
@@ -62,6 +75,17 @@ public class SingleLineEdit implements ClipboardTranslator.Provider, RegionTextQ
 	this.regionTextQueryTranslator = new RegionTextQueryTranslator(this, regionPoint, EnumSet.noneOf(RegionTextQueryTranslator.Flags.class));
     }
 
+        public SingleLineEdit(Params params)
+    {
+	requireNonNull(params.context, "params.context can't be null");
+	requireNonNull(params.model, "params.model can't be null");
+	requireNonNull(params.regionPoint, "params.regionPoint can't be null");
+	this.context = params.context;
+	this.model = params.model;
+	this.regionPoint = params.regionPoint;
+	this.clipboardTranslator = new ClipboardTranslator(this, regionPoint, EnumSet.noneOf(ClipboardTranslator.Flags.class));
+	this.regionTextQueryTranslator = new RegionTextQueryTranslator(this, regionPoint, EnumSet.noneOf(RegionTextQueryTranslator.Flags.class));
+    }
 
     public boolean onInputEvent(InputEvent event)
     {

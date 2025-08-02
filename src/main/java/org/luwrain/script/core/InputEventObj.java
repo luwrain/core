@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -21,7 +21,7 @@ import java.util.*;
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 
-import static org.luwrain.core.NullCheck.*;
+import static java.util.Objects.*;
 
 public class InputEventObj extends MapScriptObject
 {
@@ -29,7 +29,7 @@ public class InputEventObj extends MapScriptObject
 
     public InputEventObj(InputEvent event)
     {
-	notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	this.event = event;
 	members.put("special", event.isSpecial()?event.getSpecial().toString():null);//FIXME: To be deleted
 		members.put("code", event.isSpecial()?event.getSpecial().toString():null);

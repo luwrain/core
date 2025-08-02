@@ -14,8 +14,6 @@
    General Public License for more details.
 */
 
-//LWR_API 2.0
-
 package org.luwrain.script.controls;
 
 import java.util.*;

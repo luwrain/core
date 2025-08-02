@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,12 +14,12 @@
    General Public License for more details.
 */
 
-//LWR_API 1.0
-
 package org.luwrain.controls;
 
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
+
+import static java.util.Objects.*;
 
 public class EmbeddedEdit implements SingleLineEdit.Model
 {
@@ -28,17 +28,18 @@ public class EmbeddedEdit implements SingleLineEdit.Model
     protected final EmbeddedEditLines lines;
     protected final HotPointControl hotPoint;
     protected final ShiftedRegionPoint regionPoint;
-    protected int offsetX;
-    protected int offsetY;
+    protected int
+	offsetX,
+	offsetY;
 
     public EmbeddedEdit(ControlContext context, EmbeddedEditLines lines,
-				  HotPointControl hotPoint,  AbstractRegionPoint regionPoint,
-				  int offsetX, int offsetY)
+			HotPointControl hotPoint,  AbstractRegionPoint regionPoint,
+			int offsetX, int offsetY)
     {
-	NullCheck.notNull(context, "context");
-	NullCheck.notNull(lines, "lines");
-	NullCheck.notNull(hotPoint, "hotPoint");
-	NullCheck.notNull(regionPoint, "regionPoint");
+	requireNonNull(context, "context can't be null");
+	requireNonNull(lines, "lines can't be null");
+	requireNonNull(hotPoint, "hotPoint can't be null");
+	requireNonNull(regionPoint, "regionPoint can't be null");
 	if (offsetX < 0 || offsetY < 0)
 	    throw new IllegalArgumentException("offsetX (" + offsetX + ") and offsetY (" + offsetY + ") may not be negative");
 	this.context = context;
@@ -47,7 +48,7 @@ public class EmbeddedEdit implements SingleLineEdit.Model
 	this.offsetX = offsetX;
 	this.offsetY = offsetY;
 	this.regionPoint = new ShiftedRegionPoint(regionPoint, offsetX, offsetY);
-	edit = new SingleLineEdit(context, this, this.regionPoint);
+	this.edit = new SingleLineEdit(context, this, this.regionPoint);
     }
 
     public SingleLineEdit getEditObj()
@@ -66,7 +67,7 @@ public class EmbeddedEdit implements SingleLineEdit.Model
 	    throw new IllegalArgumentException("x (" + x + ") and y (" + y + ") may not be negative");
 	this.offsetX = x;
 	this.offsetY = y;
-	    this.regionPoint.setOffset(x, y);
+	this.regionPoint.setOffset(x, y);
     }
 
     public boolean onInputEvent(InputEvent event)
@@ -82,7 +83,7 @@ public class EmbeddedEdit implements SingleLineEdit.Model
     public boolean onAreaQuery(AreaQuery query)
     {
 	return edit.onAreaQuery(query);
-	}
+    }
 
     @Override public String getLine()
     {
@@ -117,7 +118,7 @@ public class EmbeddedEdit implements SingleLineEdit.Model
 
 	ShiftedRegionPoint(AbstractRegionPoint regionPoint, int offsetX, int offsetY)
 	{
-	    NullCheck.notNull(regionPoint, "regionPoint");
+	    requireNonNull(regionPoint, "regionPoint can't be null");
 	    if (offsetX < 0 || offsetY < 0)
 		throw new IllegalArgumentException("offsetX (" + offsetX + ") and offsetY (" + offsetY + ") may not be negative");
 	    this.regionPoint = regionPoint;
@@ -127,7 +128,7 @@ public class EmbeddedEdit implements SingleLineEdit.Model
 
 	@Override public boolean onSystemEvent(SystemEvent event, int hotPointX, int hotPointY)
 	{
-	    NullCheck.notNull(event, "event");
+	    requireNonNull(event, "event can't be null");
 	    if (hotPointX < 0 || hotPointY < 0)
 		throw new IllegalArgumentException("hotPointX and hotPointY must be greater or equal to zero");
 	    if (event.getType() == SystemEvent.Type.REGULAR)

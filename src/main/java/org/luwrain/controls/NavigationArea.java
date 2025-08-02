@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -21,11 +21,14 @@ package org.luwrain.controls;
 //TODO:Tab shift respecting on up-down movements;
 
 import java.util.*;
+import org.apache.logging.log4j.*;
+
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain .util.*;
 import org.luwrain.i18n.LangStatic;//FIXME:deleting
 
+import static java.util.Objects.*;
 import static org.luwrain.core.DefaultEventResponse.*;
 
 /**
@@ -41,15 +44,16 @@ import static org.luwrain.core.DefaultEventResponse.*;
  */
 public abstract class NavigationArea implements Area, HotPointControl, ClipboardTranslator.Provider, RegionTextQueryTranslator.Provider
 {
-    static final String LOG_COMPONENT = "core";
-    
+    static private final Logger log = LogManager.getLogger();
 
     protected final ControlContext context;
     protected final RegionPoint regionPoint = new RegionPoint();
     protected final ClipboardTranslator clipboardTranslator = new ClipboardTranslator(this, regionPoint, EnumSet.noneOf(ClipboardTranslator.Flags.class));
     protected final RegionTextQueryTranslator regionTextQueryTranslator = new RegionTextQueryTranslator(this, regionPoint, EnumSet.noneOf(RegionTextQueryTranslator.Flags.class));
-    protected int hotPointX = 0;
-    protected int hotPointY = 0;
+    protected int
+	hotPointX = 0,
+hotPointY = 0;
+    protected int hotPointTransCount = 0;
 
     public NavigationArea(ControlContext context)
     {
@@ -373,7 +377,7 @@ public abstract class NavigationArea implements Area, HotPointControl, Clipboard
 	    context.setEventResponse(DefaultEventResponse.hint(Hint.END_OF_LINE));
 	    return true;
 	}
-	WordIterator it = new WordIterator(line, hotPointX);
+	final var it = new WordIterator(line, hotPointX);
 	if (!it.stepForward())
 	{
 	    context.setEventResponse(DefaultEventResponse.hint(Hint.END_OF_LINE));
@@ -383,6 +387,7 @@ public abstract class NavigationArea implements Area, HotPointControl, Clipboard
 	if (it.announce().length() > 0)
 	    context.setEventResponse(DefaultEventResponse.text(it.announce())); else
 	    context.setEventResponse(DefaultEventResponse.hint(Hint.END_OF_LINE));
+	if (hotPointTransCount > 0)
 	context.onAreaNewHotPoint(this);
 	return true;
     }
@@ -403,7 +408,7 @@ public abstract class NavigationArea implements Area, HotPointControl, Clipboard
 	    context.setEventResponse(DefaultEventResponse.hint(Hint.BEGIN_OF_LINE));
 	    return true;
 	}
-	WordIterator it = new WordIterator(line, hotPointX);
+	final var it = new WordIterator(line, hotPointX);
 	if (!it.stepBackward())
 	{
 	    context.setEventResponse(DefaultEventResponse.hint(Hint.BEGIN_OF_LINE));
@@ -411,6 +416,7 @@ public abstract class NavigationArea implements Area, HotPointControl, Clipboard
 	}
 	hotPointX = it.pos();
 	context.setEventResponse(DefaultEventResponse.text(it.announce()));
+	if (hotPointTransCount > 0)
 	context.onAreaNewHotPoint(this);
 	return true;
     }
@@ -431,6 +437,7 @@ public abstract class NavigationArea implements Area, HotPointControl, Clipboard
 	regionPoint.reset();
 	hotPointX = 0;
 	hotPointY = 0;
+	hotPointTransCount = 0;
 	context.onAreaNewHotPoint(this);
 	if (announce)
 	{
@@ -467,12 +474,19 @@ public abstract class NavigationArea implements Area, HotPointControl, Clipboard
 
     @Override public void beginHotPointTrans()
     {
-	//FIXME:
+	hotPointTransCount++;
     }
 
     @Override public void endHotPointTrans()
     {
-	//FIXME:
+	if (hotPointTransCount == 0)
+	{
+	    log.warn("Unbalanced hot point transactions");
+	    return;
+	}
+	hotPointTransCount--;
+	if (hotPointTransCount == 0)
+	    context.onAreaNewHotPoint(this);
     }
 
     /**
@@ -573,7 +587,7 @@ public abstract class NavigationArea implements Area, HotPointControl, Clipboard
 
     static public void defaultLineAnnouncement(ControlContext context, int index, String line)
     {
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	if (line.isEmpty())
 	{
 	    context.setEventResponse(DefaultEventResponse.hint(Hint.EMPTY_LINE));
