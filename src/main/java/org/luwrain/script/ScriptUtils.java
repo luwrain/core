@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -25,6 +25,7 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.script.core.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.NullCheck.*;
 
 public final class ScriptUtils
@@ -191,7 +192,6 @@ public final class ScriptUtils
 	return res;
     }
 
-
         static public String[] asStringArray(Object o)
     {
 		if (o == null || !(o instanceof Value))
@@ -211,15 +211,15 @@ public final class ScriptUtils
 	return ProxyArray.fromArray((Object[])items);
     }
 
-        static public <E> Proxy getArray(List<E> items)
+    static public <E> Proxy getArray(List<E> items)
     {
-	NullCheck.notNull(items, "items");
+	requireNonNull(items, "items can't be null");
 	return ProxyArray.fromArray((Object[])items.toArray(new Object[items.size()]));
     }
 
         static public <E> Proxy createEnumSet(Set<E> s)
     {
-	NullCheck.notNull(s, "s");
+	requireNonNull(s, "s can't be null");
 	final List<String> res = new ArrayList<>();
 	for(E o: s)
 	    res.add(o.toString().toLowerCase());
@@ -229,7 +229,7 @@ public final class ScriptUtils
     @SuppressWarnings("unchecked")
     static public Object getEnumItemByStr(Class enumClass, String itemName)
     {
-	NullCheck.notNull(enumClass, "enumClass");
+	requireNonNull(enumClass, "enumClass can't be null");
 	NullCheck.notEmpty(itemName, "itemName");
 	final EnumSet allItems = EnumSet.allOf(enumClass);
 	for(Object s: allItems)
@@ -241,8 +241,8 @@ public final class ScriptUtils
     @SuppressWarnings("unchecked")
     static public Set getEnumByArrayObj(Class enumClass, Object arrayObj)
     {
-	NullCheck.notNull(enumClass, "enumClass");
-	NullCheck.notNull(arrayObj, "arrayObj");
+	requireNonNull(enumClass, "enumClass can't be null");
+	requireNonNull(arrayObj, "arrayObj can't be null");
 	final String[] items = asStringArray(arrayObj);
 	if (items == null)
 	    return null;
