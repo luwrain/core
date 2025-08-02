@@ -71,10 +71,20 @@ public interface Appearance extends MultilineEdit.Appearance
 	    this.context = context;
 	    this.appearance = new EditUtils.DefaultEditAreaAppearance(context);
 	    this.inputEventListeners = new ArrayList<>();
-	    this.inputEventListeners.add( (edit, event) -> edit.update( (lines, hotPoint) -> chainOfResponsibilityNoExc(context, EDIT_INPUT, new Object[]{
-			    new EditAreaObj(edit, lines),
+	    this.inputEventListeners.add(
+					 (edit, event) -> edit.update( (lines, hotPoint) -> chainOfResponsibilityNoExc(context, TEXT_INPUT_ML, new Object[]{
+			    //			    new EditAreaObj(edit, lines),
+			    			    new EditUpdateObj(lines, hotPoint),
 			    new InputEventObj(event)
-			})));
+						 })));
+	    this.inputEventListeners.add(
+					 					 (edit, event) -> edit.update( (lines, hotPoint) -> chainOfResponsibilityNoExc(context, TEXT_INPUT_SL, new Object[]{
+			    			    new EditSingleLineUpdateObj(lines, hotPoint),
+			    new InputEventObj(event)
+			}))
+
+
+		);
 	}
 
 	public ControlContext context = null;

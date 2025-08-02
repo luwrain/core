@@ -22,6 +22,7 @@ import org.graalvm.polyglot.proxy.*;
 import org.luwrain.controls.*;
 
 import static java.util.Objects.*;
+import static org.luwrain.script.ScriptUtils.*;
 
 public final class SingleLineEditModelObj implements ProxyObject
 {
@@ -55,7 +56,22 @@ public final class SingleLineEditModelObj implements ProxyObject
 
     @Override public void putMember(String name, Value value)
     {
-	throw new RuntimeException("The edit object doesn't support updating of its variables");
+	requireNonNull(name, "name can't be null");
+	switch(name)
+	{
+	case "hotPoint": {
+	    final var intValue = asInt(value);
+	    if (intValue < 0)
+		throw new IllegalArgumentException("Value of a hot point can't be negative");
+	    model.setHotPointX(intValue);
+	    return;
+	}
+	case "line":
+	    model.setLine(requireNonNullElse(asString(value), ""));
+	    return;
+	default:
+	    throw new IllegalArgumentException("No such property: " + name);
+	}
     }
 
     @Override public boolean hasMember(String name) { return KEYS_SET.contains(name); }

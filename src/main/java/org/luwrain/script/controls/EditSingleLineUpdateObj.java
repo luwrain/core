@@ -19,55 +19,64 @@ package org.luwrain.script.controls;
 import java.util.*;
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.proxy.*;
-
 import org.luwrain.core.*;
-import org.luwrain.controls.edit.*;
-import org.luwrain.script.core.*;
 
-public final class EditAreaObj implements ProxyObject
+import static java.util.Objects.*;
+import static org.luwrain.script.ScriptUtils.*;
+
+public final class EditSingleLineUpdateObj implements ProxyObject
 {
     static private String[] KEYS = new String[]{
 	"hotPoint",
-	"lines",
+	"line",
     };
     static private final Set<String> KEYS_SET = new HashSet<>(Arrays.asList(KEYS));
     static private final ProxyArray KEYS_ARRAY = ProxyArray.fromArray((Object[])KEYS);
 
-    //    protected final EditArea area;
-    protected final MutableLinesArray lines;
-    protected final HotPointObj hotPoint;
+    protected final MutableLines lines;
+    protected final HotPointControl hotPoint;
 
-    public EditAreaObj(EditArea area, MutableLines lines)
+    public EditSingleLineUpdateObj(MutableLines lines, HotPointControl hotPoint)
     {
-	NullCheck.notNull(area, "area");
-	NullCheck.notNull(lines, "lines");
-	//	this.area = area;
-	this.lines = new MutableLinesArray(lines);
-	this.hotPoint = new HotPointObj(area);
+	this.lines = requireNonNull(lines, "lines can't be null");
+		this.hotPoint = requireNonNull(hotPoint, "hotPoint can't be null");
     }
-
-    /*
-    public EditAreaObj(EditArea area)
-    {
-	this(area, area.getContent());
-    }
-    */
 
     @Override public Object getMember(String name)
     {
-	NullCheck.notNull(name, "name");
+	requireNonNull(name, "name can't be null");
 	switch(name)
 	{
-	case "lines":
-	    return this.lines;
+	case "line":
+	    return lines.getLine(hotPoint.getHotPointY());
 	case "hotPoint":
-	    return this.hotPoint;
+	    return Integer.valueOf(hotPoint.getHotPointX());
 	default:
 	    return null;
 	}
     }
 
+    @Override public void putMember(String name, Value value)
+    {
+	requireNonNull(name, "name can't be null");
+	switch(name)
+	{
+	case "hotPoint": {
+	    final var intValue = asInt(value);
+	    if (intValue < 0)
+		throw new IllegalArgumentException("Value of a hot point can't be negative");
+	    hotPoint.setHotPointX(intValue);
+	    return;
+	}
+	case "line":
+	    lines.setLine(hotPoint.getHotPointY(), requireNonNullElse(asString(value), ""));
+	    return;
+	default:
+	    throw new IllegalArgumentException("No such property: " + name);
+	}
+    }
+
     @Override public boolean hasMember(String name) { return KEYS_SET.contains(name); }
     @Override public Object getMemberKeys() { return KEYS_ARRAY; }
-    @Override public void putMember(String name, Value value) { throw new RuntimeException("The edit object doesn't support updating of its variables"); }
+
 }

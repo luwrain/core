@@ -38,7 +38,8 @@ public final class Hooks
 		AREA_CLEAR = "luwrain.area.clear",
 	AREA_REGION_POINT_SET = "luwrain.area.region.point.set",
 	CLIPBOARD_COPY_ALL = "luwrain.clipboard.copy.all",
-	EDIT_INPUT = "luwrain.edit.input",
+	TEXT_INPUT_ML = "luwrain.edit.input",
+		TEXT_INPUT_SL = "luwrain.text.input.single",
 	STARTUP = "luwrain.startup",
 URL_OPEN = "luwrain.url.open";
 

@@ -14,47 +14,51 @@
    General Public License for more details.
 */
 
-package org.luwrain.script.core;
+package org.luwrain.script.controls;
 
 import java.util.*;
-
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.proxy.*;
 
 import org.luwrain.core.*;
-import org.luwrain.popups.*;
+import org.luwrain.controls.edit.*;
+import org.luwrain.script.core.*;
 
 import static java.util.Objects.*;
-import static org.luwrain.script.ScriptUtils.*;
 
-public class HotPointObj implements ProxyObject
+public final class EditUpdateObj implements ProxyObject
 {
-    static private final String[] KEYS = new String[]{ "x", "y" };
-        static private final Set<String> KEYS_SET = new HashSet<>(Arrays.asList(KEYS));
+    static private String[] KEYS = new String[]{
+	"hotPoint",
+	"lines",
+    };
+    static private final Set<String> KEYS_SET = new HashSet<>(Arrays.asList(KEYS));
     static private final ProxyArray KEYS_ARRAY = ProxyArray.fromArray((Object[])KEYS);
 
-    private final HotPoint hotPoint;
+    protected final MutableLinesArray lines;
+    protected final HotPointObj hotPoint;
 
-    public HotPointObj(HotPoint hotPoint)
+    public EditUpdateObj(MutableLines lines, HotPoint hotPoint)
     {
-	this.hotPoint = requireNonNull(hotPoint, "hotPoint can't be null");
+	this.lines = new MutableLinesArray(requireNonNull(lines, "lines can't be null"));
+	this.hotPoint = new HotPointObj(requireNonNull(hotPoint));
     }
 
     @Override public Object getMember(String name)
     {
-	NullCheck.notEmpty(name, "name");
+	requireNonNull(name, "name can't be null");
 	switch(name)
 	{
-	case "x":
-	    return Integer.valueOf(hotPoint.getHotPointX());
-	case "y":
-	    return Integer.valueOf(hotPoint.getHotPointY());
+	case "lines":
+	    return this.lines;
+	case "hotPoint":
+	    return this.hotPoint;
 	default:
 	    return null;
 	}
     }
 
-        @Override public boolean hasMember(String name) { return KEYS_SET.contains(name); }
+    @Override public boolean hasMember(String name) { return KEYS_SET.contains(name); }
     @Override public Object getMemberKeys() { return KEYS_ARRAY; }
-    @Override public void putMember(String name, Value value) { throw new UnsupportedOperationException("The hot point object doesn't support updating of its variables"); }
+    @Override public void putMember(String name, Value value) { throw new RuntimeException("The edit object doesn't support updating of its variables"); }
 }
