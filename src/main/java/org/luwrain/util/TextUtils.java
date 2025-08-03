@@ -20,6 +20,8 @@ import java.util.*;
 
 import org.luwrain.core.*;
 
+import static java.util.Objects.*;
+
 public final class TextUtils
 {
         //On an empty line provided returns one empty line
@@ -96,7 +98,7 @@ public final class TextUtils
 
     static public String getLastWord(String text, int upToPos)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	String word = new String();
 	boolean broken = false;
 	for(int i = 0;i < text.length() && i < upToPos;++i)

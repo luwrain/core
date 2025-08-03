@@ -131,7 +131,7 @@ this.changeListeners.addAll(listeners);
 
     protected MultilineEdit createEdit(Params areaParams)
     {
-	NullCheck.notNull(areaParams, "areaParams");
+	requireNonNull(areaParams, "areaParams can't be null");
 	if (areaParams.editFactory != null)
 	{
 	    final var params = new MultilineEdit.Params();
