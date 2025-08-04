@@ -24,12 +24,12 @@ import org.luwrain.controls.edit.EditUtils.*;
 
 public final class EditCorrectors
 {
-    static public class IndentationCorrector extends EmptyCorrector
+    static public class IndentationCorrector extends MultilineEditModelWrap
     {
-	public IndentationCorrector(MultilineEditCorrector basicCorrector) { super(basicCorrector); }
+	public IndentationCorrector(MultilineEdit.Model basicCorrector) { super(basicCorrector); }
 	@Override public ModificationResult splitLine(int pos, int lineIndex)
 	{
-	    final ModificationResult res = basicCorrector.splitLine(pos, lineIndex);
+	    final ModificationResult res = wrappedModel.splitLine(pos, lineIndex);
 	    if (!res.isPerformed())
 		return res;
 	    final int indent = getIndent(lineIndex);
@@ -58,7 +58,7 @@ public final class EditCorrectors
 		pos++;
 	    if (pos == 0)
 		return true;
-	    return basicCorrector.deleteRegion(0, lineIndex, pos, lineIndex).isPerformed();
+	    return wrappedModel.deleteRegion(0, lineIndex, pos, lineIndex).isPerformed();
 	}
 	protected boolean addIndent(int lineIndex, int len)
 	{
@@ -72,7 +72,7 @@ public final class EditCorrectors
 	    final int spaceCount = len % tabLen;
 	    for(int i = 0;i < spaceCount;i++)
 		b.append(' ');
-	    return basicCorrector.putChars(0, lineIndex, new String(b)).isPerformed();
+	    return wrappedModel.putChars(0, lineIndex, new String(b)).isPerformed();
 	}
 	protected int getTabLen()
 	{
@@ -80,7 +80,7 @@ public final class EditCorrectors
 	}
     }
 
-    static public class WordWrapCorrector extends EmptyCorrector
+    static public class WordWrapCorrector extends MultilineEditModelWrap
     {
 	protected final int lineLen;
 	public WordWrapCorrector(MultilineEditCorrector basicCorrector, int lineLen) {

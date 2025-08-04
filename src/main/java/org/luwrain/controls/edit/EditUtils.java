@@ -268,7 +268,8 @@ public final class EditUtils
 	}
     }
 
-    static public class ActiveCorrector implements MultilineEditCorrector
+    /*
+    static class ActiveCorrector implements MultilineEditCorrector
     {
 	protected MultilineEditCorrector activatedCorrector = null;
 	protected MultilineEditCorrector defaultCorrector = null;
@@ -366,7 +367,8 @@ public final class EditUtils
 	}
     }
 
-    static public class EmptyCorrector implements MultilineEditCorrector
+
+    static class EmptyCorrector implements MultilineEditCorrector
     {
 	protected final MultilineEditCorrector basicCorrector;
 	public EmptyCorrector(MultilineEditCorrector basicCorrector)
@@ -429,4 +431,5 @@ public final class EditUtils
 	    return basicCorrector.doEditAction(action);
 	}
     }
+    */
 }

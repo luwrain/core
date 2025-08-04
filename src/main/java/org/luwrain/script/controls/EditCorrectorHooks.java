@@ -67,13 +67,13 @@ public class EditCorrectorHooks implements MultilineEditCorrector
     protected final MultilineEditCorrector base;
     protected final String hookNameBase;
 
-    public EditCorrectorHooks(HookContainer hookContainer, MultilineEditCorrector base, String hookNameBase)
+    public EditCorrectorHooks(HookContainer hookContainer, MultilineEdit.Model base, String hookNameBase)
     {
 	NullCheck.notNull(hookContainer, "hookContainer");
 	NullCheck.notNull(base, "base");
 	NullCheck.notEmpty(hookNameBase, "hookNameBase");
 	this.context = hookContainer;
-	this.base = base;
+	this.base = (MultilineEditCorrector)base;
 	this.hookNameBase = hookNameBase;
     }
 
