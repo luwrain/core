@@ -381,7 +381,7 @@ public class FormArea  extends NavigationArea
 	requireNonNull(lines, "lines can't be null");
 	final var params = new MultilineEdit.Params();
 	params.context = context;
-	params.model = new EditUtils.CorrectorChangeListener(new MultilineEditTranslator(lines, mlEditHotPoint)){
+	params.model = new CorrectorChangeListener(new MultilineEditTranslator(lines, mlEditHotPoint)){
 		@Override public void onMultilineEditChange()
 		{
 		    context.onAreaNewContent(FormArea.this);
