@@ -16,14 +16,10 @@
 
 package org.luwrain.controls.edit;
 
-import java.util.*;
 import java.util.function.*;
 
 import org.luwrain.core.*;
 import org.luwrain.controls.*;
-import org.luwrain.controls.edit.MultilineEdit.ModificationResult;
-
-import static org.luwrain.core.NullCheck.*;
 
 public final class EditUtils
 {
