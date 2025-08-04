@@ -388,7 +388,7 @@ public class FormArea  extends NavigationArea
 		    context.onAreaNewHotPoint(FormArea.this);
 		}
 	    };
-	params.appearance = new EditUtils.DefaultMultilineEditAppearance(context);
+	params.appearance = new DefaultMultilineEditAppearance(context);
 	params.regionPoint = regionPoint;
 	return params;
     }

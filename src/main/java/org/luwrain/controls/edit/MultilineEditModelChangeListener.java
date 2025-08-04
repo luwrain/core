@@ -16,10 +16,7 @@
 
 package org.luwrain.controls.edit;
 
-import org.luwrain.core.*;
 import org.luwrain.controls.edit.MultilineEdit.*;
-import org.luwrain.controls.edit.EditUtils.*;
-
 import static java.util.Objects.*;
 
 /**
@@ -38,15 +35,15 @@ public abstract class MultilineEditModelChangeListener implements MultilineEdit.
     protected final MultilineEdit.Model model;
 
     public MultilineEditModelChangeListener(MultilineEdit.Model model)
-	{
-	    requireNonNull(model, "model can't be null");
-	    this.model = model;
-	}
+    {
+	requireNonNull(model, "model can't be null");
+	this.model = model;
+    }
 
-	/** Called if the model gets some changes. There is a guarantee that this method
-	 * is invoked strictly after the changes in the model.
-	 */	 
-	abstract public void onAfterMultilineEditChange();
+    /** Called if the model gets some changes. There is a guarantee that this method
+     * is invoked strictly after the changes in the model.
+     */	 
+    abstract public void onAfterMultilineEditChange();
 
     @Override public int getLineCount()
     {
@@ -68,10 +65,10 @@ public abstract class MultilineEditModelChangeListener implements MultilineEdit.
 	return model.getHotPointY();
     }
 
-	@Override public String getTabSeq()
-	{
-	    return model.getTabSeq();
-	}
+    @Override public String getTabSeq()
+    {
+	return model.getTabSeq();
+    }
 
     @Override public ModificationResult deleteChar(int pos, int lineIndex)
     {
@@ -121,4 +118,3 @@ public abstract class MultilineEditModelChangeListener implements MultilineEdit.
 	return res;
     }
     }
-

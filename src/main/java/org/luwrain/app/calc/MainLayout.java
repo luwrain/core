@@ -41,7 +41,7 @@ public final class MainLayout extends LayoutBase
 	final EditArea.Params params = new EditArea.Params();
 	params.context = getControlContext();
 	params.name = app.getStrings().appName();
-	params.appearance = new EditUtils.DefaultEditAreaAppearance(getControlContext()){
+	params.appearance = new DefaultEditAreaAppearance(getControlContext()){
 		@Override public void announceLine(int index, String line)
 		{
 		    NavigationArea.defaultLineAnnouncement(context, index, getLuwrain().getSpeakableText(line, Luwrain.SpeakableTextType.PROGRAMMING));

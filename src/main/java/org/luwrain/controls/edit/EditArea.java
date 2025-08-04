@@ -14,8 +14,6 @@
    General Public License for more details.
 */
 
-//LWR_API 1.0
-
 package org.luwrain.controls.edit;
 
 import java.util.*;
@@ -69,7 +67,7 @@ public interface Appearance extends MultilineEdit.Appearance
 	{
 	    requireNonNull(context, "context can't be null");
 	    this.context = context;
-	    this.appearance = new EditUtils.DefaultEditAreaAppearance(context);
+	    this.appearance = new DefaultEditAreaAppearance(context);
 	    this.inputEventListeners = new ArrayList<>();
 	    this.inputEventListeners.add(
 					 (edit, event) -> edit.update( (lines, hotPoint) -> chainOfResponsibilityNoExc(context, TEXT_INPUT_ML, new Object[]{
