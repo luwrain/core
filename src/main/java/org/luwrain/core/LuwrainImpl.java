@@ -216,6 +216,8 @@ final class LuwrainImpl implements Luwrain
 	{
 	case PATH_SYS_DATA_DIR:
 	    return core.conf.getDataDir().getAbsolutePath();
+	    	case PATH_SYS_JS_DIR:
+	    return core.conf.getJsDir().getAbsolutePath();
 	}
 	if (pathId.startsWith("var:") || pathId.startsWith("VAR:") && pathId.length() >= 5)
 	{

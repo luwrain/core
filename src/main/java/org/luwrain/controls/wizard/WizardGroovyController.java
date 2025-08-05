@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -14,8 +14,6 @@
    General Public License for more details.
 */
 
-//LWR_API 1.0
-
 package org.luwrain.controls.wizard;
 
 import java.util.*;
@@ -26,8 +24,7 @@ import org.luwrain.core.*;
 import org.luwrain.controls.*;
 import org.luwrain.controls.WizardArea.*;
 
-import static org.luwrain.core.NullCheck.*;
-
+import static java.util.Objects.*;
 
 public class WizardGroovyController
 {
@@ -37,17 +34,17 @@ public class WizardGroovyController
 
     public WizardGroovyController(Luwrain luwrain, WizardArea area)
     {
-	notNull(luwrain, "luwrain");
-	notNull(area, "area");
-	this.luwrain = luwrain;
-	this.area = area;
+	this.luwrain = requireNonNull(luwrain, "luwrain can't be null");
+	this.area = requireNonNull(area, "area can't be null");
     }
 
     public void call(String title, String firstFrame, Closure frames)
     {
-	notNull(title, "title");
-	notEmpty(firstFrame, "firstFrame");
-	notNull(frames, "frames");
+	requireNonNull(title, "title can't be null");
+	requireNonNull(firstFrame, "firstFrame can't be null");
+	requireNonNull(frames, "frames can't be null");
+	if (firstFrame.isEmpty())
+	    throw new IllegalArgumentException("firstFrame can't be empty");
 	frames.setDelegate(this);
 	frames.call();
 	final var frame = this.frames.get(firstFrame);
@@ -58,13 +55,14 @@ public class WizardGroovyController
 
     public void frame(String id, Closure closure)
     {
-	notEmpty(id, "id");
-	notNull(closure, "closure");
+	requireNonNull(id, "id can't be null");
+	requireNonNull(closure, "closure can't be null");
+	if (id.isEmpty())
+	    throw new IllegalArgumentException("id can't be empty");
 	final var f = area.newFrame();
 	final var d = new FrameDelegate(this, f);
 	closure.setDelegate(d);
 	closure.call();
 	frames.put(id, f);
     }
-
     }
