@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -231,7 +231,7 @@ boolean standalone;
 
     private void loadPlayer()
     {
-	final var factories = new ArrayList<org.luwrain.player.Factory>();
+	final var factories = extensions.load(org.luwrain.player.Factory.class);
 	for(var f: ServiceLoader.load(org.luwrain.player.Factory.class))
 	    factories.add(f);
 	if (factories.isEmpty())
