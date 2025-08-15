@@ -29,7 +29,7 @@ public final class I18nImpl implements I18n, I18nExtension
 
     static private final String
 	EN_LANG = "en",
-	NO_CHOSEN_LANG = "#NO CHOSEN LANGUAGE#";
+	NO_SELECTED_LANG = "#NO SELECTED LANGUAGE#";
 
     private Lang selectedLang = null;
     private String selectedLangName = "";
@@ -52,7 +52,7 @@ public final class I18nImpl implements I18n, I18nExtension
 	NullCheck.notNull(text, "text");
 	NullCheck.notNull(speakableTextType, "speakableTextType");
 	if (selectedLang == null)
-	    return NO_CHOSEN_LANG;
+	    return NO_SELECTED_LANG;
 	try {
 	    final String value = selectedLang.getSpeakableText(text, speakableTextType);
 	    return value != null?value:text;
@@ -68,7 +68,7 @@ public final class I18nImpl implements I18n, I18nExtension
     {
 	NullCheck.notNull(date, "date");
 	if (selectedLang == null)
-	    return NO_CHOSEN_LANG;
+	    return NO_SELECTED_LANG;
 	final String value = selectedLang.pastTimeBrief(date);
 	return value != null?value:"";
     }
@@ -101,22 +101,22 @@ public final class I18nImpl implements I18n, I18nExtension
     {
 	NullCheck.notNull(entities, "entities");
 	if (selectedLang == null)
-	    return "#NO CHOSEN LANGUAGE#";
+	    return NO_SELECTED_LANG;
 	final String value = selectedLang.getNumberStr(count, entities);
 	return value != null?value:"";
     }
 
     @Override public String staticStr(LangStatic id)
     {
-	NullCheck.notNull(id, "id");
+	requireNonNull(id, "id can't be null");
 	return getStaticStr(convertStaticValueName(id.toString()));
     }
 
     @Override public String getStaticStr(String id)
     {
-	NullCheck.notNull(id, "id");
+	requireNonNull(id, "id can't be null");
 	if (selectedLang == null)
-	    return NO_CHOSEN_LANG;
+	    return NO_SELECTED_LANG;
 	final String value = selectedLang.getStaticStr(id);
 	return value != null && !value.isEmpty()?value:"#" + id + "#";
     }
@@ -287,7 +287,7 @@ public final class I18nImpl implements I18n, I18nExtension
 	return true;
     }
 
-    String getChosenLangName()
+    String getSelectedLangName()
     {
 	return selectedLangName;
     }

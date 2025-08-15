@@ -14,8 +14,6 @@
    General Public License for more details.
 */
 
-//LWR_API 2.0
-
 package org.luwrain.i18n;
 
 import java.util.*;
@@ -28,6 +26,8 @@ import org.luwrain.nlp.*;
 import org.luwrain.script.*;
 import org.luwrain.script.hooks.*;
 
+import static java.util.Objects.*;
+
 abstract public class LangBase implements Lang
 {
     protected final String langName;
@@ -37,10 +37,12 @@ protected final Map<String, String> chars;
 
     public LangBase(String langName, Luwrain luwrain, Map<String, String> staticStrings, Map<String, String> chars)
     {
-	NullCheck.notEmpty(langName, "langName");
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(staticStrings, "staticStrings");
-	NullCheck.notNull(chars, "chars");
+requireNonNull(langName, "langName can't be null");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(staticStrings, "staticStrings can't be null");
+requireNonNull(chars, "chars can't be null");
+if (langName.isEmpty())
+    throw new IllegalArgumentException("langName can't be empty");
 	this.langName = langName;
 	this.luwrain = luwrain;
 	this.staticStrings = staticStrings;
@@ -50,7 +52,7 @@ protected final Map<String, String> chars;
     @Override public String getStaticStr(String id)
     {
 	NullCheck.notEmpty(id, "id");
-	return staticStrings.containsKey(id)?staticStrings.get(id):"";
+	return staticStrings.get(id);
     }
 
     @Override public String hasSpecialNameOfChar(char ch)

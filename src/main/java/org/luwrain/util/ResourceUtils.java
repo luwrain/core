@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -16,14 +16,39 @@
 
 package org.luwrain.util;
 
+import java.util.*;
 import java.io.*;
 
 import org.luwrain.core.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.NullCheck.*;
 
 public final class ResourceUtils
 {
+    static public List<String> readStringResourceAsList(Class c, String resourceName, String charset) throws IOException
+    {
+	requireNonNull(c, "c can't be null");
+	requireNonNull(resourceName, "resourceName can't be null");
+	requireNonNull(charset, "charset can't be null");
+	if (resourceName.isEmpty())
+	    throw new IllegalArgumentException("resourceName can't be empty");
+	if (charset.isEmpty())
+	    throw new IllegalArgumentException("charset can't be empty");
+	final var res = new ArrayList<String>();
+	try (final BufferedReader r = new BufferedReader(new InputStreamReader(c.getResourceAsStream(resourceName), charset))) {
+	    {
+		String line = r.readLine();
+		while (line != null)
+		{
+		    res.add(line);
+		    line = r.readLine();
+		}
+		return res;
+	    }
+	}
+    }
+
     static public String readStringResource(Class c, String resourceName, String charset, String lineSeparator) throws IOException
     {
 	notNull(c, "c");
@@ -41,7 +66,6 @@ public final class ResourceUtils
 		}
 		return new String(b);
 	    }
-	    
 	}
     }
 

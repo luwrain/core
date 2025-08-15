@@ -22,7 +22,7 @@ import com.beust.jcommander.*;
 final class Args
 {
     @Parameter(names = {"-s", "--speech"},
-	       description = "Desired speech engine",
+	       description = "Preferable speech engine",
 	       arity = 1,
 	       required = false)
 	String speech;
@@ -42,6 +42,14 @@ final class Args
 	       description = "Set a parameter for the default speech engine",
 	       variableArity = true,	       required = false)
 	List<String> defSpeechParams;
+
+        @Parameter(names = "--lang",
+	       description = "Preferable language  of user interface",
+	       arity = 1,
+	       required = false)
+	String lang;
+
+    
 
     @Parameter(names = "--app-dir",
 	       description = "The directory with the distribution files",

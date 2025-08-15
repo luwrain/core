@@ -234,6 +234,19 @@ final class LuwrainImpl implements Luwrain
 	return null;
     }
 
+        @Override public String getString(String strId)
+    {
+	requireNonNull(strId, "strId");
+	if (strId.startsWith("static:") || strId.startsWith("STATIC:"))
+	{
+	    final var s = strId.substring(7);
+	    if (s.isEmpty())
+		return null;
+	    return core.i18n.getStaticStr(s);
+	}
+	return null;
+    }
+
     @Override public I18n i18n()
     {
 	return core.i18n;

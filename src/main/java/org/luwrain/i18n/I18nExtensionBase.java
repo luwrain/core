@@ -23,6 +23,7 @@ import java.util.*;
 import org.luwrain.core.*;
 
 import static java.util.Objects.*;
+import static org.luwrain.util.ResourceUtils.*;
 
 public class I18nExtensionBase extends EmptyExtension
 {
@@ -34,22 +35,53 @@ public class I18nExtensionBase extends EmptyExtension
     protected ClassLoader classLoader = null;
     protected Luwrain luwrain = null;
     protected final String langName;
-    protected final Map<String, String> staticStrings = new HashMap<>();
-    protected final Map<String, String> chars = new HashMap<>();
 
     protected I18nExtensionBase(String langName)
     {
 	requireNonNull(langName, "langName can't be null");
-	this.classLoader = classLoader;
 	this.langName = langName;
     }
 
     protected void init(ClassLoader classLoader, Luwrain luwrain)
     {
-	NullCheck.notNull(classLoader, "classLoader");
-	NullCheck.notNull(luwrain, "luwrain");
-	this.classLoader = classLoader;
-	this.luwrain = luwrain;
+	this.classLoader = requireNonNull(classLoader, "classLoader");
+	this.luwrain = requireNonNull(luwrain, "luwrain");
+    }
+
+    protected Map<String, String> readStaticStrings() throws IOException
+    {
+	return readResource("static.txt");
+    }
+
+        protected Map<String, String> readChars() throws IOException
+    {
+	return readResource("chars.txt");
+    }
+
+    protected void loadCommands(I18nExtension ext) throws IOException
+    {
+final var res = readResource("commands.txt");
+for(var e: res.entrySet())
+    ext.addCommandTitle(langName, e.getKey(), e.getValue());
+    }
+
+    protected Map<String, String> readResource(String resName) throws IOException
+    {
+	final var res = new HashMap<String, String>();
+	final var lines = readStringResourceAsList(getClass(), resName, "UTF-8");
+	for(var l: lines)
+	    if (!l.trim().isEmpty() && l.trim().charAt(0) != '#')
+	    {
+		final var pos = l.indexOf("=");
+		if (pos < 0)
+		    continue;
+		final String
+		key = l.substring(0, pos).trim(),
+		value = l.substring(pos + 1).trim();
+		if (!key.isEmpty() && !value.isEmpty())
+		    res.put(key, value);
+	    }
+	return res;
     }
 
     protected void loadProperties(String resourcePath, I18nExtension ext) throws IOException
@@ -84,44 +116,6 @@ public class I18nExtensionBase extends EmptyExtension
 	NullCheck.notNull(v, "v");
 	NullCheck.notNull(ext, "ext");
 	NullCheck.notNull(resourcePath, "resourcePath");
-	//commands
-	if (k.trim().startsWith(COMMAND_PREFIX))
-	{
-	    final String c = k.trim().substring(COMMAND_PREFIX.length());
-	    if (c.trim().isEmpty())
-	    {
-		Log.warning(langName, "the illegal key \'" + k + "\' in resource file " + resourcePath);
-		return;
-	    }
-	    ext.addCommandTitle(langName, c.trim(), v.trim());
-	    return;
-	}
-
-	//statics
-	if (k.trim().startsWith(STATIC_PREFIX))
-	{
-	    final String c = k.trim().substring(STATIC_PREFIX.length());
-	    if (c.trim().isEmpty())
-	    {
-		Log.warning(langName, "the illegal key \'" + k + "\' in resource file " + resourcePath);
-		return;
-	    }
-	    staticStrings.put(c.trim(), v.trim());
-	    return;
-	}
-
-	//chars
-	if (k.trim().startsWith(CHARS_PREFIX))
-	{
-	    final String c = k.trim().substring(CHARS_PREFIX.length());
-	    if (c.trim().isEmpty())
-	    {
-		Log.warning(langName, "the illegal key \'" + k + "\' in resource file " + resourcePath);
-		return;
-	    }
-	    chars.put(c.trim(), v.trim());
-	    return;
-	}
 
 	//strings
 	if (k.trim().startsWith(STRINGS_PREFIX))
