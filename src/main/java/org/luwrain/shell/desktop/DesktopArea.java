@@ -100,7 +100,7 @@ requireNonNull(areaName, "areaName can't be null");
 
     @Override protected String noContentStr()
     {
-	return "Рабочий стол пуст";//FIXME:
+	return (luwrain.getString("STATIC:EmptyDesktop"));
     }
 
     @Override public boolean onListClick(ListArea area, int index, DesktopItem item)

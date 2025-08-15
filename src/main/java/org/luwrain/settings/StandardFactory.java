@@ -63,7 +63,7 @@ public final class StandardFactory implements Factory
 	    fileTypes,
 	    StandardElements.INPUT_OUTPUT,
 	    StandardElements.SPEECH,
-	    StandardElements.BRAILLE,
+	    //	    StandardElements.BRAILLE,
 	    StandardElements.SOUND,
 	    StandardElements.KEYBOARD,
 			    	    StandardElements.HARDWARE,
@@ -79,7 +79,7 @@ public final class StandardFactory implements Factory
 
     @Override public Element[] getOnDemandElements(Element parent)
     {
-	NullCheck.notNull(parent, "parent");
+	requireNonNull(parent, "parent can't be null");
 	return new Element[0];
     }
 
@@ -87,51 +87,51 @@ public final class StandardFactory implements Factory
     {
 	requireNonNull(el, "el can't be null");
 	if (el.equals(hardwareSysDevices))
-	    return new SimpleSection(hardwareSysDevices, "Системные устройства");
+	    return new SimpleSection(hardwareSysDevices, luwrain.getString("STATIC:CpSysDevices"));
 	if (el.equals(StandardElements.ROOT))
-	    return new SimpleSection(StandardElements.ROOT, "Панель управления");
+	    return new SimpleSection(StandardElements.ROOT, luwrain.getString("STATIC:CpTreeRoot"));
 	if (el.equals(StandardElements.APPLICATIONS))
-	    return new SimpleSection(StandardElements.APPLICATIONS, "Приложения");
+	    return new SimpleSection(StandardElements.APPLICATIONS, luwrain.getString("STATIC:CpApplications"));
 	if (el.equals(dateTime))
-	    return new SimpleSection(dateTime, "Дата и время", (controlPanel)->{return new DateTime(controlPanel);});
+	    return new SimpleSection(dateTime, luwrain.getString("STATIC:CpDateTime"), (controlPanel)->{return new DateTime(controlPanel);});
 	if (el.equals(StandardElements.INPUT_OUTPUT))
-	    return new SimpleSection(StandardElements.INPUT_OUTPUT, "Ввод/вывод");
+	    return new SimpleSection(StandardElements.INPUT_OUTPUT, luwrain.getString("STATIC:CpInputOutput"));
 	if (el.equals(StandardElements.KEYBOARD))
-	    return new SimpleSection(StandardElements.KEYBOARD, "Клавиатура");
+	    return new SimpleSection(StandardElements.KEYBOARD, luwrain.getString("STATIC:CpKeyboard"));
 	if (el.equals(StandardElements.SOUND))
-	    return new SimpleSection(StandardElements.SOUND, "Звук");
+	    return new SimpleSection(StandardElements.SOUND, luwrain.getString("STATIC:CpSound"));
 	if (el.equals(StandardElements.BRAILLE))
 	    return new SimpleSection(StandardElements.BRAILLE, "Браиль", (controlPanel)->Braille.create(controlPanel));
 	if (el.equals(StandardElements.SPEECH))
-	    return new SimpleSection(StandardElements.SPEECH, luwrain.i18n().getStaticStr("CpSpeech"));
+	    return new SimpleSection(StandardElements.SPEECH, luwrain.getString("STATIC:CpSpeech"));
 	if (el.equals(StandardElements.NETWORK))
-	    return new SimpleSection(StandardElements.NETWORK, "Сеть");
+	    return new SimpleSection(StandardElements.NETWORK, luwrain.getString("STATIC:CpNetwork"));
 	if (el.equals(StandardElements.HARDWARE))
-	    return new SimpleSection(StandardElements.HARDWARE, "Оборудование");
+	    return new SimpleSection(StandardElements.HARDWARE, luwrain.getString("STATIC:CpHardware"));
 	if (el.equals(StandardElements.UI))
-	    return new SimpleSection(StandardElements.UI, "Интерфейс пользователя");
+	    return new SimpleSection(StandardElements.UI, luwrain.getString("STATIC:CpUserInterface"));
 	if (el.equals(StandardElements.EXTENSIONS))
-	    return new SimpleSection(StandardElements.EXTENSIONS, "Расширения");
+	    return new SimpleSection(StandardElements.EXTENSIONS, luwrain.getString("STATIC:CpExtensions"));
 	if (el.equals(StandardElements.WORKERS))
-	    return new SimpleSection(StandardElements.WORKERS, "Фоновые задачи");
+	    return new SimpleSection(StandardElements.WORKERS, luwrain.getString("STATIC:CpBackgroundWorkers"));
 	if (el.equals(uiGeneral))
-	    return new SimpleSection(uiGeneral, luwrain.i18n().getStaticStr("CpUiGeneral"), (controlPanel)->UserInterface.create(controlPanel));
+	    return new SimpleSection(uiGeneral, luwrain.getString("STATIC:CpUiGeneral"), (controlPanel)->UserInterface.create(controlPanel));
 	if (el.equals(hotKeys))
-	    return new SimpleSection(hotKeys, "Горячие клавиши", (controlPanel)->HotKeys.create(controlPanel));
+	    return new SimpleSection(hotKeys, luwrain.getString("STATIC:CpHotKeys"), (controlPanel)->HotKeys.create(controlPanel));
 	if (el.equals(personalInfo))
-	    return new SimpleSection(personalInfo, luwrain.i18n().getStaticStr("CpPersonalInfoSection"), (controlPanel)->{return new PersonalInfo(controlPanel);});
+	    return new SimpleSection(personalInfo, luwrain.getString("STATIC:CpPersonalInfoSection"), (controlPanel)->{return new PersonalInfo(controlPanel);});
 	if (el.equals(fileTypes))
-	    return new SimpleSection(fileTypes, "Типы файлов", (controlPanel)->FileTypes.create(controlPanel));
+	    return new SimpleSection(fileTypes, luwrain.getString("STATIC:CpFileTypes"), (controlPanel)->FileTypes.create(controlPanel));
 	if (el.equals(hardwareCpuMem))
-	    return new SimpleSection(hardwareCpuMem, "Процессор и память", (controlPanel)->HardwareCpuMem.create(controlPanel));
+	    return new SimpleSection(hardwareCpuMem, luwrain.getString("STATIC:CpCpuAndMem"), (controlPanel)->HardwareCpuMem.create(controlPanel));
 	if (el.equals(version))
-	    return new SimpleSection(version, luwrain.i18n().getStaticStr("CpVersion"), (controlPanel)->Version.create(controlPanel));
+	    return new SimpleSection(version, luwrain.getString("STATIC:CpVersion"), (controlPanel)->Version.create(controlPanel));
 	if (el.equals(speechGeneral))
-	    return new SimpleSection(speechGeneral, luwrain.i18n().getStaticStr("CpSpeechGeneral"), (controlPanel)->Speech.create(controlPanel));
+	    return new SimpleSection(speechGeneral, luwrain.getString("STATIC:CpSpeechGeneral"), (controlPanel)->Speech.create(controlPanel));
 	if (el.equals(soundsList))
-	    return new SimpleSection(soundsList, luwrain.i18n().getStaticStr("CpSoundsList"), (controlPanel)->SoundsList.create(controlPanel));
+	    return new SimpleSection(soundsList, luwrain.getString("STATIC:CpSoundsList"), (controlPanel)->SoundsList.create(controlPanel));
 	if (el.equals(mainMenu))
-	    return new SimpleSection(mainMenu, luwrain.i18n().getStaticStr("CpMainMenu"), (controlPanel)->MainMenu.create(controlPanel));
+	    return new SimpleSection(mainMenu, luwrain.getString("STATIC:CpMainMenu"), (controlPanel)->MainMenu.create(controlPanel));
 	if (el.equals(soundSchemes))
 	    return new SimpleSection(soundSchemes, "Звуковые схемы", (controlPanel)->SoundSchemes.create(controlPanel));
 	return null;
