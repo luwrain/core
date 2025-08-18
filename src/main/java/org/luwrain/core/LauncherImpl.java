@@ -19,6 +19,14 @@ package org.luwrain.core;
 import java.io.*;
 import java.net.*;
 
+import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+
+
+
 public final class LauncherImpl implements Launcher
 {
 static private final String
@@ -30,7 +38,16 @@ WIN_USER_DATA_DIR_NAME = "Luwrain";
 
     @Override public void launch(String[] args)
     {
-	final var a = Args.parse(args);
+	final Args a;
+	try {
+a = Args.parse(args);
+	}
+	catch(com.beust.jcommander.ParameterException ex)
+	{
+	    System.err.println("ERROR: luwrain:" + ex.getMessage());
+	    System.exit(1);
+	    return;
+	}
 	final File
 	appDir = new File(a.appDir),
 	dataDir = getDataDir(a, appDir),
@@ -68,4 +85,28 @@ WIN_USER_DATA_DIR_NAME = "Luwrain";
 	return new File(new File(new File(userHomeDir, ".local"), "luwrain"), "default");
     }
 
+    /*
+    void setLogFileName()
+    {
+	Logger logger = LogManager.getLogger();
+		        Appender appender = logger.getAppender("file");
+
+        if (appender instanceof FileAppender) {
+            FileAppender fileAppender = (FileAppender) appender;
+            fileAppender.setFile("new/path/to/logfile.log");
+            try {
+                fileAppender.activateOptions();
+            }
+	    catch (Exception e)
+	    {
+                e.printStackTrace();
+            }
+        } else
+	{
+            System.out.println("Appender not found or not a FileAppender");
+        }
+    }
+    */
 }
+
+

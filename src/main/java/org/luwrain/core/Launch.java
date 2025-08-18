@@ -102,7 +102,18 @@ final class Launch
 	if (instances.isEmpty())
 	    throw new IllegalStateException("No operating system instances");
 	if (instances.size() > 1)
-	    throw new IllegalStateException("There are " + instances.size() + " operating system instances, please explicitly choose which to use");
+	{
+	    if (args.os == null || args.os.trim().isEmpty())
+	    	    throw new IllegalStateException("There are " + instances.size() + " operating system instances, please explicitly choose which one to use");
+	    for(var i: instances)
+		if (i.getClass().getName().equals(args.os.trim()) || i.getClass().getSimpleName().toUpperCase().equals(args.os.trim().toUpperCase()))
+		{
+		    this.os = i;
+		    break;
+		}
+	    if (this.os == null)
+		throw new IllegalStateException("Unable to find an OS interface with name '" + args.os.trim() + "'");
+	} else
 	this.os = instances.get(0);
 	log.trace("Using operating system from the class " + this.os.getClass().getName());
 	final InitResult initRes = os.init(null);

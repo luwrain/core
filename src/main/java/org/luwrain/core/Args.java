@@ -49,7 +49,11 @@ final class Args
 	       required = false)
 	String lang;
 
-    
+            @Parameter(names = "--os",
+	       description = "Preferable interface  to operating system",
+	       arity = 1,
+	       required = false)
+	String os;
 
     @Parameter(names = "--app-dir",
 	       description = "The directory with the distribution files",
