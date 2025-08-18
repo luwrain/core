@@ -14,17 +14,17 @@
    General Public License for more details.
 */
 
-//LWR_API 1.0
-
 package org.luwrain.core;
+
+import org.luwrain.io.json.*;
 
 public interface EventResponse
 {
     public interface Speech
     {
-	void speak(String[] parts);
+	void speak(String[] fragments);
 	void speakLetter(char letter);
     }
 
-    void announce(Luwrain luwrain, org.luwrain.core.EventResponse.Speech speech);
+    void announce(Luwrain luwrain, org.luwrain.core.EventResponse.Speech speech, CommonSettings sett);
 }

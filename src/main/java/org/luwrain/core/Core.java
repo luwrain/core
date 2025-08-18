@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.*;
 import java.io.*;
 
 import org.luwrain.core.events.*;
+import org.luwrain.io.json.*;
 import org.luwrain.core.listening.*;
 import org.luwrain.script.Hooks;
 
@@ -33,12 +34,15 @@ final class Core extends EventDispatching
     final OperatingSystem os;
     final Interaction interaction;
 boolean standalone;
-    private final org.luwrain.shell.Conversations conversations;
-    org.luwrain.player.Player player = null;
+    final org.luwrain.shell.Conversations conversations;
+        final WavePlayers.Player wavePlayer = new WavePlayers.Player();
+        final UniRefProcManager uniRefProcs = new UniRefProcManager();//FIXME:
+
+    private org.luwrain.player.Player player = null;
         private Application desktop = null;
-    final WavePlayers.Player wavePlayer = new WavePlayers.Player();
     private volatile boolean wasInputEvents = false;
-    final UniRefProcManager uniRefProcs = new UniRefProcManager();//FIXME:
+    private CommonSettings commonSett = null;
+
 
     Core(Config conf)
     {
@@ -78,10 +82,10 @@ boolean standalone;
 
     @Override protected void processEventResponse(EventResponse eventResponse)
     {
-	notNull(eventResponse, "eventResponse");
+	requireNonNull(eventResponse, "eventResponse can't be null");
 	//FIXME:access level
 	final EventResponse.Speech s = new org.luwrain.core.speech.EventResponseSpeech(speech, i18n, speakingText);
-	eventResponse.announce(luwrain, s);
+	eventResponse.announce(luwrain, s, commonSett);
     }
 
     Area getActiveArea(boolean speakMessages)
@@ -153,9 +157,13 @@ boolean standalone;
 	fileTypes.load(configs);
 	loadPlayer();
 	loadDesktop();
-	//	props.setProviders(objRegistry.getPropertiesProviders());
-	//	uiSettings = null;//FIXME:newreg Settings.createUserInterface(registry);
-    }
+	final var sett = configs.load(CommonSettings.class);
+	if (sett == null)
+	{
+	    this.commonSett = new CommonSettings();
+	} else
+	    this.commonSett = sett;
+	    }
 
     String loadScript(ScriptSource script) throws ExtensionException
     {
@@ -669,6 +677,11 @@ onNewAreasLayout();
 	if (command.trim().isEmpty())
 	    return false;
 	return commands.run(command.trim());
+    }
+
+    org.luwrain.player.Player getPlayer()
+    {
+	return player;
     }
 
     void startAreaListening()

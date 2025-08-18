@@ -764,7 +764,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public org.luwrain.player.Player getPlayer()
     {
-	return core.player;
+	return core.getPlayer();
     }
 
     @Override public MediaResourcePlayer[] getMediaResourcePlayers()

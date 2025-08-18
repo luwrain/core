@@ -19,6 +19,9 @@ package org.luwrain.core;
 import java.util.*;
 
 import org.luwrain.i18n.*;
+import org.luwrain.io.json.*;
+
+import static java.util.Objects.*;
 
 public final class  EventResponses
 {
@@ -28,7 +31,7 @@ public final class  EventResponses
 	protected final String text;
 	public Hint(org.luwrain.core.Hint hint, String text)
 	{
-	    NullCheck.notNull(hint, "hint");
+	    requireNonNull(hint, "hint can't be null");
 	    this.hint = hint;
 	    this.text = text;
 	}
@@ -36,10 +39,10 @@ public final class  EventResponses
 	{
 	    this(hint, null);
 	}
-	@Override public void announce(Luwrain luwrain, Speech speech)
+	@Override public void announce(Luwrain luwrain, Speech speech, CommonSettings sett)
 	{
-	    NullCheck.notNull(luwrain, "luwrain");
-	    NullCheck.notNull(speech, "speech");
+	    requireNonNull(luwrain, "luwrain can't be null");
+	    requireNonNull(speech, "speech can't be null");
 	    final String hintText;
 	    if (this.text == null)
 		hintText = getTextForHint(luwrain, hint); else
@@ -58,11 +61,11 @@ public final class  EventResponses
 	protected final String text;
 	public Text(Sounds sound, String text)
 	{
-	    NullCheck.notNull(text, "text");
+	    requireNonNull(text, "text can't be null");
 	    this.sound = sound;
 	    this.text = text;
 	}
-	@Override public void announce(Luwrain luwrain, Speech speech)
+	@Override public void announce(Luwrain luwrain, Speech speech, CommonSettings sett)
 	{
 	    NullCheck.notNull(luwrain, "luwrain");
 	    NullCheck.notNull(text, "text");
@@ -80,7 +83,7 @@ public final class  EventResponses
 	{
 	    this.letter = letter;
 	}
-	@Override public void announce(Luwrain luwrain, Speech speech)
+	@Override public void announce(Luwrain luwrain, Speech speech, CommonSettings sett)
 	{
 	    NullCheck.notNull(luwrain, "luwrain");
 	    NullCheck.notNull(speech, "speech");
@@ -100,7 +103,7 @@ public final class  EventResponses
 	    this.text = text;
 	    this.suggestion = suggestion;
 	}
-	@Override public void announce(Luwrain luwrain, Speech speech)
+	@Override public void announce(Luwrain luwrain, Speech speech, CommonSettings sett)
 	{
 	    NullCheck.notNull(luwrain, "luwrain");
 	    NullCheck.notNull(speech, "speech");
@@ -147,7 +150,7 @@ public final class  EventResponses
 	{
 	    this(type, null, text, level, null);
 	}
-	@Override public void announce(Luwrain luwrain, Speech speech)
+	@Override public void announce(Luwrain luwrain, Speech speech, CommonSettings sett)
 	{
 	    NullCheck.notNull(luwrain, "luwrain");
 	    NullCheck.notNull(speech, "speech");
@@ -191,8 +194,8 @@ public final class  EventResponses
     //May return null
     static private String getSuggestionText(Suggestions suggestion, I18n i18n)
     {
-	NullCheck.notNull(suggestion, "suggestion");
-	NullCheck.notNull(i18n, "i18n");
+	requireNonNull(suggestion, "suggestion");
+	requireNonNull(i18n, "i18n can't be null");
 	switch(suggestion)
 	{
 	case CLICKABLE_LIST_ITEM:
