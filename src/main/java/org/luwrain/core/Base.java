@@ -76,13 +76,12 @@ abstract class Base implements EventConsumer
     Base(Config conf)
     {
 	this.conf = requireNonNull(conf, "conf can't be null");
-	this.luwrain = interfaces.systemObj;
 	this.args = requireNonNull(conf.getArgs(), "args can't be null");
 	this.configs = requireNonNull(conf.getConfigs(), "configs can't be null");
+	this.speech = new Speech(args, configs, extensions);
+	this.luwrain = interfaces.systemObj;
 	this.lang = conf.getLang();
 	this.helpSects = new HelpSections(configs);
-	this.speech = new Speech(args, configs, extensions);
-	//	this.sounds = new org.luwrain.core.sound.SoundIcons(configs);
 	this.soundManager = new org.luwrain.core.sound.Manager(objRegistry, luwrain, configs, conf.getSoundsDir().toPath());
 	this.mainCoreThread = Thread.currentThread();
     }

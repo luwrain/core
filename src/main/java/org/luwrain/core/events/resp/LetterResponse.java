@@ -14,17 +14,31 @@
    General Public License for more details.
 */
 
-package org.luwrain.io.json;
+package org.luwrain.core.events.resp;
 
 import java.util.*;
-import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public final class CommonSettings
+import org.luwrain.core.*;
+import org.luwrain.i18n.*;
+import org.luwrain.io.json.*;
+
+import static java.util.Objects.*;
+
+
+
+public class LetterResponse implements EventResponse
 {
-    String desktopTitle, desktopEscapeCommand, windowTitle, timeZone;
-    boolean hintsSounds, hintsText, hintsSoundsSpace, filePopupSkipHidden;
-    List<MainMenuItem> mainMenuItems;
+    protected final char letter;
+
+    public LetterResponse(char letter)
+	{
+	    this.letter = letter;
+	}
+
+    @Override public void announce(Luwrain luwrain, Speech speech, CommonSettings sett)
+    {
+	NullCheck.notNull(luwrain, "luwrain");
+	NullCheck.notNull(speech, "speech");
+	speech.speakLetter(letter);
+    }
 }

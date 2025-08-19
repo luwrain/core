@@ -26,7 +26,7 @@ import static java.util.Objects.*;
 public final class Speech
 {
     static private final Logger log = LogManager.getLogger();
-    static final int PITCH_HINT = -25;
+    static public final int PITCH_HINT = -25;
     static final int PITCH_MESSAGE = -25;
     static private final String SPEECH_PREFIX = "--speech=";
 

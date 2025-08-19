@@ -37,10 +37,13 @@ import static org.luwrain.script.Hooks.*;
 final class LuwrainImpl implements Luwrain
 {
     static private final Logger log = LogManager.getLogger();
+
     private final Core core;
+
+
     LuwrainImpl(Core core)
     {
-	notNull(core, "core");
+	requireNonNull(core, "core can't be null");
 	this.core = core;
     }
 
@@ -554,10 +557,10 @@ final class LuwrainImpl implements Luwrain
 		switch(letter)
 		{
 		case ' ':
-		    sayHint(Hint.SPACE);
+		    immediateHint(Hint.SPACE);
 		    return;
 		case '\t':
-		    sayHint(Hint.TAB);
+		    immediateHint(Hint.TAB);
 		    return;
 		}
 		final String value = i18n().hasSpecialNameOfChar(letter);
@@ -573,10 +576,10 @@ final class LuwrainImpl implements Luwrain
 		switch(letter)
 		{
 		case ' ':
-		    sayHint(Hint.SPACE);
+		    immediateHint(Hint.SPACE);
 		    return;
 		case '\t':
-		    sayHint(Hint.TAB);
+		    immediateHint(Hint.TAB);
 		    return;
 		}
 		final String value = i18n().hasSpecialNameOfChar(letter);
@@ -593,10 +596,10 @@ final class LuwrainImpl implements Luwrain
 		switch(letter)
 		{
 		case ' ':
-		    sayHint(Hint.SPACE);
+		    immediateHint(Hint.SPACE);
 		    return;
 		case '\t':
-		    sayHint(Hint.TAB);
+		    immediateHint(Hint.TAB);
 		    return;
 		}
 		final String value = i18n().hasSpecialNameOfChar(letter);
@@ -764,7 +767,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public org.luwrain.player.Player getPlayer()
     {
-	return core.getPlayer();
+	return core.player;
     }
 
     @Override public MediaResourcePlayer[] getMediaResourcePlayers()
@@ -876,14 +879,13 @@ final class LuwrainImpl implements Luwrain
 	return core.tempFiles.createTempFile(!prefix.trim().isEmpty()?prefix.trim():"unknown");
     }
 
-    private void sayHint(Hint hint)
+    private void immediateHint(Hint hint)
     {
-	NullCheck.notNull(hint, "hint");
-	final LangStatic staticStrId = EventResponses.hintToStaticStrMap(hint);
-	if (staticStrId == null)
-	    return;
-	speak(i18n().staticStr(staticStrId), Speech.PITCH_HINT);
+	requireNonNull(hint, "hint can't be null");
+	final var r = new org.luwrain.core.events.resp.HintResponse(hint);
+	r.announce(this, core.eventResponseSpeech, core.commonSett);
     }
+
 
     private void runInMainThread(Runnable runnable)
     {

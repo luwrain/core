@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -18,9 +18,11 @@
 
 package org.luwrain.controls;
 
+import java.util.*;
+
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
-import java.util.*;
+import org.luwrain.core.events.resp.*;
 
 public class TreeArea implements Area
 {
@@ -628,17 +630,17 @@ announce(items[hotPointY], briefAnnouncement);
 	    return;
 	}
 	String res = item.title;
-	final EventResponses.TreeItem.Type type;
+	final TreeItemResponse.Type type;
 	switch (item.type)
 	{
 	case OPENED:
-	    type = EventResponses.TreeItem.Type.EXPANDED;
+	    type = TreeItemResponse.Type.EXPANDED;
 	    break;
 	case CLOSED:
-	    type = EventResponses.TreeItem.Type.COLLAPSED;
+	    type = TreeItemResponse.Type.COLLAPSED;
 	    break;
 	default:
-	    	    type = EventResponses.TreeItem.Type.LEAF;
+	    	    type = TreeItemResponse.Type.LEAF;
 	}
 	context.setEventResponse(DefaultEventResponse.treeItem(type, item.title, item.level + 1));
 }

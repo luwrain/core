@@ -33,15 +33,15 @@ final class Core extends EventDispatching
     private final ClassLoader classLoader;
     final OperatingSystem os;
     final Interaction interaction;
-boolean standalone;
     final org.luwrain.shell.Conversations conversations;
         final WavePlayers.Player wavePlayer = new WavePlayers.Player();
         final UniRefProcManager uniRefProcs = new UniRefProcManager();//FIXME:
+final EventResponse.Speech eventResponseSpeech;
 
-    private org.luwrain.player.Player player = null;
+    org.luwrain.player.Player player = null;
         private Application desktop = null;
     private volatile boolean wasInputEvents = false;
-    private CommonSettings commonSett = null;
+    CommonSettings commonSett = null;
 
 
     Core(Config conf)
@@ -51,6 +51,7 @@ boolean standalone;
 	this.os = requireNonNull(conf.getOperatingSystem(), "conf.operatingSystem can't be null");
 	this.interaction = requireNonNull(conf.getInteraction());
 	this.conversations = new org.luwrain.shell.Conversations(luwrain);
+	this.eventResponseSpeech = new org.luwrain.core.speech.EventResponseSpeech(speech, i18n, speakingText);
     }
 
     void run()
@@ -84,8 +85,7 @@ boolean standalone;
     {
 	requireNonNull(eventResponse, "eventResponse can't be null");
 	//FIXME:access level
-	final EventResponse.Speech s = new org.luwrain.core.speech.EventResponseSpeech(speech, i18n, speakingText);
-	eventResponse.announce(luwrain, s, commonSett);
+	eventResponse.announce(luwrain, eventResponseSpeech, commonSett);
     }
 
     Area getActiveArea(boolean speakMessages)
@@ -150,7 +150,6 @@ boolean standalone;
 		error(e, "unable to load script " + f.toString());
 	    }
 	initI18n();
-	objRegistry.add(null, new StartingModeProperty());
 	speech.init();
 	//braille.init(null, os.getBraille(), this);
 	globalKeys.load();
@@ -198,7 +197,6 @@ boolean standalone;
     {
 	for(Command sc: Commands.getCommands(this, conversations))
 	    commands.add(luwrain, sc);//FIXME:
-	if (!standalone)
 	    for(Command sc: Commands.getNonStandaloneCommands(this, conversations))
 		commands.add(luwrain, sc);//FIXME:
 	final UniRefProc[] standardUniRefProcs = UniRefProcs.createStandardUniRefProcs(luwrain);
@@ -679,11 +677,6 @@ onNewAreasLayout();
 	return commands.run(command.trim());
     }
 
-    org.luwrain.player.Player getPlayer()
-    {
-	return player;
-    }
-
     void startAreaListening()
     {
 	final Area activeArea = getActiveArea(true);
@@ -705,42 +698,5 @@ onNewAreasLayout();
 	    return;
 	listening.cancel();
 	listening = null;
-    }
-
-    private final class StartingModeProperty implements PropertiesProvider
-    {
-	static private final String PROP_NAME = "luwrain.startingmode";
-        @Override public String getExtObjName()
-	{
-	    return this.getClass().getName();
-	}
-	@Override public String[] getPropertiesRegex()
-	{
-	    return new String[0];
-	}
-	@Override public Set<PropertiesProvider.Flags> getPropertyFlags(String propName)
-	{
-	    NullCheck.notEmpty(propName, "propName");
-	    if (propName.equals(PROP_NAME))
-		return EnumSet.of(PropertiesProvider.Flags.PUBLIC,
-				  PropertiesProvider.Flags.READ_ONLY);
-	    return null;
-	}
-	@Override public String getProperty(String propName)
-	{
-	    NullCheck.notEmpty(propName, "propName");
-	    if (propName.equals(PROP_NAME))
-		return wasInputEvents?"0":"1";
-	    return null;
-	}
-	@Override public boolean setProperty(String propName, String value)
-	{
-	    NullCheck.notEmpty(propName, "propName");
-	    NullCheck.notNull(value, "value");
-	    return false;
-	}
-	@Override public void setListener(PropertiesProvider.Listener listener)
-	{
-	}
     }
 }
