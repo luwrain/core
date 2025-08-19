@@ -27,4 +27,18 @@ public final class CommonSettings
     String desktopTitle, desktopEscapeCommand, windowTitle, timeZone;
     boolean hintsSounds, hintsText, hintsSoundsSpace, filePopupSkipHidden;
     List<MainMenuItem> mainMenuItems;
+
+    static public CommonSettings createInitial()
+    {
+	final var s = new CommonSettings();
+	s.setHintsSounds(true);
+	s.setHintsText(true);
+	s.setHintsSoundsSpace(true);
+	s.setFilePopupSkipHidden(true);
+	s.setDesktopTitle("LUWRAIN");
+	s.setWindowTitle("LUWRAIN");
+	s.setDesktopEscapeCommand("quit");
+	s.setMainMenuItems(new ArrayList<>());
+	return s;
+    }
 }

@@ -159,7 +159,8 @@ final EventResponse.Speech eventResponseSpeech;
 	final var sett = configs.load(CommonSettings.class);
 	if (sett == null)
 	{
-	    this.commonSett = new CommonSettings();
+	    this.commonSett = CommonSettings.createInitial();
+	    configs.save(this.commonSett);
 	} else
 	    this.commonSett = sett;
 	    }

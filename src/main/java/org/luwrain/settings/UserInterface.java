@@ -26,6 +26,10 @@ import static java.util.Objects.*;
 
 final class UserInterface extends FormArea implements SectionArea
 {
+static private final String
+    HINTS_SOUNDS = "hints-sounds",
+    HINTS_TEXT = "hints-text";
+
     private final ControlPanel controlPanel;
 
     UserInterface(ControlPanel controlPanel)
@@ -40,15 +44,19 @@ final class UserInterface extends FormArea implements SectionArea
     {
 	final var luwrain = controlPanel.getCoreInterface();
 	final var conf = requireNonNullElse(luwrain.loadConf(CommonSettings.class), new CommonSettings());
+	addCheckbox(HINTS_SOUNDS, luwrain.getString("STATIC:CpUiHintsSounds"), conf.isHintsSounds());
+		addCheckbox(HINTS_TEXT, luwrain.getString("STATIC:CpUiHintsText"), conf.isHintsText());
 	addEdit("desktop-title", luwrain.i18n().getStaticStr("CpUiDesktopTitle"), requireNonNullElse(conf.getDesktopTitle(), ""));
-	addEdit("window-title", luwrain.i18n().getStaticStr("CpUiWindowTitle"), requireNonNullElse(conf.getWindowTitle(), ""));
-	addEdit("desktop-escape-command", luwrain.i18n().getStaticStr("CpUiDesktopEscapeCommand"), requireNonNullElse(conf.getDesktopEscapeCommand(), ""));
+	addEdit("window-title", luwrain.getString("STATIC:CpUiWindowTitle"), requireNonNullElse(conf.getWindowTitle(), ""));
+	addEdit("desktop-escape-command", luwrain.getString("STATIC:CpUiDesktopEscapeCommand"), requireNonNullElse(conf.getDesktopEscapeCommand(), ""));
     }
 
     @Override public boolean saveSectionData()
     {
 		final var luwrain = controlPanel.getCoreInterface();
 	luwrain.updateConf(CommonSettings.class, conf -> {
+		conf.setHintsSounds(getCheckboxState(HINTS_SOUNDS));
+				conf.setHintsText(getCheckboxState(HINTS_TEXT));
 	conf.setDesktopTitle(getEnteredText("desktop-title"));
 	conf.setWindowTitle(getEnteredText("window-title"));
 	conf.setDesktopEscapeCommand(getEnteredText("desktop-escape-command"));
