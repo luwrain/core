@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -34,7 +34,7 @@ public final class App extends AppBase<Strings> implements MonoApp
 
     public App()
     {
-	super(Strings.NAME, Strings.class, "luwrain.console");
+	super(Strings.class, "luwrain.console");
     }
 
     @Override protected AreaLayout onAppInit()

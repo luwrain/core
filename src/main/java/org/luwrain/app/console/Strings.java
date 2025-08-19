@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -18,7 +18,5 @@ package org.luwrain.app.console;
 
 public interface Strings
 {
-    static final String NAME = "luwrain.console";
-
     String appName();
 }

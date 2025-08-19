@@ -35,9 +35,9 @@ public final class Desktop implements org.luwrain.core.Desktop
     @Override public InitResult onLaunchApp(Luwrain luwrain)
     {
 	this.luwrain = requireNonNull(luwrain, "luwrain can't be null");
-	final Object o = luwrain.i18n().getStrings(Strings.NAME);
+	final Object o = luwrain.i18n().getStrings(Strings.class.getName());
 	if (o == null || !(o instanceof Strings))
-	    return new InitResult(InitResult.Type.NO_STRINGS_OBJ, Strings.NAME);
+	    return new InitResult(InitResult.Type.NO_STRINGS_OBJ, Strings.class.getName());
 	this.strings = (Strings)o;
 	this.conv = new Conversations(luwrain, strings);
 	this.name = "";

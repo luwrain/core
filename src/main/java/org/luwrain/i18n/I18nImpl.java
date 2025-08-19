@@ -217,7 +217,7 @@ public final class I18nImpl implements I18n, I18nExtension
 	for(StringsObj o: stringsObjs)
 	    if (o.lang.equals(lang) && o.component.equals(component))
 		return;
-	log.trace("Adding the strings object " + component + " for the language  "+ lang);
+	log.trace("Adding a strings object " + component + " for the language  "+ lang);
 	stringsObjs.add(new StringsObj(lang, component, obj));
     }
 
@@ -230,7 +230,7 @@ public final class I18nImpl implements I18n, I18nExtension
 	    log.warn("Trying to add the language  "+ name + " twice");
 	    return false;
 	}
-	    log.trace("Adding the lang " + name);
+	    log.trace("Adding a lang " + name);
 	langs.put(name, lang);
 	return true;
     }
@@ -245,8 +245,8 @@ public final class I18nImpl implements I18n, I18nExtension
 	}
 	for(Map.Entry<String, Lang> l: langs.entrySet())
 	    log.trace("Lang \'" + l.getKey() + "\' loaded");
-	Lang desiredLang = null;
-	String desiredLangName = "";
+	Lang preferableLang = null;
+	String preferableLangName = "";
 	Lang anyLang = null;
 	String anyLangName = "";
 	Lang enLang = null;
@@ -259,20 +259,20 @@ public final class I18nImpl implements I18n, I18nExtension
 	    }
 	    if (l.getKey().equals(name))
 	    {
-		desiredLang = l.getValue();
-		desiredLangName = name;
+		preferableLang = l.getValue();
+		preferableLangName = name;
 	    }
 	    if (l.getKey().equals(EN_LANG))
 		enLang = l.getValue();
 	}
-	if (desiredLang == null)
-	    log.warn("The desired language \'" + name + "\' not found");
+	if (preferableLang == null)
+	    log.warn("The preferable language \'" + name + "\' not found");
 	if (enLang == null)
 	    log.warn("English language not found");
-	if (desiredLang != null)
+	if (preferableLang != null)
 	{
-	    selectedLang = desiredLang;
-	    selectedLangName = desiredLangName;
+	    selectedLang = preferableLang;
+	    selectedLangName = preferableLangName;
 	} else
 	    if (enLang != null)
 	    {

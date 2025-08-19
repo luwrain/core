@@ -18,8 +18,6 @@ package org.luwrain.shell.desktop;
 
 public interface Strings
 {
-    static final String NAME = "luwrain.desktop";
-
     String deleteItemsPopupName();
     String deleteSingleItemPopup(String itemName);
     String deleteItemsPopup(Integer count);
