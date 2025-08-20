@@ -163,7 +163,9 @@ public final class I18nImpl implements I18n, I18nExtension
 
     @Override public Object getStrings(String component)
     {
-	NullCheck.notEmpty(component, "component");
+	requireNonNull(component, "component");
+	if (component.isEmpty())
+	    throw new IllegalArgumentException("component can't be empty");
 	Object selectedLangObj = null;
 	Object enLangObj = null;
 	Object anyLangObj = null;
@@ -188,7 +190,7 @@ public final class I18nImpl implements I18n, I18nExtension
         @Override public <E> E getStrings(Class<E> stringsClass)
     {
 	requireNonNull(stringsClass, "stringsClass");
-	Object selectedLangObj = new EmptyStringsObj().create(stringsClass.getClassLoader(), stringsClass);
+	Object selectedLangObj = null;
 	Object enLangObj = null;
 	Object anyLangObj = null;
 	for(StringsObj o: stringsObjs)
@@ -205,9 +207,11 @@ public final class I18nImpl implements I18n, I18nExtension
 	    return (E)selectedLangObj;
 	if (enLangObj != null)
 	    return (E)enLangObj;
+	if (anyLangObj != null)
 	return (E)anyLangObj;
+	log.warn("Creating an empty strings object for the class " + stringsClass.getName());
+	return new EmptyStringsObj().create(stringsClass.getClassLoader(), stringsClass);
     }
-
 
     @Override public void addStrings(String lang, String component, Object obj)
     {

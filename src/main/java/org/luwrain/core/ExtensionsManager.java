@@ -95,6 +95,18 @@ public final class ExtensionsManager implements AutoCloseable
 	return res;
     }
 
+    public <E> List<E> loadFromExtensions(Class<E> c)
+    {
+	final var res = new ArrayList<E>();
+	for(var e: extensions)
+	    for(var o: e.ext.getExtObjects(e.luwrain)) //FIXME: Not trusted environment
+	    res.addAll(Arrays.asList(o).stream()
+		       .filter(f -> c.isInstance(f))
+		       .map(f -> c.cast(f))
+		       .toList());
+	return res;
+    }
+
     @Override public void close()
     {
 	for(Entry e: extensions)

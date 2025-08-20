@@ -190,7 +190,7 @@ public final class MainMenu extends ListArea<MainMenuItem> implements PopupClosi
 	UniRefInfo getUniRefInfo(MainMenuItem item)
 	{
 	    NullCheck.notNull(item, "item");
-		final String value = item.getValueNotNull();
+		final String value = item.getValue();
 	    if (uniRefCache.containsKey(value))
 		return uniRefCache.get(value);
 	    final UniRefInfo info = context.getUniRefInfo(value);

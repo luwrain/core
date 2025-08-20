@@ -92,7 +92,7 @@ final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
 	if (items != null)
 	    for(MainMenuItem item: items)
 	    {
-		final UniRefInfo info = UniRefUtils.make(luwrain, item.getValueNotNull());
+		final UniRefInfo info = UniRefUtils.make(luwrain, item.getValue());
 		if (info != null)
 		    uniRefs.add(info);
 	    }

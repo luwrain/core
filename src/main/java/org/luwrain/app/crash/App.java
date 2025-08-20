@@ -24,6 +24,8 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.app.base.*;
 
+import static java.util.Objects.*;
+
 public final class App extends AppBase<Strings>
 {
     final Application srcApp;
@@ -34,7 +36,7 @@ public final class App extends AppBase<Strings>
     public App(Throwable ex, Application srcApp, Area srcArea)
     {
 	super(Strings.class, "luwrain.crash");
-	NullCheck.notNull(ex, "ex");
+	requireNonNull(ex, "ex can't be null");
 	this.ex = ex;
 	this.srcApp = srcApp;
 	this.srcArea = srcArea;

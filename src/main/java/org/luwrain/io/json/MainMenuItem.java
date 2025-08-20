@@ -16,81 +16,26 @@
 
 package org.luwrain.io.json;
 
-import java.util.*;
-import java.lang.reflect.*;
+import lombok.*;
 
-import com.google.gson.*;
-import com.google.gson.reflect.*;
-import com.google.gson.annotations.*;
+import static java.util.Objects.*;
 
-import org.luwrain.core.*;
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MainMenuItem
 {
-    static public final String TYPE_UNIREF = "uniref";
-        static public final Type LIST_TYPE = new TypeToken<List<MainMenuItem>>(){}.getType();
+    static public final String TYPE_UNIREF = "uri";
 
-    static private Gson gson = null;
-
-    @SerializedName("type")
-    private String type = null;
-
-    @SerializedName("value")
-    private String value = null;
-
-    public MainMenuItem()
-    {
-    }
-
-    public MainMenuItem(String type, String value)
-    {
-	this.type = type;
-	this.value = value;
-    }
+    private String type, value;
 
     public String getType()
     {
-	return this.type;
-    }
-
-    public String getTypeNotNull()
-    {
-	return type != null?type:"";
-    }
-
-    public void setType(String type)
-    {
-	this.type = type;
+	return requireNonNull(type, "");
     }
 
     public String getValue()
     {
-	return this.value;
-    }
-
-    public String getValueNotNull()
-    {
-	return value != null?value:"";
-    }
-
-    public void setValue(String value)
-    {
-	 this.value = value;
-	 }
-
-    static public String toJson(MainMenuItem[] items)
-    {
-	if (gson == null)
-	    gson = new Gson();
-	return gson.toJson(items);
-    }
-
-    static public MainMenuItem[]  fromJson(String s)
-    {
-	NullCheck.notNull(s, "s");
-	if (gson == null)
-	    gson = new Gson();
-final List<MainMenuItem> res = new Gson().fromJson(s, LIST_TYPE);
-return res != null?res.toArray(new MainMenuItem[res.size()]):new MainMenuItem[0];
+	return requireNonNullElse(value, "");
     }
 }

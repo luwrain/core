@@ -74,23 +74,31 @@ final class GlobalKeys
 	return null;
     }
 
-    void load()
+    void load(OperatingSystem os)
     {
 	keys.clear();
 	if (args.stdGlobalKeys)
 	{
 	    keys.addAll(List.of(DEFAULT_KEYMAP));
+	    keys.addAll(getOsDepKeys(os));
 	    return ;
 	}
 	var conf = configs.load(Config.class);
 	if (conf == null || conf.keys == null)
 	{
 	    conf = new Config();
-	    conf.keys = List.of(DEFAULT_KEYMAP);
+	    conf.keys = new ArrayList<>(List.of(DEFAULT_KEYMAP));
+	    conf.keys.addAll(getOsDepKeys(os));
 	    configs.save(conf);
-	    keys.addAll(conf.keys);
 	}
 	    keys.addAll(conf.keys);
+    }
+
+    List<HotKey> getOsDepKeys(OperatingSystem os)
+    {
+	if (os.getClass().getSimpleName().equals("Linux"))
+	    return Arrays.asList(	cmd(Special.WINDOWS, "main-menu"));
+	return Arrays.asList();
     }
 
     static HotKey cmd(Special special, String cmdName)

@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -16,7 +16,8 @@
 
 package org.luwrain.core;
 
-public interface Shortcut extends ExtensionObject
+public interface Starter extends ExtensionObject
 {
-    Application[] prepareApp(String[] args);
+    StarterCategory getCategory();
+    java.net.URI getUri();
 }

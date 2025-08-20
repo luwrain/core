@@ -152,14 +152,14 @@ final EventResponse.Speech eventResponseSpeech;
 	initI18n();
 	speech.init();
 	//braille.init(null, os.getBraille(), this);
-	globalKeys.load();
+	globalKeys.load(os);
 	fileTypes.load(configs);
 	loadPlayer();
 	loadDesktop();
 	final var sett = configs.load(CommonSettings.class);
 	if (sett == null)
 	{
-	    this.commonSett = CommonSettings.createInitial();
+	    this.commonSett = CommonSettings.createInitial(extensions.loadFromExtensions(Starter.class));
 	    configs.save(this.commonSett);
 	} else
 	    this.commonSett = sett;

@@ -19,6 +19,8 @@ package org.luwrain.io.json;
 import java.util.*;
 import lombok.*;
 
+import org.luwrain.core.*;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,7 +30,7 @@ public final class CommonSettings
     boolean hintsSounds, hintsText, hintsSoundsSpace, filePopupSkipHidden;
     List<MainMenuItem> mainMenuItems;
 
-    static public CommonSettings createInitial()
+    static public CommonSettings createInitial(List<Starter> starters)
     {
 	final var s = new CommonSettings();
 	s.setHintsSounds(true);
@@ -38,7 +40,10 @@ public final class CommonSettings
 	s.setDesktopTitle("LUWRAIN");
 	s.setWindowTitle("LUWRAIN");
 	s.setDesktopEscapeCommand("quit");
-	s.setMainMenuItems(new ArrayList<>());
+	final var mainMenu = new ArrayList<MainMenuItem>();
+	for(var st: starters)
+	    mainMenu.add(new MainMenuItem(MainMenuItem.TYPE_UNIREF, st.getUri().toString()));
+	s.setMainMenuItems(mainMenu);
 	return s;
     }
 }

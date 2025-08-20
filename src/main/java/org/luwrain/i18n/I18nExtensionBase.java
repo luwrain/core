@@ -53,16 +53,16 @@ public class I18nExtensionBase extends EmptyExtension
 	return readResource("static.txt");
     }
 
-        protected Map<String, String> readChars() throws IOException
+    protected Map<String, String> readChars() throws IOException
     {
 	return readResource("chars.txt");
     }
 
     protected void loadCommands(I18nExtension ext) throws IOException
     {
-final var res = readResource("commands.txt");
-for(var e: res.entrySet())
-    ext.addCommandTitle(langName, e.getKey(), e.getValue());
+	final var res = readResource("commands.txt");
+	for(var e: res.entrySet())
+	    ext.addCommandTitle(langName, e.getKey(), e.getValue());
     }
 
     protected Map<String, String> readResource(String resName) throws IOException
@@ -82,92 +82,5 @@ for(var e: res.entrySet())
 		    res.put(key, value);
 	    }
 	return res;
-    }
-
-    protected void loadProperties(String resourcePath, I18nExtension ext) throws IOException
-    {
-	NullCheck.notEmpty(resourcePath, "resourcePath");
-	NullCheck.notNull(ext, "ext");
-	final Properties props = new Properties();
-	final URL url = classLoader.getResource(resourcePath);
-	if (url == null)
-	{
-	    Log.error(langName, "No resource " + resourcePath);
-	    return;
-	}
-	props.load(new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8")));
-	final Enumeration e = props.propertyNames();
-	while(e.hasMoreElements())
-	{
-	    final String k = (String)e.nextElement();
-	    final String v = props.getProperty(k);
-	    if (v == null)
-	    {
-		Log.warning(langName, "key \'" + k + "\' in resource file " + resourcePath+ " doesn\'t have value");
-		continue;
-	    }
-	    processPropItem(k, v, ext, resourcePath);
-	}
-    }
-
-    protected void processPropItem(String k, String v, I18nExtension ext, String resourcePath)
-    {
-	NullCheck.notEmpty(k, "k");
-	NullCheck.notNull(v, "v");
-	NullCheck.notNull(ext, "ext");
-	NullCheck.notNull(resourcePath, "resourcePath");
-
-	//strings
-	if (k.trim().startsWith(STRINGS_PREFIX))
-	{
-	    final String c = k.trim().substring(STRINGS_PREFIX.length());
-	    if (c.trim().isEmpty())
-	    {
-		Log.warning(langName, "the illegal key \'" + k + "\' in resource file " + resourcePath);
-		return;
-	    }
-	    if (!addProxyByClassName(c.trim(), v.trim(), resourcePath, ext))
-		Log.debug(langName, "unable to create proxy strings object \'" + c + "\' for interface " + v.trim());
-	    return;
-	}
-    }
-
-    protected boolean addProxyByClass(String name, Class stringsClass, String propertiesResourceName, I18nExtension ext)
-    {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notEmpty(name, "name");
-	NullCheck.notNull(stringsClass, "stringsClass");
-	NullCheck.notEmpty(propertiesResourceName, "propertiesResourceName");
-	NullCheck.notNull(ext, "ext");
-	final Object strings;
-	try {
-	    strings = PropertiesProxy.create(luwrain, langName, classLoader.getResource(propertiesResourceName), name + ".", stringsClass);
-	}
-	catch(java.io.IOException e)
-	{
-	    e.printStackTrace();
-	    return false;
-	}
-	ext.addStrings(langName, "luwrain." + name, strings);
-	return true;
-    }
-
-    protected boolean addProxyByClassName(String name, String className, String propertiesResourceName, I18nExtension ext)
-    {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notEmpty(name, "name");
-	NullCheck.notEmpty(className, "className");
-	NullCheck.notEmpty(propertiesResourceName, "propertiesResourceName");
-	NullCheck.notNull(ext, "ext");
-	final Class cl;
-	try {
-	    cl = Class.forName(className, true, classLoader);
-	}
-	catch (Throwable e)
-	{
-	    Log.debug(langName, "unable to find the class " + className + ": " + e.getClass().getName() + ": " + e.getMessage());
-	    return false;
-	}
-	return addProxyByClass(name, cl, propertiesResourceName, ext);
     }
 }
