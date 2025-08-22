@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2021 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -18,8 +18,6 @@ package org.luwrain.app.cpanel;
 
 public interface Strings
 {
-    static final String NAME = "luwrain.cpanel";
-
     String appName();
     String sectionsAreaName();
 }

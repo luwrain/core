@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2021 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -45,9 +45,9 @@ public class ControlPanelApp implements Application, MonoApp, Actions
     @Override public InitResult onLaunchApp(Luwrain luwrain)
     {
 	NullCheck.notNull(luwrain, "luwrain");
-	final Object o = luwrain.i18n().getStrings(Strings.NAME);
+	final Object o = luwrain.i18n().getStrings(Strings.class.getName());
 	if (o == null || !(o instanceof Strings))
-	    return new InitResult(InitResult.Type.NO_STRINGS_OBJ, Strings.NAME);
+	    return new InitResult(InitResult.Type.NO_STRINGS_OBJ, Strings.class.getName());
 	strings = (Strings)o;
 	this.luwrain = luwrain;
 	base = new Base(luwrain, factories);
