@@ -76,6 +76,7 @@ public interface Settings
 	void setCharsets(String value);
     }
 
+    /*
     public interface FileTypeAppInfo
     {
 	boolean getTakesUrls(boolean defValue);
@@ -83,6 +84,7 @@ public interface Settings
 	void setTakesUrls(boolean value);
 	void setTakesMultiple(boolean value);
     }
+    */
 
     public interface InteractionParams
     {
@@ -326,10 +328,12 @@ public interface Settings
 	return RegistryProxy.create(registry, SPEECH_PATH, SpeechParams.class);
     }
 
+    /*
     static public FileTypeAppInfo createFileTypeAppInfo(Registry registry, String path)
     {
 	return RegistryProxy.create(registry, path, FileTypeAppInfo.class);
     }
+    */
 
     static public I18n createI18n(Registry registry)
     {

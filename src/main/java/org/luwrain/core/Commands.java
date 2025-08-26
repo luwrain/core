@@ -95,7 +95,7 @@ final class Commands
 		    "open", luwrain->{
 			final File res = conversations.open();
 			if (res != null)
-			    core.openFiles(new String[]{res.getAbsolutePath()});
+			    core.fileTypes.launch(core, new String[]{res.getAbsolutePath()});
 		    }),
 
 	    new Cmd(

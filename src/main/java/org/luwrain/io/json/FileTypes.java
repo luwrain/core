@@ -22,12 +22,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public final class FileType
+public final class FileTypes
 {
-    public enum Type {
-	SHORTCUT, JOB
-    };
-
-    private Type type= null;
-    private String name = null;
+    private Map<String, FileType> types;
 }

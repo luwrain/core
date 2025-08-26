@@ -424,18 +424,21 @@ final class LuwrainImpl implements Luwrain
 
     @Override public void openFile(String fileName)
     {
-	NullCheck.notNull(fileName, "fileName");
-	runUiSafely(()->{
-		String[] s = new String[1];
-		s[0] = fileName;
-		core.openFiles(s);
-	    });
+	requireNonNull(fileName, "fileName can't be null");
+	if (fileName.isEmpty())
+	    throw new IllegalArgumentException("fileName can't be null");
+	runUiSafely(()-> core.fileTypes.launch(core, new String[]{ fileName }) );
     }
 
     @Override public void openFiles(String[] fileNames)
     {
-	NullCheck.notNullItems(fileNames, "fileNames");
-	runUiSafely(()->core.openFiles(fileNames));
+	requireNonNull(fileNames, "fileNames");
+	if (fileNames.length == 0)
+	    throw new IllegalArgumentException("fileNames can't be empty");
+	for(String s: fileNames)
+	    if (requireNonNullElse(s, "").isEmpty())
+		throw new IllegalArgumentException("fileNames can't contain empty items");
+	runUiSafely(()->core.fileTypes.launch(core, fileNames));
     }
 
     @Override public boolean openHelp(String sectName)

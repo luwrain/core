@@ -23,8 +23,9 @@ import java.io.*;
 import java.nio.file.*;
 import org.apache.logging.log4j.*;
 
-import com.google.gson.*;
-//import com.google.gson.annotations.*;
+//import com.google.gson.*;
+
+import org.luwrain.io.json.FileType;
 
 import static java.util.Objects.*;
 
@@ -33,24 +34,23 @@ final class FileTypes
     static private final Logger log = LogManager.getLogger();
     	static private final String JOB_PREFIX = "job:";
 
-    private final Gson gson = new Gson();
-    private final Map<String, String> fileTypes = new HashMap<>();
+    //    private final Gson gson = new Gson();
+    private final Map<String, FileType> fileTypes = new HashMap<>();
 
     void load(Configs configs)
     {
 	requireNonNull(configs, "configs");
 	fileTypes.clear();
-	final var conf = configs.load(Config.class);
-	if (conf != null && conf.fileTypes != null)
-	    fileTypes.putAll(conf.fileTypes);
+	final var conf = configs.load(org.luwrain.io.json.FileTypes.class);
+	if (conf != null && conf.getTypes() != null)
+	    fileTypes.putAll(conf.getTypes());
     }
 
-    void launch(Core core, Registry registry, String[] files)
+    void launch(Core core, String[] files)
     {
-	NullCheck.notNull(core, "core");
-	NullCheck.notNull(registry, "registry");
-	NullCheck.notNullItems(files, "files");
-	final String[] shortcuts = chooseShortcuts(files);
+	requireNonNull(core, "core can't be null");
+	requireNonNull(files, "files can't be null");
+	final String[] shortcuts = selectShortcuts(files);
 	final Map<String, List<String> > lists = new HashMap<>();
 	for(int i = 0;i < files.length;++i)
 	{
@@ -72,9 +72,9 @@ final class FileTypes
 	    if (runJob(core, e.getKey(), e.getValue()))
 		continue;
 	    final String shortcut = e.getKey();
-	    final Settings.FileTypeAppInfo info = Settings.createFileTypeAppInfo(registry, Registry.join(Settings.FILE_TYPES_APP_INFO_PATH, shortcut));
-	    final boolean takesMultiple = info.getTakesMultiple(false);
-	    final boolean takesUrls = info.getTakesUrls(false);
+	    //FIXME: Query shortcut
+	    final boolean takesMultiple = false;//FIXME:
+	    final boolean takesUrls = false; //FIXME:
 	    final String[] toOpen = e.getValue().toArray(new String[e.getValue().size()]);
 	    if (takesUrls)
 		for(int i = 0;i < toOpen.length;++i)
@@ -99,7 +99,8 @@ final class FileTypes
 
     private boolean runJob(Core core, String exp, List<String> args)
     {
-	NullCheck.notNull(core, "core");
+	/*
+	requireNonNull(core, "core can't be null");
 	NullCheck.notEmpty(exp, "exp");
 	NullCheck.notNull(args, "args");
 	if (!exp.startsWith(JOB_PREFIX))
@@ -129,10 +130,11 @@ final class FileTypes
 						for(int i = 0;i < jobValue.args.length;i++)
 						    jobValue.args[i] = jobValue.args[i].replaceAll("lwr.args.bash", Matcher.quoteReplacement(bashArgs));
 						core.luwrain.newJob(jobValue.name, jobValue.args, "", EnumSet.noneOf(Luwrain.JobFlags.class), null);
+						&*/
 						return true;
     }
 
-    private String[] chooseShortcuts(String[] fileNames)
+    private String[] selectShortcuts(String[] fileNames)
     {
 	NullCheck.notEmptyItems(fileNames, "fileNames");
 	final LinkedList<String> res = new LinkedList<String>();
@@ -160,14 +162,15 @@ final class FileTypes
 		res.add("notepad");
 		continue;
 	    }
-	    res.add(fileTypes.get(ext));
+	    final var fileType = fileTypes.get(ext);
+	    res.add(fileType != null?fileType.getName():"notepad");
 	}
 	return res.toArray(new String[res.size()]);
     }
 
     private String getExt(String fileName)
     {
-	NullCheck.notEmpty(fileName, "fileName");
+	requireNonNull(fileName, "fileName can't be null");
 	final String name = new File(fileName).getName();
 	if (name.isEmpty())
 	    return "";
@@ -179,7 +182,7 @@ final class FileTypes
 
     private String getExtension(URL url)
     {
-	NullCheck.notEmpty(url, "url");
+	requireNonNull(url, "url can't be null");
 	final String name = url.getFile();
 	if (name.isEmpty())
 	    return "";
@@ -195,10 +198,5 @@ final class FileTypes
 	    name = null,
 	    escaping = null;
 	String[] args = null;
-    }
-
-    static private final class Config
-    {
-	Map<String, String> fileTypes;
     }
 }

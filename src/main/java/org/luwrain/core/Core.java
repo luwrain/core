@@ -660,14 +660,16 @@ onNewAreasLayout();
 	message(i18n.getStaticStr("FontSize") + " " + interaction.getFontSize(), Luwrain.MessageType.REGULAR);
     }
 
+    /*
     void openFiles(String[] fileNames)
     {
 	NullCheck.notEmptyItems(fileNames, "fileNames");
 	mainCoreThreadOnly();
 	if (fileNames.length < 1)
 	    return;
-	fileTypes.launch(this, null, fileNames);
+	fileTypes.launch(this, fileNames);
     }
+    */
 
             boolean runCommand(String command)
     {
