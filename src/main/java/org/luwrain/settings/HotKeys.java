@@ -21,11 +21,9 @@ import java.util.*;
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
+import org.luwrain.controls.list.*;
 import org.luwrain.cpanel.*;
-//import org.luwrain.registry.*;
-
-//import static org.luwrain.core.NullCheck.*;
-//import static org.luwrain.core.Registry.*;
+import org.luwrain.io.json.HotKey;
 
 import static java.util.Objects.*;
 
@@ -40,7 +38,7 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
 	setListClickHandler((area, index, item)->editItem(item));
     }
 
-        @Override public boolean saveSectionData()
+    @Override public boolean saveSectionData()
     {
 	return true;
     }
@@ -64,18 +62,14 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
 	return false;
     }
 
-    static private Item[] loadItems(Luwrain luwrain)
+    static private List<Item> loadItems(Luwrain luwrain)
     {
-	final ArrayList<Item> res = new ArrayList<>();
-	/*FIXME:newreg 
-	for(String d: luwrain.getRegistry().getDirectories(Settings.GLOBAL_KEYS_PATH))
-	{
-	    res.add(new Item(luwrain, d));
-	}
-	*/
-final Item[] toSort = res.toArray(new Item[res.size()]);
-Arrays.sort(toSort);
-return toSort;
+	final var conf = luwrain.loadConf(org.luwrain.io.json.HotKeys.class);
+	if (conf == null || conf.getHotKeys() == null)
+	    return new ArrayList<>();
+	return conf.getHotKeys().stream()
+	.map( e -> new Item(luwrain, e) )
+	    .toList();
     }
 
     static HotKeys create(ControlPanel controlPanel)
@@ -85,18 +79,18 @@ return toSort;
 	final var params = new ListArea.Params<Item>();
 	params.context = new DefaultControlContext(luwrain);
 	params.appearance = new ListUtils.DefaultAppearance<>(params.context, Suggestions.LIST_ITEM);
-	params.name = "Общие горячие клавиши";//FIXME:
-	params.model = new ListUtils.FixedModel<>(loadItems(luwrain));
+	params.name = luwrain.getString("static:CpHotKeys");
+	params.model = new ListModel<>(loadItems(luwrain));
 	return new HotKeys(controlPanel, params);
     }
 
-        static final class Item implements Comparable
+    static final class Item implements Comparable
     {
 	final String command, title;
 	final InputEvent[] events;
-	Item(Luwrain luwrain, String command)
+	Item(Luwrain luwrain, HotKey hotKey)
 	{
-	    	    this.command = command;
+	    	    this.command = "";
 		    this.events = new InputEvent[0];
 	    this.title = luwrain.i18n().getCommandTitle(command);
 	}
@@ -104,7 +98,7 @@ return toSort;
 	@Override public String toString()
 	{
 	    if (events.length == 0)
-	    return title;
+		return title;
 	    final StringBuilder b = new StringBuilder();
 	    b.append(title).append(": ");
 	    for(InputEvent e: events)
@@ -115,23 +109,23 @@ return toSort;
 	@Override public int compareTo(Object o)
 	{
 	    if (o != null && o instanceof Item item)
-	    return command.compareTo(item.command);
+		return command.compareTo(item.command);
 	    return 0;
 	}
 
-    static private String hotKeyToString(InputEvent event)
-    {
-	final var b = new StringBuilder();
-	if (event.withControl())
-	    b.append("Ctrl+");
-	if (event.withAlt())
-	    b.append("Alt+");
-	if (event.withShift())
-	    b.append("Shift+");
-	if (!event.isSpecial())
-	    b.append(Character.toString(Character.toUpperCase(event.getChar()))); else
-	b.append(event.getSpecial().toString());
-	return new String(b);
+	static private String hotKeyToString(InputEvent event)
+	{
+	    final var b = new StringBuilder();
+	    if (event.withControl())
+		b.append("Ctrl+");
+	    if (event.withAlt())
+		b.append("Alt+");
+	    if (event.withShift())
+		b.append("Shift+");
+	    if (!event.isSpecial())
+		b.append(Character.toString(Character.toUpperCase(event.getChar()))); else
+		b.append(event.getSpecial().toString());
+	    return new String(b);
+	}
     }
-}
 }

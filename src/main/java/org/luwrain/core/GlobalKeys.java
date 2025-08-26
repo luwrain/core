@@ -83,15 +83,15 @@ final class GlobalKeys
 	    keys.addAll(getOsDepKeys(os));
 	    return ;
 	}
-	var conf = configs.load(Config.class);
-	if (conf == null || conf.keys == null)
+	var conf = configs.load(org.luwrain.io.json.HotKeys.class);
+	if (conf == null || conf.getHotKeys() == null)
 	{
-	    conf = new Config();
-	    conf.keys = new ArrayList<>(List.of(DEFAULT_KEYMAP));
-	    conf.keys.addAll(getOsDepKeys(os));
+	    conf = new org.luwrain.io.json.HotKeys();
+	    conf.setHotKeys(new ArrayList<>(List.of(DEFAULT_KEYMAP)));
+	    conf.getHotKeys().addAll(getOsDepKeys(os));
 	    configs.save(conf);
 	}
-	    keys.addAll(conf.keys);
+	keys.addAll(conf.getHotKeys());
     }
 
     List<HotKey> getOsDepKeys(OperatingSystem os)
@@ -137,14 +137,5 @@ final class GlobalKeys
 	key.setInputEvent(new InputEvent(ch, EnumSet.of(modifier1, modifier2)));
 	key.setCommand(requireNonNull(cmdName, "cmdName can't be null"));
 	return key;
-    }
-
-
-
-
-
-    static private final class Config
-    {
-	List<HotKey> keys;
     }
 }

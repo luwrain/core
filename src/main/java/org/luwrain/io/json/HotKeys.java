@@ -16,21 +16,13 @@
 
 package org.luwrain.io.json;
 
-import com.google.gson.annotations.*;
+import java.util.*;
 import lombok.*;
-import org.luwrain.core.events.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public final class HotKey
+public final class HotKeys
 {
-    @SerializedName("ev")
-    private InputEvent inputEvent;
-
-    @SerializedName("cmd")
-    private String command;
-
-    @SerializedName("scr")
-    private String script;
+    private List<HotKey> hotKeys;
 }

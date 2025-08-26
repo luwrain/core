@@ -17,11 +17,16 @@
 package org.luwrain.settings;
 
 import java.util.*;
+import lombok.*;
 
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
+import org.luwrain.controls.list.*;
 import org.luwrain.cpanel.*;
+
+import static java.util.Objects.*;
+import static java.util.stream.Collectors.*;
 
 final class FileTypes extends ListArea<FileTypes.Item> implements SectionArea
 {
@@ -30,14 +35,12 @@ final class FileTypes extends ListArea<FileTypes.Item> implements SectionArea
     FileTypes(ControlPanel controlPanel, ListArea.Params<Item> params)
     {
 	super(params);
-	NullCheck.notNull(controlPanel, "controlPanel");
 	this.controlPanel = controlPanel;
 	setListClickHandler((area, index, item)->editItem(item));
     }
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
 	if (controlPanel.onInputEvent(event))
 	    return true;
 	return super.onInputEvent(event);
@@ -45,7 +48,6 @@ final class FileTypes extends ListArea<FileTypes.Item> implements SectionArea
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
 	if (controlPanel.onSystemEvent(event))
 	    return true;
 	return super.onSystemEvent(event);
@@ -61,71 +63,52 @@ final class FileTypes extends ListArea<FileTypes.Item> implements SectionArea
 	return false;
     }
 
-    static private Item[] loadItems(/*Registry registry*/)
+    static private List<Item> loadItems(Luwrain luwrain)
     {
-	/*
-	NullCheck.notNull(registry, "registry");
-	final LinkedList<Item> res = new LinkedList<Item>();
-	for(String s: registry.getValues(Settings.FILE_TYPES_PATH))
-	{
-	    final String path = Registry.join(Settings.FILE_TYPES_PATH, s);
-	    if (s.trim().isEmpty() || registry.getTypeOf(path) != Registry.STRING)
-		continue;
-	    final String value = registry.getString(path);
-	    final LinkedList<String> shortcuts = new LinkedList<String>();
-	    for(String ss: value.split(":", -1))
-		if (!ss.trim().isEmpty())
-		    shortcuts.add(ss.trim());
-	    final String[] toSort = shortcuts.toArray(new String[shortcuts.size()]);
-	    Arrays.sort(toSort);
-	    res.add(new Item(s.trim(), toSort));
-	}
-	final Item[] toSort = res.toArray(new Item[res.size()]);
-	Arrays.sort(toSort);
-	return toSort;
-	*/
-	return new Item[0];//FIXME:newreg
+	final var res = new ArrayList<Item>();
+	final var conf = luwrain.loadConf(org.luwrain.io.json.FileTypes.class);
+	if (conf == null || conf.getTypes() == null)
+	    return res;
+	final var m = conf.getTypes().entrySet().stream()
+	.filter(e -> e.getValue() != null && !requireNonNullElse(e.getValue().getName(), "").isEmpty())
+	.collect(toMap(
+		       e -> e.getValue().getName(),
+		       e -> new ArrayList<>(List.of( e.getKey() )),
+		       (e1, e2) -> { e1.addAll(e2); return e1; }
+		       ));
+	return m.entrySet().stream()
+	.map(e -> new Item(e.getKey(), e.getValue()) )
+	.toList();
     }
 
     static FileTypes create(ControlPanel controlPanel)
     {
-	NullCheck.notNull(controlPanel, "controlPanel");
 	final Luwrain luwrain = controlPanel.getCoreInterface();
-	final ListArea.Params<Item> params = new ListArea.Params<>();
+	final var params = new ListArea.Params<Item>();
 	params.context = new DefaultControlContext(luwrain);
 	params.appearance = new ListUtils.DefaultAppearance<>(params.context, Suggestions.LIST_ITEM);
-	params.name = "Типы файлов";
-	params.model = new ListUtils.FixedModel<>(loadItems(/*luwrain.getRegistry()*/));
+	params.name = luwrain.getString("static:CpFileTypes");
+	final var items = loadItems(luwrain);
+	params.model = new ListModel(items);
 	return new FileTypes(controlPanel, params);
     }
 
+    @AllArgsConstructor
         static final class Item implements Comparable
     {
-	final String extension;
-	final String[] shortcuts;
-	Item(String extension, String[] shortcuts)
-	{
-	    NullCheck.notNull(extension, "extension");
-	    NullCheck.notNullItems(shortcuts, "shortcuts");
-	    this.extension = extension;
-	    this.shortcuts = shortcuts;
-	}
+	final String name;
+	final List<String> ext;
+
 	@Override public String toString()
 	{
-	    if (shortcuts.length == 0)
-		return extension + ": ";
-	    final StringBuilder b = new StringBuilder();
-	    b.append(extension + ": ");
-	    b.append(shortcuts[0]);
-	    for(int i = 1;i < shortcuts.length;++i)
-		b.append(", " + shortcuts[i]);
-	    return new String(b);
-	}
+	    return name;
+	    	}
+
 	@Override public int compareTo(Object o)
 	{
-	    if (o == null || !(o instanceof Item))
-		return 0;
-	    return extension.compareTo(((Item)o).extension);
+	    if (o != null && o instanceof Item item)
+	    return name.compareTo(item.name);
+	    return 0;
 	}
     }
 }

@@ -192,6 +192,7 @@ final class FileTypes
 	return name.substring(dotPos + 1);
     }
 
+    /*
     static private final class JobValue
     {
 	String
@@ -199,4 +200,5 @@ final class FileTypes
 	    escaping = null;
 	String[] args = null;
     }
+    */
 }

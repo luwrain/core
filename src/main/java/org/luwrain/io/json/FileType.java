@@ -24,9 +24,7 @@ import lombok.*;
 @AllArgsConstructor
 public final class FileType
 {
-    public enum Type {
-	SHORTCUT, JOB
-    };
+    public enum Type { SHORTCUT, JOB };
 
     private Type type= null;
     private String name = null;
