@@ -87,22 +87,20 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
     static final class Item implements Comparable
     {
 	final String command, title;
-	final InputEvent[] events;
+	final InputEvent event;
+
 	Item(Luwrain luwrain, HotKey hotKey)
 	{
-	    	    this.command = "";
-		    this.events = new InputEvent[0];
+	    this.command = requireNonNullElse(hotKey.getCommand(), "");
+	    this.event = hotKey.getInputEvent();
 	    this.title = luwrain.i18n().getCommandTitle(command);
 	}
 
 	@Override public String toString()
 	{
-	    if (events.length == 0)
-		return title;
-	    final StringBuilder b = new StringBuilder();
+	    final var b = new StringBuilder();
 	    b.append(title).append(": ");
-	    for(InputEvent e: events)
-		b.append(hotKeyToString(e));
+		b.append(hotKeyToString(event));
 	    return new String(b);
 	}
 

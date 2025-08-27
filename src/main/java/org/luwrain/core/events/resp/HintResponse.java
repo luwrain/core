@@ -54,6 +54,8 @@ public class HintResponse implements EventResponse
 	if (sett.isHintsSounds() && sound != null)
 	    luwrain.playSound(sound);
 	if (sett.isHintsText() && hintText != null && !hintText.trim().isEmpty())
-	    luwrain.speak(hintText, org.luwrain.core.Speech.PITCH_HINT);
+	    luwrain.speak(hintText, org.luwrain.core.Speech.PITCH_HINT); else
+	    luwrain.silence();
+	
     }
 }

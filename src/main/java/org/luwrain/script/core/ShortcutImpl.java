@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
@@ -16,6 +16,7 @@
 
 package org.luwrain.script.core;
 
+import java.util.*;
 import java.io.*;
 
 import org.graalvm.polyglot.*;
@@ -72,5 +73,15 @@ final class ShortcutImpl implements Shortcut
     @Override public String getExtObjName()
     {
 	return name;
+    }
+
+    @Override public Set<Flags> getShortcutFlags()
+    {
+	return EnumSet.noneOf(Flags.class);
+    }
+
+    @Override public String[] getFileExtensions()
+    {
+	return new String[0];
     }
 }
