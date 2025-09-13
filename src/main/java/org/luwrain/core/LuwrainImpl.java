@@ -330,6 +330,15 @@ final class LuwrainImpl implements Luwrain
 	return null;
     }
 
+        @Override public <T> List<T> createInstances(Class<T> c)
+    {
+	requireNonNull(c, "c can't be null");
+	if (c.equals(org.luwrain.io.websearch.Engine.class))
+	    return core.extensions.load(c);
+	return null;
+    }
+
+
         @Override public FileFetcher[] findFetchers(String url)
     {
 	notEmpty(url, "url");

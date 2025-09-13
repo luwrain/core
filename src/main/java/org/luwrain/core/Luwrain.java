@@ -119,6 +119,7 @@ String getPath(String pathId);
     void message(String text, MessageType messageType);
     void message(String text, Sounds sound);
     <T> T createInstance(Class<T> c);
+        <T> List<T> createInstances(Class<T> c);
     FileFetcher[] findFetchers(String url);
     void onAreaNewBackgroundSound(Area area);
 
