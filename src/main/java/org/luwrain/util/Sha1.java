@@ -1,27 +1,17 @@
-/*
-   Copyright 2012-2022 Michael Pozhidaev <msp@luwrain.org>
-
-   This file is part of LUWRAIN.
-
-   LUWRAIN is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 3 of the License, or (at your option) any later version.
-
-   LUWRAIN is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-*/
-
-//LWR_API 1.0
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.util;
 
 import java.io.*;
 import java.security.*;
+import java.io.*;
+import java.nio.file.*;
 
 import org.luwrain.core.*;
+
+import static java.util.Objects.*;
+import static java.nio.file.Files.*;
 
 public final class Sha1
 {
@@ -77,6 +67,14 @@ public final class Sha1
 	catch(IOException | NoSuchAlgorithmException e)
 	{
 	    throw new RuntimeException(e);
+	}
+    }
+
+    static public String getSha1(Path path) throws IOException, NoSuchAlgorithmException
+    {
+	requireNonNull(path, "path can't be null");
+	try (final var is = newInputStream(path)) {
+	    return getSha1(is);
 	}
     }
 }

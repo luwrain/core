@@ -4,7 +4,7 @@
     <Console name="console" target="SYSTEM_OUT">
       <PatternLayout pattern="%msg (%-5level %logger{36} %t)%n" />
     </Console>
-    <RollingFile name="file" fileName="/tmp/luwrain.log" filePattern="/tmp/lcloud-%d{MM-dd-yyyy}.log.gz" ignoreExceptions="false">
+    <RollingFile name="file" fileName="/tmp/luwrain.log" filePattern="/tmp/luwrain-%d{MM-dd-yyyy}.log.gz" ignoreExceptions="false">
       <PatternLayout pattern="%msg (%logger{36}) - %-5level [%t] - %d{yyyy-mm-dd HH:mm:ss.SSS} %n"/>
       <TimeBasedTriggeringPolicy />
     </RollingFile>

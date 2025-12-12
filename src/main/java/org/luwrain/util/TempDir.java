@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.util;
 
@@ -16,7 +18,7 @@ public final class TempDir implements AutoCloseable
     public TempDir()
     {
 	try {
-	    path = createTempDirectory(getBaseDir(), ".luwrain-");
+	    path = createTempDirectory(getBaseDir(), ".lwrtmp-");
 	}
 	catch(IOException ex)
 	{

@@ -1,33 +1,30 @@
-/*
-   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
-
-   This file is part of LUWRAIN.
-
-   LUWRAIN is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 3 of the License, or (at your option) any later version.
-
-   LUWRAIN is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-*/
-
-//LWR_API 1.0
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.util;
 
 import java.io.*;
+import java.nio.file.*;
 import java.util.*;
 
 import org.luwrain.core.*;
 
+import static java.util.Objects.*;
+import static java.nio.file.Files.*;
 import static org.luwrain.util.StreamUtils.*;
+import static org.luwrain.util.Sha1.*;
 
 public final class FileUtils
 {
     static public final String UTF_8 = "UTF_8";
+
+    static public String writeRandomFile(Path path, int len) throws IOException
+    {
+	byte[] data = new byte[len];
+	new Random().nextBytes(data);
+		write(path, data);
+		return getSha1(data);
+    }
 
             static public String readTextFileAsString(File file) throws IOException
     {

@@ -1,18 +1,5 @@
-/*
-   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
-
-   This file is part of LUWRAIN.
-
-   LUWRAIN is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 3 of the License, or (at your option) any later version.
-
-   LUWRAIN is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-*/
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.util;
 
@@ -21,11 +8,26 @@ import java.io.*;
 
 import org.luwrain.core.*;
 
+import static org.apache.commons.io.IOUtils.*;
 import static java.util.Objects.*;
 import static org.luwrain.core.NullCheck.*;
 
 public final class ResourceUtils
 {
+    static public File extractToTempFile(Class c, String resName) throws IOException
+    {
+	final File tempFile = new File("");
+	try (final var is = c.getResourceAsStream(resName)) {
+			try (final var os = new FileOutputStream(tempFile)) {
+			    copy(is, os);
+			    os.flush();
+			}
+		    }
+	tempFile.deleteOnExit();
+		    return tempFile;
+    }
+
+    
     static public List<String> readStringResourceAsList(Class c, String resourceName, String charset) throws IOException
     {
 	requireNonNull(c, "c can't be null");

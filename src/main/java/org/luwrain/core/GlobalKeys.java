@@ -53,7 +53,9 @@ final class GlobalKeys
 		//Basic apps
 	cmd('j', Modifiers.SHIFT, Modifiers.ALT, "jobs"),
 	cmd('p', Modifiers.SHIFT, Modifiers.ALT, "control-panel"),
+		cmd('f', Modifiers.ALT, "web"),
     };
+    
 
     private final Args args;
     private final List<HotKey> keys = new ArrayList<>();
