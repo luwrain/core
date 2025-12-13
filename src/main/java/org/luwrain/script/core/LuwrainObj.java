@@ -350,7 +350,7 @@ messageType = ConstObj.getMessageType(values[1].asString());
 	if (fileName == null || fileName.isEmpty())
 	    throw new ScriptException("readTextFile() takes a non-empty string with the name of the file as the furst argument");
 	try {
-	    final String text = FileUtils.readTextFileSingleString(new File(fileName), "UTF-8");
+	    final String text = LineIterator.join(new File(fileName), "UTF-8", System.lineSeparator());
 	    return ProxyArray.fromArray((Object[])FileUtils.universalLineSplitting(text));
 	}
 	catch(IOException e)

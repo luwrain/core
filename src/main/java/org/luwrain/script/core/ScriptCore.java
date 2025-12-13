@@ -81,7 +81,7 @@ public final class ScriptCore implements HookContainer, AutoCloseable
     {
 	notNull(file, "file");
 	final Module m = new Module(luwrain, bindings);
-	m.eval(FileUtils.readTextFileSingleString(file, "UTF-8"));
+	m.eval(LineIterator.join(file, "UTF-8", System.lineSeparator()));
 	modules.add(m);
     }
 
