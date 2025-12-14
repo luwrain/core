@@ -143,7 +143,7 @@ public final class Clipboard implements ClipboardOwner, java.util.function.Suppl
 	    e.printStackTrace();
 	    return null;
 	}
-	return splitLinesAnySeparator(s);
+	return splitLines(s);
     }
 
     public boolean isEmpty()

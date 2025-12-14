@@ -7,8 +7,6 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-import org.luwrain.core.*;
-
 import static java.util.Objects.*;
 import static java.nio.file.Files.*;
 import static org.luwrain.util.StreamUtils.*;
@@ -22,49 +20,33 @@ public final class FileUtils
     {
 	byte[] data = new byte[len];
 	new Random().nextBytes(data);
-		write(path, data);
-		return getSha1(data);
+	write(path, data);
+	return getSha1(data);
     }
 
-            static public String readTextFileAsString(File file) throws IOException
+    static public String readTextFile(File file, String charset) throws IOException
     {
-	NullCheck.notNull(file, "file");
-	return readTextFileAsString(file, UTF_8);
-    }
-
-    static public String readTextFileAsString(File file, String charset) throws IOException
-    {
-	NullCheck.notNull(file, "file");
-	NullCheck.notEmpty(charset, "charset");
-	final InputStream is = new FileInputStream(file);
-	final byte[] bytes;
-	try {
-	    bytes = readAllBytes(is);
+	requireNonNull(file, "file can't be null");
+	requireNonNull(charset, "charset can't be null");
+	if (charset.isEmpty())
+	    throw new IllegalArgumentException("charset can't be empty");
+	try (final var is = new FileInputStream(file)) {
+    	    return new String(readAllBytes(is), charset);
 	}
-	finally {
-	    is.close();
-	}
-	return new String(bytes, charset);
     }
 
-            static public String readTextFileSingleString(File file) throws IOException
+    static public String readTextFile(File file) throws IOException
     {
-	NullCheck.notNull(file, "file");
-	return readTextFileAsString(file, UTF_8);
+	return readTextFile(file, UTF_8);
     }
 
-        static public String readTextFileSingleString(File file, String charset) throws IOException
+    static public void writeTextFile(File file, String text, String charset) throws IOException
     {
-	NullCheck.notNull(file, "file");
-	NullCheck.notEmpty(charset, "charset");
-	return readTextFileAsString(file, charset);
-    }
-
-    static public void writeTextFileSingleString(File file, String text, String charset) throws IOException
-    {
-	NullCheck.notNull(file, "file");
-	NullCheck.notNull(text, "text");
-	NullCheck.notEmpty(charset, "charset");
+	requireNonNull(file, "file can't be null");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(charset, "charset can't be null");
+	if (charset.isEmpty())
+	    throw new IllegalArgumentException("charset can't be empty");
 	final OutputStream os = new FileOutputStream(file);
 	try {
 	    writeAllBytes(os, text.getBytes(charset));
@@ -78,118 +60,25 @@ public final class FileUtils
     //lineSeparator may be null, means use default 
     static public String[] readTextFileMultipleStrings(File file, String charset, String lineSeparator) throws IOException
     {
-	NullCheck.notNull(file, "file");
-	NullCheck.notEmpty(charset, "charset");
-	final String text = readTextFileSingleString(file, charset);
+	requireNonNull(file, "file can't be null");
+	requireNonNull(charset, "charset can't be null");
+	if (charset.isEmpty())
+	    throw new IllegalArgumentException("charset can't be empty");
+	final String text = readTextFile(file, charset);
 	if (text.isEmpty())
 	    return new String[0];
 	return text.split(lineSeparator != null?lineSeparator:System.getProperty("line.separator"), -1);
     }
 
-    //lineSeparator may be null, means use default 
-    static public void writeTextFileMultipleStrings(File file, String[] text, String charset, String lineSeparator) throws IOException
-    {
-	NullCheck.notNull(file, "file");
-	NullCheck.notNull(text, "text");
-	NullCheck.notEmpty(charset, "charset");
-	final StringBuilder b = new StringBuilder();
-	if (text.length > 0)
-	{
-	    b.append(text[0]);
-	    for(int i = 1;i < text.length;++i)
-		b.append((lineSeparator != null?lineSeparator:System.getProperty("line.separator")) + text[i]);
-	}
-	writeTextFileSingleString(file, new String(b), charset);
-    }
-
-    //On an empty line provided returns one empty line
-    static public String[] universalLineSplitting(String text)
-    {
-	NullCheck.notNull(text, "text");
-	boolean wasBN = false;
-	boolean wasBR = false;
-	final List<String> res = new ArrayList<>();
-	StringBuilder b = new StringBuilder();
-	for(int i = 0;i < text.length();++i)
-	{
-	    final char c = text.charAt(i);
-	    switch(c)
-	    {
-	    case '\n':
-		if (wasBR)
-		{
-		    //Doing nothing
-		    wasBN = true;
-		    continue;
-		}
-		if (wasBN)
-		{
-		    //The second encountering, it means there was an empty line
-		    wasBN = false;
-		    wasBR = false;
-		    //b must be empty
-		    res.add("");
-		    continue;
-		}
-		//wasBR and wasBN are false
-		res.add(new String(b));
-		b = new StringBuilder();
-		wasBN = true;
-		break;
-	    case '\r':
-		if (wasBN)
-		{
-		    //Doing nothing
-		    wasBR = true;
-		    continue;
-		}
-		if (wasBR)
-		{
-		    //The second encountering, it means there was an empty line
-		    wasBN = false;
-		    wasBR = false;
-		    //b must be empty
-		    res.add("");
-		    continue;
-		}
-		//wasBR and wasBN are false
-		res.add(new String(b));
-		b = new StringBuilder();
-		wasBR = true;
-		break;
-	    default:
-		wasBR = false;
-		wasBN = false;
-		b.append("" + c);
-	    }
-	}
-	res.add(new String(b));
-	return res.toArray(new String[res.size()]);
-    }
-
     static public File ifNotAbsolute(File baseDir, String path)
     {
-	NullCheck.notNull(baseDir, "baseDir");
-	NullCheck.notEmpty(path, "path");
+	requireNonNull(baseDir, "baseDir can't be null");
+	requireNonNull(path, "path can't be null");
+	if (path.isEmpty())
+	    throw new IllegalArgumentException("path can't be empty");
 	final File file = new File(path);
 	if (file.isAbsolute())
 	    return file;
 	return new File(baseDir, path);
-    }
-
-    static public void createSubdirs(File destDir) throws IOException
-    {
-	NullCheck.notNull(destDir, "destDir");
-
-	if (destDir.exists())
-	{
-	    if (!destDir.isDirectory())
-		throw new IOException(destDir.getAbsolutePath() + " exists and isn't a directory");
-	    return;
-	}
-	final File parent = destDir.getParentFile();
-	if (parent != null)
-	    createSubdirs(parent);
-	destDir.mkdir();	
     }
 }

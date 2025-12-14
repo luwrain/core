@@ -40,7 +40,7 @@ public final class StreamUtils
 	}
     }
 
-    static void writeAllBytes(OutputStream os, byte[] bytes, int numBytes) throws IOException
+    static public void writeAllBytes(OutputStream os, byte[] bytes, int numBytes) throws IOException
     {
 	requireNonNull(os, "os can't be null");
 	requireNonNull(bytes, "bytes can't be null");
@@ -58,7 +58,14 @@ public final class StreamUtils
 	}
     }
 
-    static byte [] readAllBytes(InputStream is) throws IOException
+        static public void writeAllBytes(OutputStream os, byte[] bytes) throws IOException
+    {
+	requireNonNull(os, "os can't be null");
+	requireNonNull(bytes, "bytes can't be null");
+	writeAllBytes(os, bytes, bytes.length);
+    }
+
+    static public byte [] readAllBytes(InputStream is) throws IOException
     {
 	requireNonNull(is, "is can't be null");
 	final byte[] buf = new byte[BUF_SIZE];
@@ -67,15 +74,9 @@ public final class StreamUtils
 	do {
 	    length = is.read(buf);
 	    if (length > 0)
-		res.write(buf, 0, length);
+		writeAllBytes(res, buf, length);
 	} while(length >= 0);
 	return res.toByteArray();
     }
     
-    static public void writeAllBytes(OutputStream os, byte[] bytes) throws IOException
-    {
-	requireNonNull(os, "os can't be null");
-	requireNonNull(bytes, "bytes can't be null");
-	writeAllBytes(os, bytes, bytes.length);
-    }
 }

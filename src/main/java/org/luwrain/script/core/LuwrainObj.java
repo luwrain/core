@@ -1,18 +1,3 @@
-/*
-   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
-
-   This file is part of LUWRAIN.
-
-   LUWRAIN is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 3 of the License, or (at your option) any later version.
-
-   LUWRAIN is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-*/
 
 package org.luwrain.script.core;
 
@@ -30,7 +15,8 @@ import org.luwrain.util.*;
 
 import static java.util.Objects.*;
 import static org.luwrain.script.ScriptUtils.*;
-import static org.luwrain.core.NullCheck.*;
+///import static org.luwrain.core.NullCheck.*;
+import static org.luwrain.util.TextUtils.*;
 
 public final class LuwrainObj extends LuwrainObjBase
 {
@@ -351,7 +337,7 @@ messageType = ConstObj.getMessageType(values[1].asString());
 	    throw new ScriptException("readTextFile() takes a non-empty string with the name of the file as the furst argument");
 	try {
 	    final String text = LineIterator.join(new File(fileName), "UTF-8", System.lineSeparator());
-	    return ProxyArray.fromArray((Object[])FileUtils.universalLineSplitting(text));
+	    return ProxyArray.fromArray((Object[])splitLines(text));
 	}
 	catch(IOException e)
 	{
@@ -371,7 +357,14 @@ messageType = ConstObj.getMessageType(values[1].asString());
 	if (lines == null)
 	    throw new IllegalArgumentException("No lines to write");
 	try {
-	    FileUtils.writeTextFileMultipleStrings(new File(fileName), lines, "UTF-8", null);
+	    try (final var w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"))) {
+		for(final var line: lines)
+		{
+		    w.write(line);
+		    w.newLine();
+		}
+		w.flush();
+	    }
 	    return true;
 	}
 	catch(IOException e)
