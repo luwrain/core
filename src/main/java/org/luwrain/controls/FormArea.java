@@ -1,18 +1,5 @@
-/*
-   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
-
-   This file is part of LUWRAIN.
-
-   LUWRAIN is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 3 of the License, or (at your option) any later version.
-
-   LUWRAIN is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-*/
+// SPDX-License-Identifier: BUSL-1.1
+// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.controls;
 
@@ -206,7 +193,7 @@ public class FormArea  extends NavigationArea
         public boolean addPasswd(String name, String caption, String text, Object obj, boolean enabled)
     {
 	NullCheck.notEmpty(name, "name");
-	NullCheck.notNull(caption, "caption");
+	requireNonNull(caption, "caption can't be null");
 	NullCheck.notNull(text, "text");
 	final Item item = new Item(context, this, Type.EDIT, name);
 	item.caption = caption;
@@ -266,7 +253,7 @@ public class FormArea  extends NavigationArea
 			   Object obj, boolean enabled)
     {
 	NullCheck.notNull(itemName, "itemName");
-	NullCheck.notNull(caption, "caption");
+	requireNonNull(caption, "caption can't be null");
 	NullCheck.notNull(listChoosing, "listChoosing");
 	if (itemName.trim().isEmpty() || hasItemWithName(itemName))
 	    return false;
@@ -298,7 +285,7 @@ public class FormArea  extends NavigationArea
 			       boolean initialState, Object obj, boolean enabled)
     {
 	NullCheck.notNull(itemName, "itemName");
-	NullCheck.notNull(caption, "caption");
+	requireNonNull(caption, "caption can't be null");
 	if (itemName.trim().isEmpty() || hasItemWithName(itemName))
 	    return false;
 	final Item item = new Item(context, this, Type.CHECKBOX, itemName);
@@ -316,7 +303,7 @@ public class FormArea  extends NavigationArea
     public boolean addCheckbox(String itemName, String caption, boolean initialState)
     {
 	NullCheck.notNull(itemName, "itemName");
-	NullCheck.notNull(caption, "caption");
+	requireNonNull(caption, "caption can't be null");
 	return addCheckbox(itemName, caption, initialState, null, true);
     }
 
@@ -334,7 +321,7 @@ public class FormArea  extends NavigationArea
     public boolean addStatic(String itemName, String caption, Object obj)
     {
 	NullCheck.notEmpty(itemName, "itemName");
-	NullCheck.notNull(caption, "caption");
+	requireNonNull(caption, "caption can't be null");
 	if (hasItemWithName(itemName))
 	    return false;
 	final Item item = new Item(context, this, Type.STATIC, itemName);
@@ -350,13 +337,13 @@ public class FormArea  extends NavigationArea
     public boolean addStatic(String itemName, String caption)
     {
 	NullCheck.notNull(itemName, "itemName");
-	NullCheck.notNull(caption, "caption");
+	requireNonNull(caption, "caption can't be null");
 	return addStatic(itemName, caption, "");
     }
 
         public boolean addStatic(String caption)
     {
-	NullCheck.notNull(caption, "caption");
+	requireNonNull(caption, "caption can't be null");
 	return addStatic(getItemNewAutoName(), caption, "");
     }
 
@@ -395,7 +382,7 @@ public class FormArea  extends NavigationArea
 
     public boolean activateMultilineEdit(String caption, MutableMarkedLines content, MultilineEdit.Params params, boolean enabled)
     {
-	NullCheck.notNull(caption, "caption");
+	requireNonNull(caption, "caption can't be null");
 	NullCheck.notNull(content, "content");
 	NullCheck.notNull(params, "params");
 	if (isMultilineEditActivated())
@@ -410,9 +397,16 @@ public class FormArea  extends NavigationArea
 	return true;
     }
 
+            public boolean addMultilineEdit(String caption, List<String> text, boolean enabled)
+    {
+	requireNonNull(caption, "caption can't be null");
+	requireNonNull(text, "text can't be null");
+	return activateMultilineEdit(caption, text.toArray(new String[text.size()]), enabled);
+    }
+
         public boolean activateMultilineEdit(String caption, String[] text, boolean enabled)
     {
-	NullCheck.notNull(caption, "caption");
+	requireNonNull(caption, "caption can't be null");
 	NullCheck.notNullItems(text, "text");
 final var content = new MutableMarkedLinesImpl(text);
 final var params = createMultilineEditParams(context, content);
@@ -421,7 +415,7 @@ return activateMultilineEdit(caption, content, params, enabled);
 
     public boolean activateMultilineEdit(String caption, String[] text)
     {
-	NullCheck.notNull(caption, "caption");
+	requireNonNull(caption, "caption can't be null");
 	NullCheck.notNullItems(text, "text");
 	return activateMultilineEdit(caption, text, true);
     }

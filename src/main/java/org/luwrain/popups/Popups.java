@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: BUSL-1.1
 // Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.popups;
@@ -157,7 +157,7 @@ public final class Popups
 	NullCheck.notEmpty(name, "name");
 	NullCheck.notEmpty(prefix, "prefix");
 	final FilePopup popup = new FilePopup(luwrain, name, prefix,
-					      acceptance, startFrom != null?startFrom:luwrain.getFileProperty(Luwrain.PROP_DIR_USERHOME), getUserHome(luwrain),
+					      acceptance, startFrom != null?startFrom:luwrain.getFileProperty(Luwrain.PROP_DIR_USERHOME), new File(luwrain.getDir("~")),
 					      loadFilePopupFlags(luwrain), Popups.DEFAULT_POPUP_FLAGS){
 		@Override public boolean onInputEvent(InputEvent event)
 		{
@@ -228,9 +228,11 @@ public final class Popups
     static public File existingFile(Luwrain luwrain, String name, File startWith, String[] extensions)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notEmpty(name, "name");
-	NullCheck.notNull(startWith, "startWith");
-	NullCheck.notNullItems(extensions, "extensions");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(startWith, "startWith can't be null");
+	requireNonNull(extensions, "extensions can't be null");
+	if (name.isEmpty())
+	    throw new IllegalArgumentException("name can't be empty");
 	//	final Settings.UserInterface sett = null;//Settings.createUserInterface(luwrain.getRegistry());
 	final CommanderArea.Filter<File> filter;
 	if (getFilePopupSkipHidden(luwrain))
@@ -241,7 +243,7 @@ public final class Popups
 							startWith, filter, DEFAULT_POPUP_FLAGS){
 		@Override public boolean onSystemEvent(SystemEvent event)
 		{
-		    NullCheck.notNull(event, "event");
+		    requireNonNull(event, "event can't be null");
 		    if (event.getType() != SystemEvent.Type.REGULAR)
 			return super.onSystemEvent(event);
 		    switch(event.getCode())
@@ -282,8 +284,10 @@ public final class Popups
     static public File existingFile(Luwrain luwrain, String name)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notEmpty(name, "name");
-	return Popups.existingFile(luwrain, name, getUserHome(luwrain), new String[0]);
+	requireNonNull(name, "name can't be null");
+	if (name.isEmpty())
+	    throw new IllegalArgumentException("name can't be empty");
+	return existingFile(luwrain, name, new File(luwrain.getDir("~")), new String[0]);
     }
 
     static public File existingDir(Luwrain luwrain, String name, File startWith)

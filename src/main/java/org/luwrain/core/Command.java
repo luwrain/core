@@ -1,26 +1,13 @@
-/*
-   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
-
-   This file is part of LUWRAIN.
-
-   LUWRAIN is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 3 of the License, or (at your option) any later version.
-
-   LUWRAIN is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-*/
+// SPDX-License-Identifier: BUSL-1.1
+// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 /**
- * Context-independent action in the system. Command represents some
- * operations associated with some name (command name). Such operations
- * can be performed anywhere in the system and usually serve as handlers
- * for hotkeys.
+ * A context-independent action in the system. 
+ * A command represents a named action capable of assigning to a hotkey.
+ * This kind of operations can be performed regardless of the context (no matter which applications a user keeps opened etc).
+ * A command can hav either a native implementation provided through extensions or a JavaScript implementation.
  *
  * @see Shortcut
  */

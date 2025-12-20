@@ -1,22 +1,8 @@
-/*
-   Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
-
-   This file is part of LUWRAIN.
-
-   LUWRAIN is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 3 of the License, or (at your option) any later version.
-
-   LUWRAIN is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-*/
+// SPDX-License-Identifier: BUSL-1.1
+// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
 /**
- * The core classes with a collection of interfaces designed to provide a
- * basic functionality of LUWRAIN applications. 
+ * The core classes with a collection of interfaces designed to provide a basic functionality of LUWRAIN applications. 
  * <p> This package includes classes for managing various aspects of the
  * application, such as handling user input, managing events, interacting
  * with the operating system, working with files, and more. It also

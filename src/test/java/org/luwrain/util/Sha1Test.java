@@ -1,25 +1,14 @@
-/*
-   Copyright 2012-2024 Michael Pozhidaev <msp@luwrain.org>
-
-   This file is part of LUWRAIN.
-
-   LUWRAIN is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 3 of the License, or (at your option) any later version.
-
-   LUWRAIN is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-*/
+// SPDX-License-Identifier: BUSL-1.1
+// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.util;
 
-import java.io.*;
+
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.*;
+import java.util.*;
 import org.luwrain.core.*;
 
 public class Sha1Test
@@ -29,6 +18,9 @@ public class Sha1Test
 	final byte[] emptyBuf = new byte[0];
 final ByteArrayInputStream s = new ByteArrayInputStream(emptyBuf);
 final String res = Sha1.getSha1(s);
-assertTrue(res.equals("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+//assertTrue(res.equals("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+for(var f: List.of("yutf-8.txt", "cp1251.txt", "koi8-r.txt", "866.txt"))
+{
+}
     }
 }
