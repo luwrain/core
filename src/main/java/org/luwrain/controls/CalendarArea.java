@@ -4,21 +4,23 @@
 package org.luwrain.controls;
 
 import java.util.*;
+
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 
+import static java.util.Objects.*;
+
 public class CalendarArea implements Area
 {
-    private ControlContext environment;
+    private final ControlContext context;
     private Calendar calendar;
     private int[][] table;
-    private int tableX = 0;
-    private int tableY = 0;
+    private int tableX = 0, tableY = 0;
 
-    public CalendarArea(ControlContext environment, Calendar calendar)
+    public CalendarArea(ControlContext context, Calendar calendar)
     {
-	this.environment = environment;
-	this.calendar = calendar;
+	this.context = requireNonNull(context, "context can't be null");
+	this.calendar = requireNonNull(calendar, "calendar can't be null");
 	refresh();
     }
 
@@ -73,10 +75,10 @@ public class CalendarArea implements Area
 	default:return false;
 	}
 	refresh();
-	environment.onAreaNewContent(this);
-	environment.onAreaNewHotPoint(this);
-	environment.onAreaNewName(this);
-	environment.say(constructDayStringForSpeech(calendar));
+	context.onAreaNewContent(this);
+	context.onAreaNewHotPoint(this);
+	context.onAreaNewName(this);
+	context.say(constructDayStringForSpeech(calendar));
 	return true;
     }
 

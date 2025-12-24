@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 // Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
 
-package org.luwrain.app.jobs;
+package org.luwrain.app.calendar;
 
 import java.util.*;
 import java.io.*;
@@ -15,13 +15,11 @@ import static java.util.Objects.*;
 
 public final class App extends AppBase<Strings> implements MonoApp
 {
-    final JobsManager jobs;
     private MainLayout mainLayout = null;
 
-    public App(JobsManager jobs)
+    public App()
     {
     super(Strings.class);
-    this.jobs = requireNonNull(jobs, "jobs can't be null");
     }
 
 @Override protected AreaLayout onAppInit()

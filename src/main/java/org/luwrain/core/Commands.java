@@ -240,7 +240,7 @@ final class Commands
 
 	    new Cmd(
 		    "font-size-inc",
-		    (luwrain)->{
+luwrain -> {
 			core.fontSizeInc();
 		    }),
 
@@ -255,6 +255,13 @@ final class Commands
 		    (luwrain)->{
 			core.launchApp(new org.luwrain.app.jobs.App(core.jobs));
 		    }),
+
+	    	    new Cmd(
+		    "calendar",
+		    luwrain -> {
+			core.launchApp(new org.luwrain.app.calendar.App());
+		    }),
+
 
 	    new Cmd(
 		    "calc",

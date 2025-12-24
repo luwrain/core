@@ -192,9 +192,11 @@ public class FormArea  extends NavigationArea
 
         public boolean addPasswd(String name, String caption, String text, Object obj, boolean enabled)
     {
-	NullCheck.notEmpty(name, "name");
+	requireNonNull(name, "name can't be null");
 	requireNonNull(caption, "caption can't be null");
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "tex tcan't be null");
+	if (name.isEmpty())
+	    throw new IllegalArgumentException("name can't be empty");
 	final Item item = new Item(context, this, Type.EDIT, name);
 	item.caption = caption;
 	item.enteredText = text;
