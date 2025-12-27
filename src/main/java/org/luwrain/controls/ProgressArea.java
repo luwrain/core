@@ -30,9 +30,9 @@ public class ProgressArea extends SimpleArea
 	if (content.getLineCount() > 0)
 	{
 	    content.setLine(content.getLineCount() - 1, line);
-	    content.addLine("");
+	    content.add("");
 	} else
-	    addLine(line);
+	    add(line);
 	environment.onAreaNewContent(this);
     }
 }

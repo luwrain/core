@@ -68,8 +68,8 @@ final class MainLayout extends LayoutBase
 	    simpleArea.update((lines)->{
 	    final String[] message = c.getCustomMessage();
 	    for(String s: message)
-		lines.addLine(s);
-	    lines.addLine("");
+		lines.add(s);
+	    lines.add("");
 		});
 	    return;
 	}
@@ -82,22 +82,22 @@ final class MainLayout extends LayoutBase
 	    	simpleArea.update((lines)->{
 	if (t instanceof java.io.FileNotFoundException && t.getMessage() != null)
 	{
-	    lines.addLine("");
-	    lines.addLine(app.getStrings().fileNotFound() + ": " + t.getMessage());
+	    lines.add("");
+	    lines.add(app.getStrings().fileNotFound() + ": " + t.getMessage());
 	}
 
 	final String[] msg = app.getStrings().intro().split("\\n");
-	lines.addLine("");
+	lines.add("");
 	for(String s: msg)
-	    lines.addLine(s);
-	lines.addLine("");
+	    lines.add(s);
+	lines.add("");
 	if (app.srcApp != null)
-	    lines.addLine(app.getStrings().app(app.srcApp.getClass().getName()));
+	    lines.add(app.getStrings().app(app.srcApp.getClass().getName()));
 	if (app.srcArea != null)
-	    lines.addLine(app.getStrings().area(app.srcArea.getClass().getName()));
+	    lines.add(app.getStrings().area(app.srcArea.getClass().getName()));
 	if (app.srcApp != null || app.srcArea != null)
-	    lines.addLine("");
-	lines.addLine(app.getStrings().stackTrace());
+	    lines.add("");
+	lines.add(app.getStrings().stackTrace());
 	final StringWriter sw = new StringWriter();
 	final PrintWriter pw = new PrintWriter(sw);
 	t.printStackTrace(pw);
@@ -105,7 +105,7 @@ final class MainLayout extends LayoutBase
 	sw.flush();
 	final String[] trace = sw.toString().split("\n", -1);
 	for(String s: trace)
-	    lines.addLine(s);
+	    lines.add(s);
 		    });
     }
 

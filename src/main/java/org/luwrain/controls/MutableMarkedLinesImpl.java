@@ -7,6 +7,8 @@ import java.util.*;
 
 import org.luwrain.core.*;
 
+import static java.util.Objects.*;
+
 public class MutableMarkedLinesImpl extends ArrayList<MutableMarkedLinesImpl.Line> implements MutableMarkedLines 
 {
     public MutableMarkedLinesImpl() {}
@@ -44,7 +46,7 @@ public class MutableMarkedLinesImpl extends ArrayList<MutableMarkedLinesImpl.Lin
 	    add(new Line(l));
     }
 
-    @Override public String[] getLines()
+    @Override public String[] getLinesAsArray()
     {
 	final ArrayList<String> res = new ArrayList<>();
 	res.ensureCapacity(size());
@@ -52,6 +54,16 @@ public class MutableMarkedLinesImpl extends ArrayList<MutableMarkedLinesImpl.Lin
 	    res.add(get(i).text);
 	return res.toArray(new String[res.size()]);
     }
+
+        @Override public List<String> getLines()
+    {
+	final ArrayList<String> res = new ArrayList<>();
+	res.ensureCapacity(size());
+	for(int i = 0;i < size();i++)
+	    res.add(get(i).text);
+	return res;
+    }
+
 
     @Override public void setLine(int index, String line)
     {
@@ -63,14 +75,15 @@ public class MutableMarkedLinesImpl extends ArrayList<MutableMarkedLinesImpl.Lin
 	set(index, new Line(line));
     }
 
-    @Override public void addLine(String line)
+    @Override public boolean add(String line)
     {
 	NullCheck.notNull(line, "line");
 	add(new Line(line));
+	return true;
     }
 
     //index is the position of newly inserted line
-    @Override public void insertLine(int index, String line)
+    @Override public void add(int index, String line)
     {
 	NullCheck.notNull(line, "line");
 	if (index < 0 || index > size())
@@ -117,7 +130,7 @@ final String text;
 	LineMarks marks = null;
 	public Line(String text)
 	{
-	    NullCheck.notNull(text, "text");
+	    requireNonNull(text, "text can't be null");
 	    this.text = text;
 	}
     }

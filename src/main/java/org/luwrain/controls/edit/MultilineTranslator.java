@@ -167,7 +167,7 @@ lastLine = text.get(text.size() - 1);
 	{
 	    try (var op = operation(false)){
 		for(final String s: text)
-		    lines.addLine(s);
+		    lines.add(s);
 		hotPoint.setHotPointX(text.get(text.size() - 1).length());
 		hotPoint.setHotPointY(lines.getLineCount() - 1);
 	    }
@@ -216,7 +216,7 @@ lastLine = text.get(text.size() - 1);
 	checkPos(pos, line);
 	try (var op = operation(false)){
 	    if (pos == 0 && line == 0 && lines.getLineCount() == 0)
-		lines.addLine("");
+		lines.add("");
 	    final int count = lines.getLineCount();
 	    if (line >= count)
 		throw new IllegalArgumentException("line (" + line + ") must be less then the number of lines (" + count + ")");
@@ -269,7 +269,7 @@ lastLine = text.get(text.size() - 1);
 	try (var op = operation(false)){
 		//Adding the line to the empty lines list
 	    if (pos == 0 && line == 0 && lines.getLineCount() == 0)
-		lines.addLine("");
+		lines.add("");
 	    final int lineCount = lines.getLineCount();
 	    if (line >= lineCount)
 		throw new IllegalArgumentException("The index of the line to split (" + String.valueOf(line) + ") must be less than the number of lines (" + String.valueOf(lineCount) + ")");
@@ -279,7 +279,7 @@ lastLine = text.get(text.size() - 1);
 		throw new IllegalArgumentException("pos (" + String.valueOf(pos) + ") can't be greater than the length of the line (" + String.valueOf(l.length()) + ")");
 	    lines.setLine(line, l.substring(0, pos));
 	    final String newLine = l.substring(pos);
-	    lines.insertLine(line + 1, newLine);
+	    lines.add(line + 1, newLine);
 	    if (hotPoint.getHotPointY() == line && hotPoint.getHotPointX() >= pos)
 	    {
 		hotPoint.setHotPointY(line + 1);

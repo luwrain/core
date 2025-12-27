@@ -473,7 +473,7 @@ final int count = mlEditContent.getLineCount();
 
     public String[] getMultilineEditText()
     {
-	return mlEditContent != null?mlEditContent .getLines():new String[0];
+	return mlEditContent != null?mlEditContent .getLinesAsArray():new String[0];
     }
 
     public MutableMarkedLines getMultilineEditContent()

@@ -44,9 +44,14 @@ public class MutableLinesImpl extends ArrayList<String> implements MutableLines
 	addAll(Arrays.asList(lines));
     }
 
-    @Override public String[] getLines()
+    @Override public String[] getLinesAsArray()
     {
 	return toArray(new String[size()]);
+    }
+
+    @Override public List<String> getLines()
+    {
+	return this;
     }
 
     @Override public void setLine(int index, String line)
@@ -57,23 +62,6 @@ public class MutableLinesImpl extends ArrayList<String> implements MutableLines
 	if (index >= size())
 	    throw new IllegalArgumentException("index (" + String.valueOf(index) + ") can't be greater or equal to line count (" + String.valueOf(size()) + ")");
 	set(index, line);
-    }
-
-    @Override public void addLine(String line)
-    {
-	NullCheck.notNull(line, "line");
-	add(line);
-    }
-
-    //index is the position of newly inserted line
-    @Override public void insertLine(int index, String line)
-    {
-	NullCheck.notNull(line, "line");
-	if (index < 0 || index > size())
-	    throw new IllegalArgumentException("Illegal index value (" + index + ")");
-	if (index < size())
-	    add(index, line); else
-	    add(line);
     }
 
     @Override public void removeLine(int index)

@@ -33,24 +33,31 @@ public class UndoLines implements MutableMarkedLines
 	//FIXME:
     }
 
-    @Override public String[] getLines()
+    @Override public String[] getLinesAsArray()
+    {
+	return lines.getLinesAsArray();
+    }
+
+        @Override public List<String> getLines()
     {
 	return lines.getLines();
     }
+
 
     @Override public void setLines(String[] lines)
     {
     }
 
-    @Override public void addLine(String line)
+    @Override public boolean add(String line)
     {
 	NullCheck.notNull(line, "line");
 	final Command cmd = new AddLine(lines, line);
 	cmd.redo(lines);
 	saveCommand(cmd);
+	return true;
     }
 
-    @Override public void insertLine(int index, String line)
+    @Override public void add(int index, String line)
     {
 	//FIXME:
     }
@@ -106,7 +113,7 @@ public class UndoLines implements MutableMarkedLines
 	@Override public void redo(MutableLines lines)
 	{
 	    NullCheck.notNull(lines, "lines");
-	    lines.addLine(line);
+	    lines.add(line);
 	}
 	@Override public void undo(MutableLines lines)
 	{
@@ -135,7 +142,7 @@ public class UndoLines implements MutableMarkedLines
 	@Override public void undo(MutableLines lines)
 	{
 	    NullCheck.notNull(lines, "lines");
-	    lines.insertLine(removingLineIndex, line);
+	    lines.add(removingLineIndex, line);
 	}
     }
 

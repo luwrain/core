@@ -31,12 +31,12 @@ final class Version extends SimpleArea implements SectionArea
 	final String javaVersion = luwrain.i18n().getStaticStr("CpVersionJava") + " " + System.getProperty("java.version") + " (" + System.getProperty("java.vm.vendor") + ")";
 	final String memUsed = luwrain.i18n().getStaticStr("CpVersionMemUsed") + " " + (memUsedBytes / 1048576) + "M";
 	update((lines)->{
-		lines.addLine("");
-		lines.addLine(luwrainVersion);
-		lines.addLine(osVersion);
-		lines.addLine(javaVersion);
-		lines.addLine(memUsed);
-		lines.addLine("");
+		lines.add("");
+		lines.add(luwrainVersion);
+		lines.add(osVersion);
+		lines.add(javaVersion);
+		lines.add(memUsed);
+		lines.add("");
 	    });
     }
 

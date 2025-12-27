@@ -36,6 +36,11 @@ public class LineIterator implements Iterator<String>
 	this(new InputStreamReader(is, charset));
     }
 
+    public LineIterator(String str) throws IOException
+    {
+	this(new StringReader(str));
+    }
+
     @Override public boolean hasNext()
     {
         return nextLine != null;

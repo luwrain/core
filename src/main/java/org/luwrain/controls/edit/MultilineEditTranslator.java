@@ -130,7 +130,7 @@ public class MultilineEditTranslator implements MultilineEditCorrector
 	{
 	    beginEditTrans();
 	    for(int i = 0;i < text.length;++i)
-		lines.addLine(text[i]);
+		lines.add(text[i]);
 	    hotPoint.setHotPointX(text[text.length - 1].length());
 	    hotPoint.setHotPointY(lines.getLineCount() - 1);
 	    endEditTrans(false);
@@ -154,8 +154,8 @@ public class MultilineEditTranslator implements MultilineEditCorrector
 	beginEditTrans();
 	lines.setLine(y, line.substring(0, x) + text[0]);
 	for(int i = 1;i < text.length - 1;++i)
-	    lines.insertLine(y + i, text[i]);
-	lines.insertLine(y+ text.length - 1, text[text.length - 1] + line.substring(x));
+	    lines.add(y + i, text[i]);
+	lines.add(y+ text.length - 1, text[text.length - 1] + line.substring(x));
 	if (hotPoint.getHotPointY() > y)
 	    hotPoint.setHotPointY(hotPoint.getHotPointY() + text.length - 1); else
 	    if (hotPoint.getHotPointY() == y && hotPoint.getHotPointX() >= x)
@@ -176,7 +176,7 @@ public class MultilineEditTranslator implements MultilineEditCorrector
 	beginEditTrans();
 	try {
 	    if (pos == 0 && lineIndex == 0 && lines.getLineCount() == 0)
-		lines.addLine("");
+		lines.add("");
 	    final int count = lines.getLineCount();
 	    if (lineIndex >= count)
 		throw new IllegalArgumentException("lineIndex (" + lineIndex + ") must be less then the number of lines (" + count + ")");
@@ -235,7 +235,7 @@ public class MultilineEditTranslator implements MultilineEditCorrector
 	final String newLine;
 	try {
 	    if (pos == 0 && lineIndex == 0 && lines.getLineCount() == 0)
-		lines.addLine("");
+		lines.add("");
 	    final int lineCount = lines.getLineCount();
 	    if (lineIndex >= lineCount)
 		throw new IllegalArgumentException("lineIndex (" + lineIndex + ") must be less than the number of lines (" + lineCount + ")");
@@ -245,7 +245,7 @@ public class MultilineEditTranslator implements MultilineEditCorrector
 		throw new IllegalArgumentException("pos (" + pos + ") may not be negative than the length of the line (" + line.length() + ")");
 	    lines.setLine(lineIndex, line.substring(0, pos));
 	    newLine = line.substring(pos);
-	    lines.insertLine(lineIndex + 1, newLine);
+	    lines.add(lineIndex + 1, newLine);
 	    if (hotPoint.getHotPointY() == lineIndex && hotPoint.getHotPointX() >= pos)
 	    {
 		hotPoint.setHotPointY(lineIndex + 1);

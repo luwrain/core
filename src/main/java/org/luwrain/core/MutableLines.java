@@ -3,6 +3,8 @@
 
 package org.luwrain.core;
 
+import java.util.*;
+
 public interface MutableLines extends Lines
 {
     public interface Updating
@@ -11,10 +13,11 @@ public interface MutableLines extends Lines
     }
 
     void update(Updating updating);
-    String[] getLines();
+    String[] getLinesAsArray();
+    List<String> getLines();
     void setLines(String[] lines);
-    void addLine(String line);
-    void insertLine(int index, String line);
+    boolean add(String line);
+    void add(int index, String line);
     void removeLine(int index);
     void setLine(int index, String line);
     void clear();

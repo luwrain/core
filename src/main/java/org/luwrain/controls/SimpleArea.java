@@ -3,8 +3,12 @@
 
 package org.luwrain.controls;
 
+import java.util.*;
+
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
+
+import static java.util.Objects.*;
 
 /**
  * {code Area} interface implementation with internal lines storing. This
@@ -76,30 +80,36 @@ public class SimpleArea extends NavigationArea implements MutableLines
 	afterChange();
     }
 
-    public String[] getLines()
+    public String[] getLinesAsArray()
+    {
+	return content.getLinesAsArray();
+    }
+
+    @Override public List<String> getLines()
     {
 	return content.getLines();
     }
 
     public void setLine(int index, String line)
     {
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	content.setLine(index, line);
 	afterChange();
     }
 
-    public void addLine(String line)
+    @Override public boolean add(String line)
     {
-	NullCheck.notNull(line, "line");
-	content.addLine(line);
+	requireNonNull(line, "line can't be null");
+	content.add(line);
 	afterChange();
+	return true;
     }
 
     //index is the position of newly inserted line
-    public void insertLine(int index, String line)
+    public void add(int index, String line)
     {
-	NullCheck.notNull(line, "line");
-	content.insertLine(index, line);
+	requireNonNull(line, "line can't be null");
+	content.add(index, line);
 	afterChange();
     }
 

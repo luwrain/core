@@ -180,12 +180,12 @@ this.changeListeners.addAll(listeners);
 
     public List<String> getTextAsList()
     {
-	return Arrays.asList(content.getLines());
+	return content.getLines();
     }
 
     public String[] getText()
     {
-	return content.getLines();
+	return content.getLinesAsArray();
     }
 
         public String getText(String lineSeparator)
