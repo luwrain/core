@@ -7,6 +7,9 @@ import java.util.*;
 
 import org.luwrain.core.*;
 
+import static java.util.Objects.*;
+import static java.util.stream.Collectors.*;
+
 public class MutableLinesImpl extends ArrayList<String> implements MutableLines 
 {
     public MutableLinesImpl()
@@ -74,16 +77,8 @@ public class MutableLinesImpl extends ArrayList<String> implements MutableLines
     public String getWholeText(String lineSep)
     {
 	final String s = lineSep != null?lineSep:System.lineSeparator();
-	if (size() == 0)
-	    return "";
-	if (size() == 1)
-	    return get(0);
-	final StringBuilder res = new StringBuilder();
-	res.append(get(0));
-	for(int i = 1;i < size();++i)
-	    res.append(s).append(get(i));
-	return new String(res);
-    }
+	return stream().collect(joining(s));
+	    }
 
     public String getWholeText()
     {

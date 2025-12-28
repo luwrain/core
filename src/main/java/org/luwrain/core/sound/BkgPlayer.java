@@ -3,42 +3,48 @@
 
 package org.luwrain.core.sound;
 
+import java.util.*;
 import java.net.*;
 
 import org.luwrain.core.*;
 import org.luwrain.core.MediaResourcePlayer.*;
 
+import static java.util.Objects.*;
+
 final class BkgPlayer
 {
     static private final String LOG_COMPONENT = "core";
 
-    private final ExtObjects extObjs;
+    private final Luwrain luwrain;
     private final String url;
     private Instance instance = null;
+    private List<MediaResourcePlayer> players = null; //FIXME: Inefficient store there
 
-    BkgPlayer(ExtObjects extObjs, String url)
+    BkgPlayer(Luwrain luwrain, String url)
     {
-	NullCheck.notNull(extObjs, "extObjs");
+	this.luwrain = requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notEmpty(url, "url");
-	this.extObjs = extObjs;
 	this.url = url;
     }                                                                           
 
     void start()
     {
+	if (players == null)
+	    players = luwrain.createInstances(MediaResourcePlayer.class);
 	MediaResourcePlayer player = null;
-	for(MediaResourcePlayer p: extObjs.getMediaResourcePlayers())
-	    if (p.getSupportedMimeType().equals(ContentTypes.SOUND_MP3_DEFAULT))
-	    {
-		player = p;
-		break;
-	    }
+	if (players != null)
+	    for(var p: players)
+		if (p.getSupportedMimeType().equals(ContentTypes.SOUND_MP3_DEFAULT))
+		{
+		    player = p;
+		    break;
+		}
 	if (player == null)
 	{
 	    Log.error(LOG_COMPONENT, "unable to find a media resource player for " + url.toString());
 	    return;
 	}
-	this.instance = player.newMediaResourcePlayer(new MediaResourcePlayer.Listener(){
+	this.instance = player.newMediaResourcePlayer(luwrain, new MediaResourcePlayer.Listener(){
 		@Override public void onPlayerTime(Instance instance, long msec)
 		{
 		}

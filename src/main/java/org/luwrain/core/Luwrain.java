@@ -87,7 +87,6 @@ public interface Luwrain extends PropertiesBase, HookContainer
     int getAreaVisibleWidth(Area area);
     Clipboard getClipboard();
     String[] xGetLoadedSpeechFactories();
-    MediaResourcePlayer[] getMediaResourcePlayers();
     org.luwrain.player.Player getPlayer();
 String getPath(String pathId);
     String getString(String strId);

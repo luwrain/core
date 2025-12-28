@@ -9,7 +9,7 @@ import org.apache.logging.log4j.*;
 import static java.util.Objects.*;
 import static org.luwrain.core.NullCheck.*;
 
-final class ObjRegistry implements ExtObjects
+final class ObjRegistry
 {
     static private final Logger log = LogManager.getLogger();
     static private final class Entry<E> 
@@ -29,7 +29,6 @@ final class ObjRegistry implements ExtObjects
 
     private Map<String, Entry<Shortcut>> shortcuts = new HashMap<>();
     private Map<String, Entry<Worker>> workers = new HashMap<>();
-    private Map<String, Entry<MediaResourcePlayer>> players = new HashMap<>();
         private Map<String, Entry<PropertiesProvider>> propsProviders = new HashMap<>();
 
     boolean add(Extension ext, ExtensionObject obj)
@@ -47,16 +46,6 @@ final class ObjRegistry implements ExtObjects
 	    if (!shortcuts.containsKey(name))
 	    {
 		shortcuts.put(name, new Entry<>(ext, name, shortcut));
-		res = true;
-	    }
-	}
-
-		if (obj instanceof MediaResourcePlayer)
-	{
-	    final MediaResourcePlayer player = (MediaResourcePlayer)obj;
-	    if (!players.containsKey(name))
-	    {
-		players.put(name, new Entry<>(ext, name, player));
 		res = true;
 	    }
 	}
@@ -91,7 +80,6 @@ final class ObjRegistry implements ExtObjects
 	notNull(ext, "ext");
 	removeEntriesByExt(shortcuts, ext);
 	removeEntriesByExt(workers, ext);
-	removeEntriesByExt(players, ext);
     }
 
     Shortcut getShortcut(String name)
@@ -110,14 +98,6 @@ final class ObjRegistry implements ExtObjects
 	final String[] str = res.toArray(new String[res.size()]);
 	Arrays.sort(str);
 	return str;
-    }
-
-    @Override public MediaResourcePlayer[] getMediaResourcePlayers()
-    {
-	final List<MediaResourcePlayer> res = new ArrayList<>();
-	for(Map.Entry<String, Entry<MediaResourcePlayer>> e: players.entrySet())
-	    res.add(e.getValue().obj);
-	return res.toArray(new MediaResourcePlayer[res.size()]);
     }
 
             Worker[] getWorkers()

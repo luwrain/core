@@ -9,6 +9,7 @@ import java.net.*;
 import javax.sound.sampled.*;
 import org.apache.logging.log4j.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.NullCheck.*;
 
 public final class WavePlayers
@@ -208,13 +209,13 @@ public final class WavePlayers
 
 	static private long mSecToBytes(AudioFormat format, float msec)
 	{
-	    NullCheck.notNull(format, "format");
+	    requireNonNull(format, "format can't be null");
 	    return (long)((format.getSampleRate() * format.getSampleSizeInBits() * msec) / 8000);
 	}
 
 	static private long bytesToMsec(AudioFormat format, long bytes)
 	{
-	    NullCheck.notNull(format, "format");
+	    requireNonNull(format, "format can't be null");
 	    final float samples = (8f * (float)bytes) / format.getSampleSizeInBits();
 	    return (long)((1000 * samples) / format.getSampleRate()); 
 	}
@@ -222,9 +223,9 @@ public final class WavePlayers
 
     static class Player implements MediaResourcePlayer
     {
-	@Override public Instance newMediaResourcePlayer(Listener listener)
+	@Override public Instance newMediaResourcePlayer(Luwrain luwrain, Listener listener)
 	{
-	    NullCheck.notNull(listener, "listener");
+	    requireNonNull(listener, "listener can't be null");
 	    return new PlayerInstance(listener);
 	}
 

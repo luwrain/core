@@ -320,11 +320,11 @@ final class LuwrainImpl implements Luwrain
         @Override public <T> List<T> createInstances(Class<T> c)
     {
 	requireNonNull(c, "c can't be null");
-	if (c.equals(org.luwrain.io.websearch.Engine.class))
+	if (c.equals(org.luwrain.io.websearch.Engine.class) ||
+	    c.equals(MediaResourcePlayer.class))
 	    return core.extensions.load(c);
 	return null;
     }
-
 
         @Override public FileFetcher[] findFetchers(String url)
     {
@@ -767,16 +767,6 @@ final class LuwrainImpl implements Luwrain
     @Override public org.luwrain.player.Player getPlayer()
     {
 	return core.player;
-    }
-
-    @Override public MediaResourcePlayer[] getMediaResourcePlayers()
-    {
-	core.mainCoreThreadOnly();
-	final List<MediaResourcePlayer> res = new ArrayList<>();
-	res.add(core.wavePlayer);
-	for(MediaResourcePlayer p: core.objRegistry.getMediaResourcePlayers())
-	    res.add(p);
-	return res.toArray(new MediaResourcePlayer[res.size()]);
     }
 
     @Override public String[] xGetLoadedSpeechFactories()

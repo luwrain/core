@@ -54,6 +54,6 @@ public interface MediaResourcePlayer extends ExtensionObject
 	void stop();
     }
 
-    Instance newMediaResourcePlayer(Listener listener);
+    Instance newMediaResourcePlayer(Luwrain luwrain, Listener listener);
     String getSupportedMimeType();//FIXME:multiple types
 }
