@@ -43,11 +43,18 @@ final List<LineMarks.Mark> res = marks.parallelStream()
 return new DefaultLineMarks(res.toArray(new LineMarks.Mark[res.size()]));
 }
 
-    @Override public void refill(List<Mark> marks)
+    @Override public     void transform(Function<Mark, Mark> transformation)
     {
-	requireNonNull(marks, "marks can't be null");
-	this.marks.clear();
-	this.marks.addAll(marks);
+	final var res = new ArrayList<Mark>();
+	res.ensureCapacity(marks.size());
+	for(var m: marks)
+	{
+	    final var mm = transformation.apply(m);
+	    if (mm != null)
+		res.add(mm);
+	}
+	marks.clear();
+	marks.addAll(res);
     }
 
     static public final class Builder
@@ -57,11 +64,12 @@ return new DefaultLineMarks(res.toArray(new LineMarks.Mark[res.size()]));
 	{
 	    if (marks != null)
 	    {
-		final LineMarks.Mark[] newMarks = marks.getMarks();
+		final var newMarks = marks.getMarks();
 		if (newMarks != null)
 		    res.addAll(Arrays.asList(newMarks));
 	    }
 	}
+		public Builder() { this(null); }
 	public Builder add(LineMarks.Mark mark)
 	{
 	    requireNonNull(mark, "mark can't be null");
@@ -70,7 +78,7 @@ return new DefaultLineMarks(res.toArray(new LineMarks.Mark[res.size()]));
 	}
 	public Builder addAll(List<LineMarks.Mark> marks)
 	{
-	    NullCheck.notNull(marks, "marks");
+	    requireNonNull(marks, "marks can't be null");
 	    res.addAll(marks);
 	    return this;
 	}

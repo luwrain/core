@@ -11,7 +11,7 @@ public interface LineMarks
     Mark[] getMarks();
     Mark[] findAtPos(int pos);
 LineMarks filter(Predicate<Mark> cond);
-    void refill(List<Mark> marks);
+    void transform(Function<Mark, Mark> transformation);
 
     public interface MarkObject
     {

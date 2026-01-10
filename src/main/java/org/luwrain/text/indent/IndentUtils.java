@@ -50,7 +50,25 @@ marks = null;
 	    }
 	b.append(line.substring(fromPos));
 	lines.setLine(lineIndex, new String(b));
-
+	//Repositioning line marks
+	if (lines instanceof MutableMarkedLines markedLines && marks != null)
+	{
+	    final int diff = newIndent - oldIndent;
+	    marks.transform(m -> {
+		    //If the mark lies fully inside of the old indent, removing it
+		    if (m.getPosTo() <= oldIndent)
+			return null;
+		    final int newPosFrom;
+		    //If posFrom of the mark lies inside of the old indent, stretching it to the beginning of the line
+		    if (m.getPosFrom() < oldIndent)
+			newPosFrom = 0; else
+			newPosFrom = m.getPosFrom() + diff;
+		    //Moving posTo of the mark according to the difference between old and new indents
+		    final int newPosTo = m.getPosTo() + diff;
+		    return m.repos(newPosFrom, newPosTo);
+		});
+	    markedLines.setLineMarks(lineIndex, marks);
+	}
     }
 
     protected int getIndentLen(char ch)
