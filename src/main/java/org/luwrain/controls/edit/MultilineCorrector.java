@@ -18,11 +18,6 @@ public interface MultilineCorrector
 	MERGE_LINES,
 	SPLIT_LINE};
 
-    public interface Model extends MutableLines, HotPointControl
-    {
-	void change(Change c);
-    }
-
     void change(Change c);
 
     static public class Change

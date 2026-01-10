@@ -8,37 +8,47 @@ import java.util.function.*;
 
 import org.luwrain.core.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.util.RangeUtils.*;
 
 public class DefaultLineMarks implements LineMarks
 {
-    final Mark[] marks;
+    final List<Mark> marks = new ArrayList<>();
+    
     DefaultLineMarks(Mark[] marks)
     {
 	NullCheck.notNullItems(marks, "marks");
-	this.marks = marks;
+	this.marks.addAll(Arrays.asList (marks));
     }
+    
     @Override public Mark[] getMarks()
     {
-	return this.marks.clone();
+	return marks.toArray(new Mark[marks.size()]);
     }
+    
     @Override public LineMarks.Mark[] findAtPos(int pos)
     {
-	 final List<LineMarks.Mark> res = new ArrayList<>();
-	 for(LineMarks.Mark m: marks)
-	     if (between(pos, m.getPosFrom(), m.getPosTo()))
-		 res.add(m);
+	final List<LineMarks.Mark> res = marks.parallelStream()
+	.filter(e -> between(pos, e.getPosFrom(), e.getPosTo()))
+	.toList();
 	 return res.toArray(new LineMarks.Mark[res.size()]);
 	 }
-@Override public DefaultLineMarks filter(Predicate<LineMarks.Mark> cond)
+    
+    @Override public DefaultLineMarks filter(Predicate<LineMarks.Mark> cond)
 {
-NullCheck.notNull(cond, "cond");
-final List<LineMarks.Mark> res = new ArrayList<>();
-for(LineMarks.Mark m: marks)
-if (cond.test(m))
-res.add(m);
+requireNonNull(cond, "cond can't be null");
+final List<LineMarks.Mark> res = marks.parallelStream()
+.filter(e -> cond.test(e))
+.toList();
 return new DefaultLineMarks(res.toArray(new LineMarks.Mark[res.size()]));
 }
+
+    @Override public void refill(List<Mark> marks)
+    {
+	requireNonNull(marks, "marks can't be null");
+	this.marks.clear();
+	this.marks.addAll(marks);
+    }
 
     static public final class Builder
     {
@@ -54,7 +64,7 @@ return new DefaultLineMarks(res.toArray(new LineMarks.Mark[res.size()]));
 	}
 	public Builder add(LineMarks.Mark mark)
 	{
-	    NullCheck.notNull(mark, "mark");
+	    requireNonNull(mark, "mark can't be null");
 	    res.add(mark);
 	    return this;
 	}
@@ -81,17 +91,45 @@ return new DefaultLineMarks(res.toArray(new LineMarks.Mark[res.size()]));
 	final Type type;
 	final int posFrom, posTo;
 	final MarkObject obj;
+	
 	public MarkImpl(Type type, int posFrom, int posTo, MarkObject obj)
 	{
-	    NullCheck.notNull(type, "type");
+	    requireNonNull(type, "type can't be null");
+	    if (posFrom < 0)
+		throw new IllegalArgumentException("posFrom can't be negative");
+	    if (posTo < 0)
+		throw new IllegalArgumentException("posTo can't be negative");
+	    if (posTo <= posFrom)
+		throw new IllegalArgumentException("posTo must be strictly greater than posFrom");
 	    this.type = type;
 	    this.posFrom = posFrom;
 	    this.posTo = posTo;
 	    this.obj = obj;
 	}
-	@Override public Type getType() { return type; }
-	@Override public int getPosFrom() { return posFrom; }
-	@Override public int getPosTo() { return posTo; }
-	@Override public MarkObject getMarkObject() { return obj; }
+
+	@Override public MarkImpl repos(int newPosFrom, int newPosTo)
+	{
+	    return new MarkImpl(type, newPosFrom, newPosTo, obj);    
+	}
+	
+	@Override public Type getType()
+	{
+	    return type;
+	}
+	
+	@Override public int getPosFrom()
+	{
+	    return posFrom;
+	}
+	
+	@Override public int getPosTo()
+	{
+	    return posTo;
+	}
+	
+	@Override public MarkObject getMarkObject()
+	{
+	    return obj;
+	}
     }
 }

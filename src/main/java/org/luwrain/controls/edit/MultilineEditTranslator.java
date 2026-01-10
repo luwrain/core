@@ -167,7 +167,7 @@ public class MultilineEditTranslator implements MultilineEditCorrector
 	return new ModificationResult(true);
     }
 
-    //??Adds empty line with pos=0 and line=0 if previously there were no lines at all
+    //Adds empty line with pos=0 and line=0 if previously there were no lines at all
     @Override public ModificationResult putChars(int pos, int lineIndex, String str)
     {
 	NullCheck.notNull(str, "str");

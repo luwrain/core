@@ -293,18 +293,19 @@ public final class Popups
     static public File existingDir(Luwrain luwrain, String name, File startWith)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(startWith, "startWith can't be null");
 	NullCheck.notEmpty(name, "name");
 	//	final Settings.UserInterface sett = null;//Settings.createUserInterface(luwrain.getRegistry());
 	final CommanderArea.Filter<File> filter;
 	if (getFilePopupSkipHidden(luwrain))
 	    filter = CommanderPopup.FILTER_NO_HIDDEN; else
 	    filter = CommanderPopup.FILTER_ALL;
-	final AtomicReference<Object> res = new AtomicReference<>(null);
-	final CommanderPopup popup = new CommanderPopup(luwrain, name,
+	final var res = new AtomicReference<Object>(null);
+	final var popup = new CommanderPopup(luwrain, name,
 							startWith, filter, DEFAULT_POPUP_FLAGS){
 		@Override public boolean onSystemEvent(SystemEvent event)
 		{
-		    NullCheck.notNull(event, "event");
+		    requireNonNull(event, "event can't be null");
 		    if (event.getType() != SystemEvent.Type.REGULAR)
 			return super.onSystemEvent(event);
 		    switch(event.getCode())
@@ -345,7 +346,9 @@ public final class Popups
     static public File existingDir(Luwrain luwrain, String name)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notEmpty(name, "name");
+	requireNonNull(name, "name can't be null");
+	if (name.isEmpty())
+	    throw new IllegalArgumentException("name can't be empty");
 	return existingDir(luwrain, name, getUserHome(luwrain));
     }
 
@@ -427,7 +430,7 @@ public final class Popups
     static private File getUserHome(Luwrain luwrain)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	return luwrain.getFileProperty("luwrain.dir.userhome");
+	return new File(luwrain.getDir("~"));
     }
 
     static public Set<FilePopup.Flags> loadFilePopupFlags(Luwrain luwrain)
