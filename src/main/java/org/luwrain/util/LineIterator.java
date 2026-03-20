@@ -66,6 +66,30 @@ public class LineIterator implements Iterator<String>
 	return a;
     }
 
+    static public List<String> toList(String s)
+    {
+	try {
+	    return new LineIterator(s).toList();
+	}
+	catch(IOException ex)
+	{
+	    throw new RuntimeException(ex);
+	}
+    }
+
+        static public String[] toArray(String s)
+    {
+	try {
+final var l = new LineIterator(s).toList();
+return l.toArray(new String[l.size()]);
+	}
+	catch(IOException ex)
+	{
+	    throw new RuntimeException(ex);
+	}
+    }
+
+
     public Stream<String> stream()
     {
 	final var a = new ArrayList<String>();

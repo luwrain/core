@@ -427,12 +427,12 @@ public interface ActionHandler
     public EditArea.Params editParams(EditParams l)
     {
 	requireNonNull(l, "l can't be null");
-	final EditArea.Params params = new EditArea.Params(getControlContext());
+	final var params = new EditArea.Params(getControlContext());
 	//	params.inputEventListeners = new ArrayList<>();
 	//	params.inputEventListeners.add(createEditAreaInputEventHook());
 	l.setEditParams(params);
 	if (params.inputEventListeners != null)
-	    log.debug(String.valueOf(params.inputEventListeners.size()) + " edit input listeners");
+	    log.trace(String.valueOf(params.inputEventListeners.size()) + " edit input listeners");
 	return params;
     }
 

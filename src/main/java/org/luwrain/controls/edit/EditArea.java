@@ -288,7 +288,7 @@ return true;
 
         @Override public void announceLine(int index, String line)
     {
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	appearance.announceLine(index, line);
     }
 

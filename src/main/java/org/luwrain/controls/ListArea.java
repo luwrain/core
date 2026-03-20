@@ -11,6 +11,8 @@ import org.luwrain.core.events.*;
 import org.luwrain.core.queries.*;
 import org.luwrain.util.*;
 
+import static java.util.Objects.*;
+
 public class ListArea<E>  implements Area, ClipboardTranslator.Provider, RegionTextQueryTranslator.Provider
 {
     public enum Flags {
@@ -406,7 +408,7 @@ public interface ClipboardSaver<E>
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "even tcan't be null");
 	if (!event.isSpecial() && (!event.isModified() || event.withShiftOnly()))
 	    return onChar(event);
 	if (!event.isSpecial() || event.isModified())
@@ -454,7 +456,7 @@ public interface ClipboardSaver<E>
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return false;
 	switch (event.getCode())
@@ -483,7 +485,7 @@ public interface ClipboardSaver<E>
 
     @Override public boolean onAreaQuery(AreaQuery query)
     {
-	NullCheck.notNull(query, "query");
+	requireNonNull(query, "query can't be null");
 	switch(query.getQueryCode())
 	{
 	case AreaQuery.BEGIN_LISTENING:
@@ -590,7 +592,7 @@ public interface ClipboardSaver<E>
 
     protected boolean onMoveHotPoint(MoveHotPointEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	final int x = event.getNewHotPointX();
 	final int y = event.getNewHotPointY();
 	final int newY;
@@ -650,7 +652,7 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 
     protected boolean onListeningFinishedEvent(ListeningFinishedEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (!(event.getExtraInfo() instanceof ListeningInfo))
 	    return false;
 	final ListeningInfo info = (ListeningInfo)event.getExtraInfo();
