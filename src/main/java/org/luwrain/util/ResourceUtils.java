@@ -5,6 +5,7 @@ package org.luwrain.util;
 
 import java.util.*;
 import java.io.*;
+import org.apache.logging.log4j.*;
 
 import org.luwrain.core.*;
 
@@ -14,16 +15,25 @@ import static org.luwrain.core.NullCheck.*;
 
 public final class ResourceUtils
 {
-    static public File extractToTempFile(Class c, String resName) throws IOException
+    static private final Logger log = LogManager.getLogger();
+    
+    static public File extractToTempFile(Class c, String resName, boolean loadAsLibrary) throws IOException
     {
-	final File tempFile = new File("");
-	try (final var is = c.getResourceAsStream(resName)) {
+	final File tempFile = File.createTempFile("libjni-", ".so");
+		log.trace("Requested to create a temp file to save the resource {} from {}", resName, c.getName());
+		log.trace("Creating a temp file {}", tempFile.getAbsolutePath());
+		try (final var is = c.getResourceAsStream(resName)) {
 			try (final var os = new FileOutputStream(tempFile)) {
 			    copy(is, os);
 			    os.flush();
 			}
 		    }
 	tempFile.deleteOnExit();
+	if (loadAsLibrary)
+	{
+	    log.trace("Loading {} as a library", tempFile.getAbsolutePath());
+	        System.load(tempFile.getAbsolutePath());
+	}
 		    return tempFile;
     }
 
