@@ -21,6 +21,14 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+/*
+compileJava {
+    sourceCompatibility = ver.java
+    targetCompatibility = ver.java
+}
+*/
+
+
 
 publishing {
   publications {
