@@ -21,6 +21,18 @@ import static org.luwrain.core.Base.*;
 import static org.luwrain.core.NullCheck.*;
 import static org.luwrain.script.Hooks.*;
 
+/**
+ * The primary implementation of the {@link Luwrain} interface, serving as the
+ * main facade for applications running within the LUWRAIN environment.
+ * <p>
+ * This class delegates most operations to the central {@link Core} instance,
+ * ensuring thread safety and proper access control. It provides methods for
+ * configuration management, area interaction, speech and braille output,
+ * event handling, application launching, and many other core services.
+ * <p>
+ * All public methods are documented with their intended purpose, parameters,
+ * return values, and possible exceptions.
+ */
 final class LuwrainImpl implements Luwrain
 {
     static private final Logger log = LogManager.getLogger();

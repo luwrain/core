@@ -272,7 +272,7 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 	    luwrain.onAreaNewBackgroundSound(a);
     }
 
-    public boolean isBusy()
+    public final boolean isBusy()
     {
 	return task != null && !task.isDone();
     }

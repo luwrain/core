@@ -1,17 +1,15 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.util.*;
-//import java.util.service.*;
 import java.util.jar.*;
 import java.io.*;
 
 import org.apache.logging.log4j.*;
 
 import static java.util.Objects.*;
-//import static org.luwrain.core.NullCheck.*;
 
 public final class ExtensionsManager implements AutoCloseable
 {

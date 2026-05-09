@@ -11,12 +11,18 @@ import org.luwrain.core.events.*;
 import org.luwrain.speech.Channel;
 
 /**
- * The main bridge for applications and extensions to communicate with the LUWRAIN core.
- * This class serves as the central hub for applications and extensions to invoke system routines.
- * It ensures that applications and extensions never gain access deeper than what this class provides.
+ * The main applications interface serving as the main facade for applications running within the LUWRAIN environment.
+ * <p>
+ * This class delegates most operations to the LUWRAIN core,
+ * ensuring thread safety and proper access control. It provides methods for
+ * configuration management, area interaction, speech and braille output,
+ * event handling, application launching, and many other core services.
+ * <p>
+ * All public methods are documented with their intended purpose, parameters,
+ * return values, and possible exceptions.
+ * <p>
  * Packages like {@link org.luwrain.controls} and {@link org.luwrain.popups} always encapsulate an instance of the {@code Luwrain} class,
  * guaranteeing that they cannot offer more access to the system core than allowed by the provided {@code Luwrain} instance.
- * <p>
  * The core generates a new instance of this class for each newly launched application or loaded extension.
  * This mechanism enables the environment to identify which application or extension has initiated a specific request.
  * Applications receive their associated object through the {@code onLaunch()} method,
@@ -27,7 +33,7 @@ import org.luwrain.speech.Channel;
  * However, this distinction is necessary to differentiate multiple instances of the same application,
  * as an extension can be loaded only once.
  * <p>
- * Different instances of the {@code Luwrain} class may offer varying levels of access.
+ * Different instances of the {@code Luwrain} interface may offer varying levels of access.
  * This design is essential to ensure that extensions are more precise and transparent in their operations.
  */
 public interface Luwrain extends PropertiesBase, HookContainer
@@ -47,13 +53,62 @@ public interface Luwrain extends PropertiesBase, HookContainer
     public enum AreaAttr { DIRECTORY, UNIREF, URL, UNIREF_UNDER_HOT_POINT, URL_UNDER_HOT_POINT};
     public enum JobFlags { TRACKING };
 
+    /**
+     * Persists the given configuration object.
+     * <p>
+     * The object is stored using the configuration subsystem of the core.
+     *
+     * @param <C>  the class of the configuration object
+     * @param conf the configuration object to save; must not be {@code null}
+     * @throws NullPointerException if {@code conf} is {@code null}
+     */
     <C> void saveConf(C conf);
+
+    /**
+     * Loads a configuration object of the specified class.
+     * <p>
+     * If no previously saved configuration exists, this function returns {@code null}.
+     *
+     * @param <C> the class of the configuration object
+     * @param cl  the class of the configuration object; must not be {@code null}
+     * @return the loaded configuration object, or {@code null} if not available
+     * @throws NullPointerException if {@code cl} is {@code null}
+     */
     <C> C loadConf(Class<C> cl);
+    
+    /**
+     * Atomically updates a configuration object of the given class.
+     * <p>
+     * The provided {@link ConfigUpdate} function receives the current
+     * configuration (or newly created if none exists) and appropriately modifies it.
+     *
+     * @param <C>         the class of the configuration object
+     * @param configClass the class of the configuration object; must not be {@code null}
+     * @param func        the update function; must not be {@code null}
+     * @throws NullPointerException if any argument is {@code null}
+     */
     <C> void updateConf(Class<C> configClass, ConfigUpdate<C> func);
+    
     String getDir(String type);
+
+        /**
+     * Announces the currently active area to the user.
+     * <p>
+     * This typically speaks the area name and plays a short announcement sound.
+     * Must be called from the main core thread only.
+     */
     void announceActiveArea();
+    
     Object callUiSafely(java.util.concurrent.Callable callable);
+
+        /**
+     * Closes the application.
+     * <p>
+     * This method must be called from the main core thread. It instructs the
+     * application manager to destroy the application associated with this instance.
+     */
     void closeApp();
+    
     void crash(org.luwrain.app.crash.App app);
     void crash(Throwable e);
     boolean announcement(String text, AnnouncementType type, String component, String category, Map<String, String> args);
