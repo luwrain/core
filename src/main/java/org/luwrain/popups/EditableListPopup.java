@@ -4,11 +4,11 @@
 package org.luwrain.popups;
 
 import java.util.*;
-
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.util.*;
+import static java.util.Objects.*;
 
 public class EditableListPopup<E> extends EditableListArea<E> implements Popup, PopupClosingTranslator.Provider
 {
@@ -19,15 +19,15 @@ public class EditableListPopup<E> extends EditableListArea<E> implements Popup, 
     public EditableListPopup(Luwrain luwrain, EditableListArea.Params<E> params, Set<Popup.Flags> popupFlags)
     {
 	super(params);
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(popupFlags, "popupFlags");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(popupFlags, "popupFlags can't be null");
 	this.luwrain = luwrain;
 	this.popupFlags = popupFlags;
     }
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (closing.onInputEvent(event))
 	    return true;
 	return super.onInputEvent(event);
@@ -35,7 +35,7 @@ public class EditableListPopup<E> extends EditableListArea<E> implements Popup, 
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return super.onSystemEvent(event);
 	if (closing.onSystemEvent(event))

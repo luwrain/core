@@ -4,11 +4,11 @@
 package org.luwrain.popups;
 
 import java.util.*;
-
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.util.*;
+import static java.util.Objects.*;
 
 public class ListPopup<E> extends ListPopupBase<E>
 {
@@ -22,7 +22,7 @@ public class ListPopup<E> extends ListPopupBase<E>
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.isSpecial() && !event.isModified())
 	    switch(event.getSpecial())
 	{

@@ -27,10 +27,10 @@ public final class Popups
 			      StringAcceptance acceptance, Luwrain.SpeakableTextType speakableTextType)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notNull(name, "name");
-	NullCheck.notNull(prefix, "prefix");
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(speakableTextType, "speakableTextType");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(prefix, "prefix can't be null");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(speakableTextType, "speakableTextType can't be null");
 	final SimpleEditPopup popup = new SimpleEditPopup(luwrain, name, prefix, text, DEFAULT_POPUP_FLAGS){
 		@Override protected String getSpeakableText(String prefix, String text)
 		{
@@ -53,18 +53,18 @@ public final class Popups
 			      String text, StringAcceptance acceptance)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notNull(name, "name");
-	NullCheck.notNull(prefix, "prefix");
-	NullCheck.notNull(text, "text");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(prefix, "prefix can't be null");
+	requireNonNull(text, "text can't be null");
 	return text(luwrain, name, prefix, text, acceptance, Luwrain.SpeakableTextType.PROGRAMMING);
     }
 
     static public String text(Luwrain luwrain, String name, String prefix, String text)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notNull(name, "name");
-	NullCheck.notNull(prefix, "prefix");
-	NullCheck.notNull(text, "text");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(prefix, "prefix can't be null");
+	requireNonNull(text, "text can't be null");
 	return text(luwrain, name, prefix, text, null);
     }
 
@@ -73,7 +73,7 @@ public final class Popups
 	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notEmpty(name, "name");
 	NullCheck.notEmpty(prefix, "prefix");
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	return text(luwrain, name, prefix, text, (input)->{
 		if (input.trim().isEmpty())
 		{
@@ -89,11 +89,11 @@ public final class Popups
 					 Set<String> history, Set<Popup.Flags> popupFlags)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notNull(name, "name");
-	NullCheck.notNull(prefix, "prefix");
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(history, "history");
-	NullCheck.notNull(popupFlags, "popupFlags");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(prefix, "prefix can't be null");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(history, "history can't be null");
+	requireNonNull(popupFlags, "popupFlags can't be null");
 	final EditListPopup popup = new EditListPopup(luwrain, 
 						      new EditListPopupUtils.FixedModel(history.toArray(new String[history.size()])),
 						      name, prefix, text, popupFlags);
@@ -108,10 +108,10 @@ public final class Popups
 					 String prefix, String text, Set<String> history)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notNull(name, "name");
-	NullCheck.notNull(prefix, "prefix");
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(history, "history");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(prefix, "prefix can't be null");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(history, "history can't be null");
 	return editWithHistory(luwrain, name, prefix, text, history, DEFAULT_POPUP_FLAGS);
     }
 
@@ -120,9 +120,9 @@ public final class Popups
 				   Set<Popup.Flags> popupFlags)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notNull(name, "name");
+	requireNonNull(name, "name can't be null");
 	NullCheck.notNullItems(items, "items");
-	NullCheck.notNull(popupFlags, "popupFlags");
+	requireNonNull(popupFlags, "popupFlags can't be null");
 	final ListArea.Model<Object> model = new ListArea.Model<Object>(){
 		@Override public int getItemCount() { return items.length; }
 		@Override public Object getItem(int index) { return index < items.length?items[index]:null; }
@@ -146,7 +146,7 @@ public final class Popups
 				   String name, Object[] items)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notNull(name, "name");
+	requireNonNull(name, "name can't be null");
 	NullCheck.notNullItems(items, "items");
 	return fixedList(luwrain, name, items, DEFAULT_POPUP_FLAGS);
     }
@@ -161,7 +161,7 @@ public final class Popups
 					      loadFilePopupFlags(luwrain), Popups.DEFAULT_POPUP_FLAGS){
 		@Override public boolean onInputEvent(InputEvent event)
 		{
-		    NullCheck.notNull(event, "event");
+		    requireNonNull(event, "event can't be null");
 		    if (event.isSpecial() && !event.isModified())
 			switch(event.getSpecial())
 			{
@@ -187,7 +187,7 @@ public final class Popups
 		}
 		@Override public boolean onAreaQuery(AreaQuery query)
 		{
-		    NullCheck.notNull(query, "query");
+		    requireNonNull(query, "query can't be null");
 		    switch(query.getQueryCode())
 		    {
 		    case AreaQuery.UNIREF_AREA:
@@ -213,7 +213,7 @@ public final class Popups
     {
 	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notEmpty(name, "name");
-	NullCheck.notNull(prefix, "prefix");
+	requireNonNull(prefix, "prefix can't be null");
 		return path(luwrain, name, prefix, null, acceptance);
     }
 
@@ -355,7 +355,7 @@ public final class Popups
     static boolean mkdir(Luwrain luwrain, File createIn)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notNull(createIn, "createIn");
+	requireNonNull(createIn, "createIn can't be null");
 	final FilePopup newDirPopup = new FilePopup(luwrain, "Новый каталог", "Имя нового каталога:",
 						    null, new File(""), createIn, loadFilePopupFlags(luwrain), DEFAULT_POPUP_FLAGS){
 		@Override public boolean onOk()
@@ -376,7 +376,7 @@ public final class Popups
     static public File disks(Luwrain luwrain, String name)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notNull(name, "name");
+	requireNonNull(name, "name can't be null");
 	final DisksPopup popup = new DisksPopup(luwrain, name, DEFAULT_POPUP_FLAGS);
 	luwrain.popup(popup);
 	if (popup.wasCancelled())
@@ -389,9 +389,9 @@ public final class Popups
 				       String[] items)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notNull(name, "name");
-	NullCheck.notNull(prefix, "prefix");
-	NullCheck.notNull(text, "text");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(prefix, "prefix can't be null");
+	requireNonNull(text, "text can't be null");
 	NullCheck.notNullItems(items, "items");
 	final EditListPopup popup = new EditListPopup(luwrain, new EditListPopupUtils.FixedModel(items),
 						      name, prefix, text, DEFAULT_POPUP_FLAGS);
@@ -405,8 +405,8 @@ public final class Popups
 					    String name, String text)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notNull(name, "name");
-	NullCheck.notNull(text, "text");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(text, "text can't be null");
 	final YesNoPopup popup = new YesNoPopup(luwrain, name, text, true, DEFAULT_POPUP_FLAGS);
 	luwrain.popup(popup);
 	if (popup.closing.cancelled())
@@ -418,8 +418,8 @@ public final class Popups
 					   String name, String text)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notNull(name, "name");
-	NullCheck.notNull(text, "text");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(text, "text can't be null");
 	final YesNoPopup popup = new YesNoPopup(luwrain, name, text, false, DEFAULT_POPUP_FLAGS);
 	luwrain.popup(popup);
 	if (popup.closing.cancelled())

@@ -4,9 +4,9 @@
 package org.luwrain.popups;
 
 import java.util.*;
-
 import org.luwrain.core.*;
 import org.luwrain.popups.EditListPopup.Item;
+import static java.util.Objects.*;
 
 public final class EditListPopupUtils
 {
@@ -21,8 +21,8 @@ public final class EditListPopupUtils
 	}
 	public DefaultItem(String value, String announcement)
 	{
-	    NullCheck.notNull(value, "value");
-	    NullCheck.notNull(announcement, "announcement");
+	    requireNonNull(value, "value can't be null");
+	    requireNonNull(announcement, "announcement can't be null");
 	    this.value = value;
 	    this.announcement = announcement;
 	}
@@ -54,8 +54,8 @@ public final class EditListPopupUtils
 	protected Luwrain.SpeakableTextType speakableTextType;
 	public DefaultAppearance(Luwrain luwrain, Luwrain.SpeakableTextType speakableTextType)
 	{
-	    NullCheck.notNull(luwrain, "luwrain");
-	    NullCheck.notNull(speakableTextType, "speakableTextType");
+	    requireNonNull(luwrain, "luwrain can't be null");
+	    requireNonNull(speakableTextType, "speakableTextType can't be null");
 	    this.luwrain = luwrain;
 	    this.speakableTextType = speakableTextType;
 	}
@@ -65,8 +65,8 @@ public final class EditListPopupUtils
 	}
 	@Override public void announceItem(EditListPopup.Item item, Set<Flags> flags)
 	{
-	    NullCheck.notNull(item, "item");
-	    NullCheck.notNull(flags, "flags");
+	    requireNonNull(item, "item can't be null");
+	    requireNonNull(flags, "flags can't be null");
 	    final String value = item.getValue();
 	    if (!value.isEmpty())
 	    luwrain.setEventResponse(DefaultEventResponse.listItem(luwrain.getSpeakableText(value, speakableTextType))); else
@@ -74,8 +74,8 @@ public final class EditListPopupUtils
 	}
 	@Override public String getSpeakableText(String prefix, String text)
 	{
-	    NullCheck.notNull(prefix, "prefix");
-	    NullCheck.notNull(text, "text");
+	    requireNonNull(prefix, "prefix can't be null");
+	    requireNonNull(text, "text can't be null");
 	    return prefix + luwrain.getSpeakableText(text, speakableTextType);
 	}
     }

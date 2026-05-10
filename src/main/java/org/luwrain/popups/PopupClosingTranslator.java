@@ -5,6 +5,7 @@ package org.luwrain.popups;
 
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
+import static java.util.Objects.*;
 
 /**
  * Unifies all actions which could result in closing of a popup. There
@@ -30,7 +31,7 @@ public class PopupClosingTranslator
 
     public PopupClosingTranslator(Provider provider)
     {
-	NullCheck.notNull(provider, "provider");
+	requireNonNull(provider, "provider can't be null");
 	this.provider = provider;
     }
 
@@ -64,7 +65,7 @@ public class PopupClosingTranslator
 
     public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (!event.isModified() && event.isSpecial() && event.getSpecial() == InputEvent.Special.ESCAPE)
 	    return doCancel();
 	return false;
@@ -72,7 +73,7 @@ public class PopupClosingTranslator
 
     public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return false;
 	switch(event.getCode())

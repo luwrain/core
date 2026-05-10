@@ -11,6 +11,7 @@ import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.util.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.DefaultEventResponse.*;
 
 public class DisksPopup extends ListPopupBase<DisksPopup.Disk>
@@ -48,7 +49,7 @@ return false;
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.isSpecial() || !event.isModified())
 	    switch(event.getSpecial())
 	    {
@@ -67,7 +68,7 @@ return false;
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() == SystemEvent.Type.BROADCAST)
 	    switch(event.getCode())
 	    {
@@ -152,9 +153,9 @@ else refresh();
 
     static private void announceDisk(Luwrain luwrain, DisksPopup.Disk disk, Set<ListArea.Appearance.Flags> flags)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(disk, "disk");
-	NullCheck.notNull(flags, "flags");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(disk, "disk can't be null");
+	requireNonNull(flags, "flags can't be null");
 	final String str = disk.toString().replaceAll(",", " ").replaceAll(",", " ").replaceAll("-", " ");
 	if (str.equals("/"))
 	{
@@ -171,7 +172,7 @@ else refresh();
 
     static private Disk[] getDisks(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	final Factory factory = (Factory)luwrain.createInstance(Factory.class);
 	if (factory  == null)
 	{
@@ -189,8 +190,8 @@ else refresh();
 
     static protected ListArea.Params<Disk> createParams(Luwrain luwrain, String name)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(name, "name");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(name, "name can't be null");
 	final ListArea.Params<Disk> params = new ListArea.Params<Disk>();
 	params.context = new DefaultControlContext(luwrain);
 	params.name = name;

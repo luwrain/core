@@ -10,6 +10,8 @@ import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.util.*;
 
+import static java.util.Objects.*;
+
 /**
  * Shows a popup for input of single line of text. This class is an
  * implementation of {@link org.luwrain.core.Popup} interface with
@@ -41,11 +43,11 @@ public class SimpleEditPopup implements Popup, PopupClosingTranslator.Provider, 
 			   String text,
 			   Set<Popup.Flags> popupFlags)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(name, "name");
-	NullCheck.notNull(prefix, "prefix");
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(popupFlags, "popupFlags");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(prefix, "prefix can't be null");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(popupFlags, "popupFlags can't be null");
 	this.luwrain = luwrain;
 	this.name = name ;
 	this.prefix = prefix;
@@ -77,13 +79,13 @@ public class SimpleEditPopup implements Popup, PopupClosingTranslator.Provider, 
 
     protected String getSpeakableText(String prefix, String text)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	return prefix + text;
     }
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (closing.onInputEvent(event))
 	    return true;
 	if (edit.isPosCovered(pos, 0) && edit.onInputEvent(event))
@@ -114,7 +116,7 @@ public class SimpleEditPopup implements Popup, PopupClosingTranslator.Provider, 
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return false;
 	switch(event.getCode())
@@ -134,7 +136,7 @@ public class SimpleEditPopup implements Popup, PopupClosingTranslator.Provider, 
 
     @Override public boolean onAreaQuery(AreaQuery query)
     {
-	NullCheck.notNull(query, "query");
+	requireNonNull(query, "query can't be null");
 	if (edit.isPosCovered(pos, 0) && edit.onAreaQuery(query))
 	    return true;
 	if (regionTextQueryTranslator.onAreaQuery(query, getHotPointX(), getHotPointY()))

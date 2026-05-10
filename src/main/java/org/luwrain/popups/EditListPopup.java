@@ -8,6 +8,8 @@ import java.util.*;
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 
+import static java.util.Objects.*;
+
 public class EditListPopup extends SimpleEditPopup
 {
     static private final int MAX_ALTERNATIVES_TO_SAY = 100;
@@ -45,8 +47,8 @@ public class EditListPopup extends SimpleEditPopup
 			 String name, String prefix, String text, Set<Popup.Flags> popupFlags)
     {
 	super(luwrain, name, prefix, text, popupFlags);
-	NullCheck.notNull(model, "model");
-	NullCheck.notNull(appearance, "appearance");
+	requireNonNull(model, "model can't be null");
+	requireNonNull(appearance, "appearance can't be null");
 	this.model = model;
 	this.appearance = appearance;
     }
@@ -59,7 +61,7 @@ public class EditListPopup extends SimpleEditPopup
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.isSpecial() && !event.isModified())
 	    switch(event.getSpecial())
 	    {
@@ -132,8 +134,8 @@ public class EditListPopup extends SimpleEditPopup
 
     @Override protected String getSpeakableText(String prefix, String text)
     {
-	NullCheck.notNull(prefix, "prefix");
-	NullCheck.notNull(text, "text");
+	requireNonNull(prefix, "prefix can't be null");
+	requireNonNull(text, "text can't be null");
 	return this.appearance.getSpeakableText(prefix, text);
     }
 }

@@ -10,6 +10,8 @@ import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.util.*;
 
+import static java.util.Objects.*;
+
 public class ListPopup2<E> extends ListArea<E> implements Popup, PopupClosingTranslator.Provider
 {
     protected final PopupClosingTranslator closing = new PopupClosingTranslator(this);
@@ -21,15 +23,15 @@ public class ListPopup2<E> extends ListArea<E> implements Popup, PopupClosingTra
 			 Set<Popup.Flags> popupFlags)
     {
 	super(params);
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(popupFlags, "popupFlags");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(popupFlags, "popupFlags can't be null");
 	this.luwrain = luwrain;
 	this.popupFlags = popupFlags;
     }
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (closing.onInputEvent(event))
 	    return true;
 	if (event.isSpecial() && !event.isModified())
@@ -43,7 +45,7 @@ public class ListPopup2<E> extends ListArea<E> implements Popup, PopupClosingTra
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (closing.onSystemEvent(event))
 	    return true;
 	switch(event.getCode())

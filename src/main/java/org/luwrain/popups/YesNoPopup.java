@@ -8,6 +8,7 @@ import java.util.*;
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.core.queries.*;
+import static java.util.Objects.*;
 
 public class YesNoPopup implements Popup, PopupClosingTranslator.Provider
 {
@@ -22,10 +23,10 @@ public class YesNoPopup implements Popup, PopupClosingTranslator.Provider
     public YesNoPopup(Luwrain luwrain, String name, String text,
 		      boolean defaultRes, Set<Popup.Flags> popupFlags)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(name, "name");
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(popupFlags, "popupFlags");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(popupFlags, "popupFlags can't be null");
 	this.luwrain = luwrain;
 	this.name = name;
 	this.text = text;
@@ -36,7 +37,7 @@ public class YesNoPopup implements Popup, PopupClosingTranslator.Provider
 
     protected String getSpeakableText(String text)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	return luwrain.getSpeakableText(text, Luwrain.SpeakableTextType.NATURAL);
     }
 
@@ -62,7 +63,7 @@ public class YesNoPopup implements Popup, PopupClosingTranslator.Provider
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (closing.onInputEvent(event))
 	    return true;
 	if (!event.isSpecial())
@@ -102,7 +103,7 @@ public class YesNoPopup implements Popup, PopupClosingTranslator.Provider
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return false;
 	switch (event.getCode())
@@ -121,7 +122,7 @@ public class YesNoPopup implements Popup, PopupClosingTranslator.Provider
 
     @Override public boolean onAreaQuery(AreaQuery query)
     {
-	NullCheck.notNull(query, "query");
+	requireNonNull(query, "query can't be null");
 	switch(query.getQueryCode())
 	{
 	case AreaQuery.REGION_TEXT:

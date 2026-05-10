@@ -8,6 +8,8 @@ import java.io.*;
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 
+import static java.util.Objects.*;
+
 public class FilePopup extends EditListPopup
 {
     public enum Flags { SKIP_HIDDEN };
@@ -41,7 +43,7 @@ public class FilePopup extends EditListPopup
 
     @Override protected String getSpeakableText(String prefix, String text)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	return prefix + luwrain.getSpeakableText(text, Luwrain.SpeakableTextType.PROGRAMMING);
     }
 
@@ -54,7 +56,7 @@ public class FilePopup extends EditListPopup
 
     static String getPathWithEndingSeparator(File file)
     {
-	NullCheck.notNull(file, "file");
+	requireNonNull(file, "file can't be null");
 	final String str = file.toString();
 	//Checking if there is nothing to do
 	if (str.endsWith(SEPARATOR))
@@ -71,7 +73,7 @@ public class FilePopup extends EditListPopup
 
 	Model(File defPath, boolean skipHidden)
 	{
-	    NullCheck.notNull(defPath, "defPath");
+	    requireNonNull(defPath, "defPath can't be null");
 	    this.defPath = defPath;
 	    if (!defPath.isAbsolute())
 		throw new IllegalArgumentException("defPath must be absolute");
@@ -80,11 +82,11 @@ public class FilePopup extends EditListPopup
 
 	@Override protected EditListPopup.Item[] getItems(String context)
 	{
-	    NullCheck.notNull(context, "context");
+	    requireNonNull(context, "context can't be null");
 	    if (context.isEmpty())
 		return readDirectory(defPath, defPath);
 	    final File contextPath = new File(context);
-	    NullCheck.notNull(contextPath, "contextPath");
+	    requireNonNull(contextPath, "contextPath can't be null");
 	    final File base;
 	    File path;
 	    if (contextPath.isAbsolute())
@@ -105,7 +107,7 @@ public class FilePopup extends EditListPopup
 
 	@Override protected EditListPopup.Item getEmptyItem(String context)
 	{
-	    NullCheck.notNull(context, "context");
+	    requireNonNull(context, "context can't be null");
 	    if (context.isEmpty())
 		return new EditListPopupUtils.DefaultItem();
 	    File base = null;
@@ -138,7 +140,7 @@ path.exists() && path.isDirectory())
 	@Override public String getCompletion(String beginning)
 	{
 	    final String res = super.getCompletion(beginning);
-	    NullCheck.notNull(res, "res");
+	    requireNonNull(res, "res can't be null");
 	    final String path = beginning + res;
 					     //We already have the slash, doing nothing
 	    if (!path.isEmpty() && path.endsWith(SEPARATOR))
@@ -157,7 +159,7 @@ path.exists() && path.isDirectory())
 
 protected Item[] readDirectory(File dir, File base)
 	{
-	    NullCheck.notNull(dir, "dir");
+	    requireNonNull(dir, "dir can't be null");
 	    final File[] files = dir.listFiles();
 	    if (files == null)
 		return new Item[0];
@@ -176,7 +178,7 @@ protected Item[] readDirectory(File dir, File base)
 
 	protected boolean hasWithSameBeginningNearby(File path)
 	{
-	    NullCheck.notNull(path, "path");
+	    requireNonNull(path, "path can't be null");
 	    final File parent = path.getParentFile();
 	    if (parent == null)
 		return false;
@@ -198,7 +200,7 @@ protected Item[] readDirectory(File dir, File base)
 
 	static protected String relativize(File file, File base)
 	{
-	    NullCheck.notNull(file, "file");
+	    requireNonNull(file, "file can't be null");
 	    final String itemStr = file.toString();
 	    final String baseStr = base.toString();
 	    if (itemStr.startsWith(baseStr + SEPARATOR))
@@ -208,7 +210,7 @@ protected Item[] readDirectory(File dir, File base)
 
     static protected boolean isRoot(File file)
     {
-	NullCheck.notNull(file, "file");
+	requireNonNull(file, "file can't be null");
 	for(File root: File.listRoots())
 	    if (file.equals(root))
 		return true;

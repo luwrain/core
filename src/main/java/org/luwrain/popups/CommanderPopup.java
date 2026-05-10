@@ -12,6 +12,8 @@ import org.luwrain.controls.*;
 import org.luwrain.io.*;
 import org.luwrain.controls.CommanderArea.Filter;
 
+import static java.util.Objects.*;
+
 public class CommanderPopup extends CommanderArea<File> implements CommanderArea.ClickHandler<File>, Popup, PopupClosingTranslator.Provider
 {
     //    static public final Filter<File> FILTER_ALL = new CommanderUtilsFile.Filter(EnumSet.noneOf(CommanderUtilsFile.Filter.Flags.class));
@@ -30,10 +32,10 @@ public class CommanderPopup extends CommanderArea<File> implements CommanderArea
 			  Set<Popup.Flags> popupFlags)
     {
 	super(newParams(luwrain, filter != null?filter:FILTER_ALL));
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(name, "name");
-	NullCheck.notNull(file, "file");
-	NullCheck.notNull(popupFlags, "popupFlags");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(file, "file can't be null");
+	requireNonNull(popupFlags, "popupFlags can't be null");
 	this.luwrain = luwrain;
 	this.name = name;
 	this.popupFlags = popupFlags;
@@ -45,8 +47,8 @@ public class CommanderPopup extends CommanderArea<File> implements CommanderArea
 
     @Override public CommanderArea.ClickHandler.Result onCommanderClick(CommanderArea area, File file, boolean dir)
     {
-	NullCheck.notNull(area, "area");
-	NullCheck.notNull(file, "file");
+	requireNonNull(area, "area can't be null");
+	requireNonNull(file, "file can't be null");
 	if (dir)
 	    return ClickHandler.Result.OPEN_DIR;
 	return closing.doOk()?ClickHandler.Result.OK:ClickHandler.Result.REJECTED;
@@ -54,7 +56,7 @@ public class CommanderPopup extends CommanderArea<File> implements CommanderArea
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (closing.onInputEvent(event))
 	    return true;
 	return super.onInputEvent(event);
@@ -62,7 +64,7 @@ public class CommanderPopup extends CommanderArea<File> implements CommanderArea
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return super.onSystemEvent(event);
 	switch(event.getCode())
@@ -143,8 +145,8 @@ public class CommanderPopup extends CommanderArea<File> implements CommanderArea
 
     static private CommanderArea.Params<File> newParams(Luwrain luwrain, CommanderArea.Filter<File> filter)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(filter, "filter");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(filter, "filter can't be null");
 	final CommanderArea.Params<File> params = CommanderUtilsFile.createParams(new DefaultControlContext(luwrain));
 	params.filter = filter;
 	params.comparator = new CommanderUtils.ByNameComparator<>();
