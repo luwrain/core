@@ -4,7 +4,6 @@
 package org.luwrain.controls;
 
 import java.util.*;
-import java.io.*;
 
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
@@ -13,61 +12,241 @@ import org.luwrain.util.*;
 
 import static java.util.Objects.*;
 
+/**
+ * A generic list area that displays a model of items and allows navigation,
+ * selection, clipboard operations, and custom appearance. The list area
+ * integrates with the LUWRAIN area management, handling input events,
+ * system events, and area queries.
+ *
+ * <p>
+ * The class is parameterized by the type of item {@code <E>}. It uses a
+ * {@link Model} to provide the data, an {@link Appearance} to control how
+ * items are displayed and announced, a {@link Transition} to define movement
+ * behaviour, and a {@link ClipboardSaver} for clipboard operations.
+ * </p>
+ *
+ * <p>
+ * The list can optionally have an empty line at the top and/or bottom, and
+ * can announce the selected item when the area is introduced.
+ * </p>
+ *
+ * @param <E> the type of items in the list
+ */
 public class ListArea<E>  implements Area, ClipboardTranslator.Provider, RegionTextQueryTranslator.Provider
 {
+    /**
+     * Flags that control the behaviour of the list area.
+     */
     public enum Flags {
+	/** An empty line is shown at the top of the list. */
 	EMPTY_LINE_TOP,
+	/** An empty line is shown at the bottom of the list. */
 	EMPTY_LINE_BOTTOM,
-	AREA_ANNOUNCE_SELECTED};
+	/** When the area is introduced, the selected item is announced instead of the area name. */
+	AREA_ANNOUNCE_SELECTED
+    };
 
     static protected final Set<Appearance.Flags> NONE_APPEARANCE_FLAGS = EnumSet.noneOf(Appearance.Flags.class);
     static protected final Set<Appearance.Flags> BRIEF_ANNOUNCEMENT_ONLY = EnumSet.of(Appearance.Flags.BRIEF);
 
+    /**
+     * Provides the data for the list. The model is responsible for the number
+     * of items, retrieving an item by index, and notifying the list when the
+     * underlying data has changed.
+     *
+     * @param <E> the type of items in the list
+     */
     public interface Model<E>
     {
+	/**
+	 * Returns the total number of items in the model.
+	 *
+	 * @return the item count
+	 */
 	int getItemCount();
+
+	/**
+	 * Returns the item at the given index.
+	 *
+	 * @param index the zero-based index of the item
+	 * @return the item at that position, or {@code null} if the index is out of bounds
+	 */
 	E getItem(int index);
+
+	/**
+	 * Called when the underlying data has changed and the list needs to
+	 * be refreshed. Implementations should reload or update their data.
+	 */
 	void refresh();
     }
 
+    /**
+     * Controls the visual and audible presentation of items. It provides the
+     * screen text, observable boundaries, and speech announcement for each
+     * item.
+     *
+     * @param <E> the type of items in the list
+     */
     public interface Appearance<E>
     {
-	public enum Flags {BRIEF, CLIPBOARD};
+	/**
+	 * Flags that modify the appearance behaviour.
+	 */
+	public enum Flags {
+	    /** Brief announcement (e.g. when moving quickly). */
+	    BRIEF,
+	    /** The text is being prepared for clipboard copy. */
+	    CLIPBOARD
+	};
 
+	/**
+	 * Announces the given item using the screen reader.
+	 *
+	 * @param item  the item to announce
+	 * @param flags a set of flags that may affect the announcement style
+	 */
 	void announceItem(E item, Set<Flags> flags);
+
+	/**
+	 * Returns the text representation of the item as it should appear on
+	 * the screen.
+	 *
+	 * @param item  the item to display
+	 * @param flags a set of flags that may affect the representation
+	 * @return the screen text for the item
+	 */
 	String getScreenAppearance(E item, Set<Flags> flags);
+
+	/**
+	 * Returns the leftmost observable column index for the item. The hot
+	 * point cannot move to the left of this bound.
+	 *
+	 * @param item the item
+	 * @return the left bound (inclusive)
+	 */
 	int getObservableLeftBound(E item);
+
+	/**
+	 * Returns the rightmost observable column index for the item. The hot
+	 * point cannot move to the right of this bound.
+	 *
+	 * @param item the item
+	 * @return the right bound (inclusive)
+	 */
 	int getObservableRightBound(E item);
     }
 
+    /**
+     * Handler for click (activation) events on list items. This is typically
+     * triggered by pressing Enter or a dedicated OK command.
+     *
+     * @param <E> the type of items in the list
+     */
     public interface ClickHandler<E>
     {
+	/**
+	 * Called when an item is activated.
+	 *
+	 * @param area  the list area that received the click
+	 * @param index the index of the clicked item in the model
+	 * @param item  the clicked item
+	 * @return {@code true} if the event was handled; {@code false} otherwise
+	 */
 	boolean onListClick(ListArea<E> area, int index, E item);
     }
 
-public interface ClipboardSaver<E>
-{
-    //Use this model only, MarkableListArea may provide another instances
-    boolean saveToClipboard(ListArea<E> listArea, Model<E> model, Appearance<E> appearance, int fromIndex, int toIndex, Clipboard clipboard);
-}
+    /**
+     * Responsible for saving a range of items to the clipboard. This allows
+     * custom formatting of the clipboard content.
+     *
+     * @param <E> the type of items in the list
+     */
+    public interface ClipboardSaver<E>
+    {
+	/**
+	 * Saves the items from {@code fromIndex} (inclusive) to
+	 * {@code toIndex} (exclusive) to the given clipboard.
+	 *
+	 * @param listArea    the list area requesting the save
+	 * @param model       the model providing the items (may differ from the area's model in subclasses)
+	 * @param appearance  the appearance used for text conversion
+	 * @param fromIndex   the starting index (inclusive)
+	 * @param toIndex     the ending index (exclusive)
+	 * @param clipboard   the clipboard to write to
+	 * @return {@code true} if the save succeeded, {@code false} otherwise
+	 */
+	boolean saveToClipboard(ListArea<E> listArea, Model<E> model, Appearance<E> appearance, int fromIndex, int toIndex, Clipboard clipboard);
+    }
 
+    /**
+     * Defines how the hot point moves in response to navigation commands
+     * (arrow keys, page up/down, home/end). The transition logic can be
+     * customised by providing a different implementation.
+     */
     public interface Transition
     {
-	public enum Type{SINGLE_DOWN, SINGLE_UP,
-			 PAGE_DOWN, PAGE_UP,
-			 HOME, END};
+	/**
+	 * Types of navigation actions.
+	 */
+	public enum Type {
+	    /** Move one item down. */
+	    SINGLE_DOWN,
+	    /** Move one item up. */
+	    SINGLE_UP,
+	    /** Move one page down. */
+	    PAGE_DOWN,
+	    /** Move one page up. */
+	    PAGE_UP,
+	    /** Jump to the first item. */
+	    HOME,
+	    /** Jump to the last item. */
+	    END
+	};
 
+	/**
+	 * Represents a possible state of the hot point: on an empty line
+	 * (top or bottom), on a specific item index, or no transition
+	 * possible.
+	 */
 	static public final class State
 	{
-	    public enum Type{EMPTY_LINE_TOP, EMPTY_LINE_BOTTOM, ITEM_INDEX, NO_TRANSITION};
+	    /**
+	     * The type of the state.
+	     */
+	    public enum Type {
+		/** Hot point is on the top empty line. */
+		EMPTY_LINE_TOP,
+		/** Hot point is on the bottom empty line. */
+		EMPTY_LINE_BOTTOM,
+		/** Hot point is on a valid item. */
+		ITEM_INDEX,
+		/** No transition is possible (e.g. already at the boundary). */
+		NO_TRANSITION
+	    };
+
+	    /** The type of this state. */
 	    public final Type type;
+	    /** The item index if type is {@code ITEM_INDEX}, otherwise -1. */
 	    public final int itemIndex;
+
+	    /**
+	     * Creates a state with the given type and no item index.
+	     *
+	     * @param type the state type (must not be {@code null})
+	     * @throws NullPointerException if {@code type} is {@code null}
+	     */
 	    public State(Type type)
 	    {
 		requireNonNull(type, "type can't be null");
 		this.type = type;
 		this.itemIndex = -1;
 	    }
+
+	    /**
+	     * Creates a state representing an item index.
+	     *
+	     * @param itemIndex the index of the item
+	     */
 	    public State(int itemIndex)
 	    {
 		this.type = Type.ITEM_INDEX;
@@ -75,19 +254,43 @@ public interface ClipboardSaver<E>
 	    }
 	}
 
+	/**
+	 * Computes the new state after a navigation action.
+	 *
+	 * @param type               the type of navigation action
+	 * @param fromState          the current state of the hot point
+	 * @param itemCount          the total number of items in the model
+	 * @param hasEmptyLineTop    whether the list has a top empty line
+	 * @param hasEmptyLineBottom whether the list has a bottom empty line
+	 * @return the new state after the transition; never {@code null}
+	 */
 	State transition(Type type, State fromState, int itemCount,
 			 boolean hasEmptyLineTop, boolean hasEmptyLineBottom);
     }
 
+    /**
+     * Parameters for constructing a {@link ListArea}. All fields must be set
+     * before passing to the constructor.
+     *
+     * @param <E> the type of items in the list
+     */
     static public class Params<E>
     {
+	/** The control context (required). */
 	public ControlContext context = null;
+	/** The data model (required). */
 	public Model<E> model = null;
+	/** The appearance controller (required). */
 	public Appearance<E> appearance = null;
+	/** Optional click handler. */
 	public ListArea.ClickHandler<E> clickHandler;
+	/** The transition logic (defaults to {@link ListUtils.DefaultTransition}). */
 	public Transition transition = new ListUtils.DefaultTransition();
+	/** The clipboard saver (defaults to {@link ListUtils.DefaultClipboardSaver}). */
 	public ClipboardSaver<E> clipboardSaver = new ListUtils.DefaultClipboardSaver<E>();
+	/** The area name (required). */
 	public String name = null;
+	/** Flags controlling list behaviour (default includes {@link Flags#EMPTY_LINE_BOTTOM}). */
 	public Set<Flags> flags = EnumSet.of(Flags.EMPTY_LINE_BOTTOM);
     }
 
@@ -106,6 +309,12 @@ public interface ClipboardSaver<E>
     protected int hotPointX = 0;
     protected int hotPointY = 0;
 
+    /**
+     * Constructs a new list area with the given parameters.
+     *
+     * @param params the configuration parameters (must not be {@code null})
+     * @throws NullPointerException if {@code params} or any required field is {@code null}
+     */
     public ListArea(Params<E> params)
     {
 	requireNonNull(params, "params can't be null");
@@ -127,16 +336,31 @@ public interface ClipboardSaver<E>
 	resetHotPoint();
     }
 
+    /**
+     * Sets the click handler for item activation.
+     *
+     * @param clickHandler the handler to set (may be {@code null})
+     */
     public void setListClickHandler(ListArea.ClickHandler<E> clickHandler)
     {
 	this.listClickHandler = clickHandler;
     }
 
+    /**
+     * Returns the data model used by this list.
+     *
+     * @return the model
+     */
     public Model<E> getListModel()
     {
 	return listModel;
     }
 
+    /**
+     * Returns the appearance controller used by this list.
+     *
+     * @return the appearance
+     */
     public Appearance<E> getListAppearance()
     {
 	return listAppearance;
@@ -234,7 +458,13 @@ public interface ClipboardSaver<E>
 	return true;
     }
 
-        public boolean selectEmptyLineBottom(boolean announce)
+    /**
+     * Moves the hot point to the bottom empty line, if the list has one.
+     *
+     * @param announce if {@code true}, the empty line is announced
+     * @return {@code true} if the operation succeeded, {@code false} if there is no bottom empty line
+     */
+    public boolean selectEmptyLineBottom(boolean announce)
     {
 	if (!listFlags.contains(Flags.EMPTY_LINE_BOTTOM))
 	    return false;
@@ -247,7 +477,15 @@ public interface ClipboardSaver<E>
 	return true;
     }
 
-
+    /**
+     * Given a line index (screen coordinate), returns the corresponding
+     * item index in the model, or -1 if the line does not contain a valid
+     * item.
+     *
+     * @param lineIndex the screen line index (non-negative)
+     * @return the model index, or -1 if not on an item
+     * @throws IllegalArgumentException if {@code lineIndex} is negative
+     */
     public int getExistingItemIndexOnLine(int lineIndex)
     {
 	if (lineIndex < 0)
@@ -256,7 +494,14 @@ public interface ClipboardSaver<E>
 	return res < listModel.getItemCount()?res:-1;
     }
 
-    //returns the index for the one additional item to be
+    /**
+     * Converts a screen line index to a model index, without checking
+     * whether the resulting index is within the model bounds. This is used
+     * internally for calculations.
+     *
+     * @param index the screen line index
+     * @return the model index (may be out of bounds)
+     */
     public int getItemIndexOnLine(int index)
     {
 	final int linesTop = listFlags.contains(Flags.EMPTY_LINE_TOP)?1:0;
@@ -267,6 +512,12 @@ public interface ClipboardSaver<E>
 	return -1;
     }
 
+    /**
+     * Converts a model item index to the corresponding screen line index.
+     *
+     * @param index the model index
+     * @return the screen line index, or -1 if the index is invalid
+     */
     public int getLineIndexByItemIndex(int index)
     {
 	final int count = listModel.getItemCount();
@@ -276,6 +527,13 @@ public interface ClipboardSaver<E>
 	return index + linesTop;
     }
 
+    /**
+     * Returns the item displayed on the given screen line.
+     *
+     * @param lineIndex the screen line index (non-negative)
+     * @return the item, or {@code null} if the line is empty or out of range
+     * @throws IllegalArgumentException if {@code lineIndex} is negative
+     */
     public E getItemOnLine(int lineIndex)
     {
 	if (lineIndex < 0)
@@ -286,22 +544,42 @@ public interface ClipboardSaver<E>
 	return listModel.getItem(index);
     }
 
+    /**
+     * Returns the total number of items in the model.
+     *
+     * @return the item count
+     */
     public int getListItemCount()
     {
 	return listModel.getItemCount();
     }
 
+    /**
+     * Resets the region point and the hot point to the beginning of the list.
+     *
+     * @param announce if {@code true}, the newly selected item is announced
+     */
     public void reset(boolean announce)
     {
 	regionPoint.reset();
 	resetHotPoint(announce);
     }
 
+    /**
+     * Resets the hot point to the first item (or the top empty line if the
+     * list is empty) without any announcement.
+     */
     public void resetHotPoint()
     {
 	resetHotPoint(false);
     }
 
+    /**
+     * Resets the hot point to the first item (or the top empty line if the
+     * list is empty).
+     *
+     * @param introduce if {@code true}, the newly selected item is announced
+     */
     public void resetHotPoint(boolean introduce)
     {
 	hotPointY = 0;
@@ -326,6 +604,9 @@ public interface ClipboardSaver<E>
 	context.onAreaNewHotPoint(this);
     }
 
+    /**
+     * Announces the currently selected item using the appearance.
+     */
     public void announceSelected()
     {
 	final E item = selected();
@@ -371,6 +652,10 @@ public interface ClipboardSaver<E>
 	context.onAreaNewHotPoint(this);
     }
 
+    /**
+     * Redraws the area content and adjusts the hot point similarly to
+     * {@link #refresh()}, but without calling {@code Model.refresh()}.
+     */
     public void redraw()
     {
 	final E previouslySelected = selected();
@@ -401,6 +686,11 @@ public interface ClipboardSaver<E>
 	context.onAreaNewHotPoint(this);
     }
 
+    /**
+     * Checks whether the list model contains any items.
+     *
+     * @return {@code true} if the model is empty, {@code false} otherwise
+     */
     public boolean isEmpty()
     {
 	return listModel.getItemCount() <= 0;
@@ -541,6 +831,12 @@ public interface ClipboardSaver<E>
 	return areaName;
     }
 
+    /**
+     * Sets the area name and notifies the context of the change.
+     *
+     * @param areaName the new area name (must not be {@code null})
+     * @throws NullPointerException if {@code areaName} is {@code null}
+     */
     public void setAreaName(String areaName)
     {
 	requireNonNull(areaName, "areaName can't be null");
@@ -576,6 +872,11 @@ public interface ClipboardSaver<E>
 	return true;
     }
 
+    /**
+     * Announces the current line (the item under the hot point).
+     *
+     * @return {@code true} if the announcement was handled
+     */
     protected boolean onAnnounceLine()
     {
 	if (isEmpty())
@@ -590,6 +891,12 @@ public interface ClipboardSaver<E>
 	return true;
     }
 
+    /**
+     * Handles a {@link MoveHotPointEvent} to reposition the hot point.
+     *
+     * @param event the event (must not be {@code null})
+     * @return {@code true} if the hot point was moved
+     */
     protected boolean onMoveHotPoint(MoveHotPointEvent event)
     {
 	requireNonNull(event, "event can't be null");
@@ -628,6 +935,13 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	    return true;
     }
 
+    /**
+     * Handles a {@link BeginListeningQuery} to start continuous reading from
+     * the current hot point position.
+     *
+     * @param query the query (must not be {@code null})
+     * @return {@code true} if the query was answered
+     */
     protected boolean onBeginListeningQuery(BeginListeningQuery query)
     {
 	requireNonNull(query, "query can't be null");
@@ -650,6 +964,13 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	return true;
     }
 
+    /**
+     * Handles the completion of a listening session, moving the hot point to
+     * the position where listening stopped.
+     *
+     * @param event the event (must not be {@code null})
+     * @return {@code true} if the hot point was updated
+     */
     protected boolean onListeningFinishedEvent(ListeningFinishedEvent event)
     {
 	requireNonNull(event, "event can't be null");
@@ -670,6 +991,13 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	return true;
     }
 
+    /**
+     * Handles character input for incremental search. Moves the hot point to
+     * the first item whose observable text starts with the accumulated prefix.
+     *
+     * @param event the input event
+     * @return {@code true} if the character was processed
+     */
     protected boolean onChar(InputEvent event)
     {
 	if (noContent())
@@ -703,36 +1031,85 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	return false;
     }
 
+    /**
+     * Handles the "move down" command.
+     *
+     * @param event the input event
+     * @param briefAnnouncement if {@code true}, use brief announcement
+     * @return {@code true} if handled
+     */
     protected boolean onMoveDown(InputEvent event, boolean briefAnnouncement)
     {
 	return onTransition(Transition.Type.SINGLE_DOWN, Hint.NO_ITEMS_BELOW, briefAnnouncement);
     }
 
+    /**
+     * Handles the "move up" command.
+     *
+     * @param event the input event
+     * @param briefAnnouncement if {@code true}, use brief announcement
+     * @return {@code true} if handled
+     */
     protected boolean onMoveUp(InputEvent event, boolean briefAnnouncement)
     {
 	return onTransition(Transition.Type.SINGLE_UP, Hint.NO_ITEMS_ABOVE, briefAnnouncement);
     }
 
+    /**
+     * Handles the "page down" command.
+     *
+     * @param event the input event
+     * @param briefAnnouncement if {@code true}, use brief announcement
+     * @return {@code true} if handled
+     */
     protected boolean onPageDown(InputEvent event, boolean briefAnnouncement)
     {
 	return onTransition(Transition.Type.PAGE_DOWN, Hint.NO_ITEMS_BELOW, briefAnnouncement);
     }
 
+    /**
+     * Handles the "page up" command.
+     *
+     * @param event the input event
+     * @param briefAnnouncement if {@code true}, use brief announcement
+     * @return {@code true} if handled
+     */
     protected boolean onPageUp(InputEvent event, boolean briefAnnouncement)
     {
 	return onTransition(Transition.Type.PAGE_UP, Hint.NO_ITEMS_ABOVE, briefAnnouncement);
     }
 
+    /**
+     * Handles the "end" command (jump to last item).
+     *
+     * @param event the input event
+     * @return {@code true} if handled
+     */
     protected boolean onEnd(InputEvent event)
     {
 	return onTransition(Transition.Type.END, Hint.NO_ITEMS_BELOW, false);
     }
 
+    /**
+     * Handles the "home" command (jump to first item).
+     *
+     * @param event the input event
+     * @return {@code true} if handled
+     */
     protected boolean onHome(InputEvent event)
     {
 	return onTransition(Transition.Type.HOME, Hint.NO_ITEMS_ABOVE, false);
     }
 
+    /**
+     * Performs a transition based on the given type, using the current state
+     * and the list's transition logic.
+     *
+     * @param type the type of transition
+     * @param hint the hint to provide if no transition is possible
+     * @param briefAnnouncement if {@code true}, use brief announcement
+     * @return {@code true} if the transition was processed
+     */
     protected boolean onTransition(Transition.Type type, Hint hint, boolean briefAnnouncement)
     {
 	requireNonNull(type, "type can't be null");
@@ -780,7 +1157,13 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	return true;
     }
 
-protected boolean onMoveRight(InputEvent event)
+    /**
+     * Handles the "move right" command (character by character).
+     *
+     * @param event the input event
+     * @return {@code true} if handled
+     */
+    protected boolean onMoveRight(InputEvent event)
     {
 	if (noContent())
 	    return true;
@@ -808,6 +1191,12 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	return true;
     }
 
+    /**
+     * Handles the "move left" command (character by character).
+     *
+     * @param event the input event
+     * @return {@code true} if handled
+     */
     protected boolean onMoveLeft(InputEvent event)
     {
 	if (noContent())
@@ -837,6 +1226,12 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	return true;
     }
 
+    /**
+     * Handles the alternative right command (move by word forward).
+     *
+     * @param event the input event
+     * @return {@code true} if handled
+     */
     protected boolean onAltRight(InputEvent event)
     {
 	if (noContent())
@@ -876,6 +1271,12 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	return true;
     }
 
+    /**
+     * Handles the alternative left command (move by word backward).
+     *
+     * @param event the input event
+     * @return {@code true} if handled
+     */
     protected boolean onAltLeft(InputEvent event)
     {
 	if (noContent())
@@ -912,6 +1313,12 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	return true;
     }
 
+    /**
+     * Handles the alternative end command (jump to the end of the line).
+     *
+     * @param event the input event
+     * @return {@code true} if handled
+     */
     protected boolean onAltEnd(InputEvent event)
     {
 	if (noContent())
@@ -930,6 +1337,12 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	return true;
     }
 
+    /**
+     * Handles the alternative home command (jump to the beginning of the line).
+     *
+     * @param event the input event
+     * @return {@code true} if handled
+     */
     protected boolean onAltHome(InputEvent event)
     {
 	if (noContent())
@@ -948,6 +1361,12 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	return true;
     }
 
+    /**
+     * Handles the Enter key activation.
+     *
+     * @param event the input event
+     * @return {@code true} if the click was handled
+     */
     protected boolean onEnter(InputEvent event)
     {
 	if (isEmpty() || listClickHandler == null)
@@ -960,6 +1379,12 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	return true;
     }
 
+    /**
+     * Handles the OK system event (alternative activation).
+     *
+     * @param event the system event
+     * @return {@code true} if the click was handled
+     */
     protected boolean onOk(SystemEvent event)
     {
 	if (listClickHandler == null)
@@ -1052,6 +1477,12 @@ return listClipboardSaver.saveToClipboard(this, listModel, listAppearance, model
 	return false;
     }
 
+    /**
+     * Called after the hot point Y coordinate changes. Updates the hot point X
+     * to the left bound of the new item and announces it.
+     *
+     * @param briefAnnouncement if {@code true}, use brief announcement
+     */
     protected void onNewHotPointY(boolean briefAnnouncement)
     {
 	final int index = selectedIndex();
@@ -1075,6 +1506,13 @@ return listClipboardSaver.saveToClipboard(this, listModel, listAppearance, model
 	context.onAreaNewHotPoint(this);
     }
 
+    /**
+     * Returns the observable substring of an item's screen representation,
+     * i.e., the part between its left and right bounds.
+     *
+     * @param item the item (must not be {@code null})
+     * @return the observable substring, or an empty string if not applicable
+     */
     protected String getObservableSubstr(E item)
     {
 	requireNonNull(item, "item can't be null");
@@ -1089,11 +1527,24 @@ if (leftBound >= rightBound)
 return line.substring(leftBound, rightBound);
     }
 
+    /**
+     * Returns the string to display when the list has no content.
+     *
+     * @return the "no content" string
+     */
     protected String noContentStr()
     {
 	return context.getStaticStr("ListNoContent");
     }
 
+    /**
+     * Announces a character at the given position, or a line bound hint if
+     * at the end.
+     *
+     * @param line the full line text
+     * @param pos the current hot point column
+     * @param rightBound the right observable bound
+     */
     protected void announceChar(String  line, int pos, int rightBound)
     {
 	requireNonNull(line, "line can't be null");
@@ -1102,7 +1553,13 @@ return line.substring(leftBound, rightBound);
 	    context.setEventResponse(DefaultEventResponse.hint(Hint.LINE_BOUND));
     }
 
-	protected boolean noContent()
+    /**
+     * Checks whether the list has no content and, if so, sets an appropriate
+     * hint response.
+     *
+     * @return {@code true} if the list is empty, {@code false} otherwise
+     */
+    protected boolean noContent()
     {
 	if (listModel == null || listModel.getItemCount() < 1)
 	{
@@ -1112,15 +1569,19 @@ return line.substring(leftBound, rightBound);
 	return false;
     }
 
-static protected class ListeningInfo
-{
-    final int itemIndex;
-    final int pos;
-
-    ListeningInfo(int itemIndex, int pos)
+    /**
+     * Internal class used to pass information about the listening position
+     * between the begin-listening query and the listening-finished event.
+     */
+    static protected class ListeningInfo
     {
-	this.itemIndex = itemIndex;
-	this.pos = pos;
+	final int itemIndex;
+	final int pos;
+
+	ListeningInfo(int itemIndex, int pos)
+	{
+	    this.itemIndex = itemIndex;
+	    this.pos = pos;
+	}
     }
-}
 }
