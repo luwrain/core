@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.properties;
 
 import java.io.*;
 import java.util.*;
-
 import org.luwrain.core.*;
 import org.luwrain.player.*;
+import static java.util.Objects.*;
 
 public final class Player implements PropertiesProvider, org.luwrain.player.Listener
 {
@@ -62,7 +62,7 @@ public final class Player implements PropertiesProvider, org.luwrain.player.List
     @Override public boolean setProperty(String propName, String value)
     {
 	NullCheck.notEmpty(propName, "propName");
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	return false;
     }
 
@@ -77,7 +77,7 @@ public final class Player implements PropertiesProvider, org.luwrain.player.List
 
     @Override public void onNewTrack(Playlist playlist, int trackNum)
     {
-	NullCheck.notNull(playlist, "playlist");
+	requireNonNull(playlist, "playlist can't be null");
 	this.trackNum = trackNum;
 	this.trackUrl = playlist.getTrackUrl(trackNum);
 	if (listener != null)
@@ -89,7 +89,7 @@ public final class Player implements PropertiesProvider, org.luwrain.player.List
 
     @Override public void onTrackTime(Playlist playlist, int trackNum,  long msec)
     {
-	NullCheck.notNull(playlist, "playlist");
+	requireNonNull(playlist, "playlist can't be null");
 	if (msec >= trackTimeMsec && msec < trackTimeMsec + 1000)
 	    return;
 	this.trackTimeMsec = msec - (msec % 1000);

@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.util.*;
+
+import static java.util.Objects.*;
 
 public final class AreaLayoutSwitch
 {
@@ -14,7 +16,7 @@ public final class AreaLayoutSwitch
     public AreaLayoutSwitch(Luwrain luwrain)
     {
 	this.luwrain = luwrain;
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
     }
 
     public int getCurrentIndex()
@@ -24,7 +26,7 @@ public final class AreaLayoutSwitch
 
     public void add(AreaLayout layout)
     {
-	NullCheck.notNull(layout, "layout");
+	requireNonNull(layout, "layout can't be null");
 	layouts.add(layout);
     }
 

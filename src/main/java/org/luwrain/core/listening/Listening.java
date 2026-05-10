@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.listening;
 
@@ -9,6 +9,7 @@ import org.luwrain.core.queries.*;
 import org.luwrain.speech.*;
 import org.luwrain.core.ListenableArea.ListeningInfo;
 
+import static java.util.Objects.*;
 
 public final class Listening
 {
@@ -22,10 +23,10 @@ public final class Listening
 
     public Listening(Luwrain luwrain, Speech speech, Area area, Runnable completion)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(speech, "speech");
-	NullCheck.notNull(area, "area");
-	NullCheck.notNull(completion, "completion");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(speech, "speech can't be null");
+	requireNonNull(area, "area can't be null");
+	requireNonNull(completion, "completion can't be null");
 	this.luwrain = luwrain;
 	this.speech = speech;
 	this.area = area;
@@ -89,7 +90,7 @@ public final class Listening
 
     private void onFinish(ListeningInfo listeningInfo)
     {
-	NullCheck.notNull(listeningInfo, "listeningInfo");
+	requireNonNull(listeningInfo, "listeningInfo can't be null");
 	if (listenableArea == null)
 	    return;
 	listenableArea.onListeningFinish(listeningInfo);
@@ -106,7 +107,7 @@ public final class Listening
 
     private void speak(ListeningInfo listeningInfo)
     {
-	NullCheck.notNull(listeningInfo, "listeningInfo");
+	requireNonNull(listeningInfo, "listeningInfo can't be null");
 	final Channel.Listener listener = (id)->luwrain.runUiSafely(()->onFinish(listeningInfo));
 	channel .speak(luwrain.getSpeakableText(listeningInfo.getText(), Luwrain.SpeakableTextType.NATURAL), listener, sett.getListeningPitch(50) - 50, 50 - sett.getListeningRate(50), false);
     }

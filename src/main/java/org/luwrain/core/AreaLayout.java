@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
-import static org.luwrain.core.NullCheck.*;
+import static java.util.Objects.*;
 
 public final class AreaLayout
 {
@@ -24,7 +24,7 @@ public final class AreaLayout
     public AreaLayout(Area area)
     {
 	layoutType = SINGLE;
-	notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	this.area1 = area;
 	this.area2 = null;
 	this.area3 = null;
@@ -32,9 +32,9 @@ public final class AreaLayout
 
     public AreaLayout(Type layoutType, Area area1, Area area2)
     {
-	notNull(layoutType, "layoutType");
-	notNull(area1, "area1");
-	notNull(area2, "area2");
+	requireNonNull(layoutType, "layoutType can't be null");
+	requireNonNull(area1, "area1 can't be null");
+	requireNonNull(area2, "area2 can't be null");
 	if (layoutType != LEFT_RIGHT && layoutType != TOP_BOTTOM)
 	    throw new IllegalArgumentException("Illegal layoutType " + layoutType);
 	this.layoutType = layoutType;
@@ -49,24 +49,24 @@ public final class AreaLayout
 	this.area1 = area1;
 	this.area2 = area2;
 	this.area3 = area3;
-	NullCheck.notNull(area1, "area1");
-	NullCheck.notNull(area2, "area2");
-	NullCheck.notNull(area3, "area3");
+	requireNonNull(area1, "area1 can't be null");
+	requireNonNull(area2, "area2 can't be null");
+	requireNonNull(area3, "area3 can't be null");
 	if (layoutType != LEFT_TOP_BOTTOM && layoutType != LEFT_RIGHT_BOTTOM)
 	    throw new IllegalArgumentException("Illegal layoutType " + layoutType);
     }
 
     public AreaLayout(Type layoutType, Area[] areas)
     {
-	notNull(layoutType, "layoutType");
-	notNullItems(areas, "areas");
+	requireNonNull(layoutType, "layoutType can't be null");
+	//notNullItems(areas, "areas");
 	this.layoutType = layoutType;
 	switch(layoutType)
 	{
 	case SINGLE:
 	    if (areas.length < 1)
 		throw new IllegalArgumentException("areas array must have at least one element");
-	    notNull(areas[0], "areas[0]");
+	    //notNull(areas[0], "areas[0]");
 	    this.area1 = areas[0];
 	    this.area2 = null;
 	    this.area3 = null;
@@ -75,8 +75,8 @@ public final class AreaLayout
 	case TOP_BOTTOM:
 	    if (areas.length < 2)
 		throw new IllegalArgumentException("areas array must have at least two elements");
-	    notNull(areas[0], "areas[0]");
-	    notNull(areas[1], "areas[1]");
+	    //notNull(areas[0], "areas[0]");
+	    //notNull(areas[1], "areas[1]");
 	    this.area1 = areas[0];
 	    this.area2 = areas[1];
 	    this.area3 = null;
@@ -85,9 +85,9 @@ public final class AreaLayout
 	case LEFT_RIGHT_BOTTOM:
 	    if (areas.length < 3)
 		throw new IllegalArgumentException("areas array must have at least three elements");
-	    notNull(areas[0], "areas[0]");
-	    notNull(areas[1], "areas[1]");
-	    notNull(areas[2], "areas[2]");
+	    //notNull(areas[0], "areas[0]");
+	    //notNull(areas[1], "areas[1]");
+	    //notNull(areas[2], "areas[2]");
 	    this.area1 = areas[0];
 	    this.area2 = areas[1];
 	    this.area3 = areas[2];
@@ -153,7 +153,7 @@ public final class AreaLayout
 
     public Area getNextArea(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	final Area[] areas = getAreas();
 	if (areas.length == 0)
 	    return null;
@@ -169,7 +169,7 @@ public final class AreaLayout
 
     public Area getPrevArea(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	final Area[] areas = getAreas();
 	if (areas.length == 0)
 	    return null;

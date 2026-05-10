@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.file.*;
 import org.apache.logging.log4j.*;
 
+import static java.util.Objects.*;
 import static java.nio.file.Files.*;
 
 final class TempFiles
@@ -47,7 +48,7 @@ tmpDir = createTempDirectory(Paths.get(PROP_USER_HOME), ".luwrain-");
 
     File createTempFile(String prefix)
     {
-	NullCheck.notNull(prefix, "prefix");
+	requireNonNull(prefix, "prefix can't be null");
 	    init();
 	    try {
 	    final var res = Files.createTempFile(tmpDir, prefix + "-", ".tmp");

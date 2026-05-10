@@ -164,7 +164,7 @@ abstract class Base implements EventConsumer
 
     void setEventResponse(EventResponse eventResponse)
     {
-	NullCheck.notNull(eventResponse, "eventResponse");
+	requireNonNull(eventResponse, "eventResponse can't be null");
 	this.eventResponse = eventResponse;
     }
 
@@ -213,14 +213,14 @@ abstract class Base implements EventConsumer
 
     void unsafeOperation(Runnable runnable)
     {
-	NullCheck.notNull(runnable, "runnable");
+	requireNonNull(runnable, "runnable can't be null");
 	unsafeAreaOperation(runnable);
     }
 
     //To be deleted
     void unsafeAreaOperation(Runnable runnable)
     {
-	NullCheck.notNull(runnable, "runnable");
+	requireNonNull(runnable, "runnable can't be null");
 	try {
 	    runnable.run();
 	}
@@ -318,8 +318,8 @@ abstract class Base implements EventConsumer
 
 	PopupStopCondition(StopCondition parentCondition, StopCondition popupCondition)
 	{
-	    NullCheck.notNull(parentCondition, "parentCondition");
-	    NullCheck.notNull(popupCondition, "popupCondition");
+	    requireNonNull(parentCondition, "parentCondition can't be null");
+	    requireNonNull(popupCondition, "popupCondition can't be null");
 	    this.parentCondition = parentCondition;
 	    this.popupCondition = popupCondition;
 	}

@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.util.*;
+import static java.util.Objects.*;
+
 
 public interface Settings
 {
@@ -274,7 +276,7 @@ public interface Settings
 
     static public PersonalInfo createPersonalInfo(Registry registry)
     {
-	NullCheck.notNull(registry, "registry");
+	requireNonNull(registry, "registry can't be null");
 	return RegistryProxy.create(registry, PERSONAL_INFO_PATH, PersonalInfo.class);
     }
 
@@ -300,13 +302,13 @@ public interface Settings
 
     static public BackgroundSounds createBackgroundSounds(Registry registry)
     {
-	NullCheck.notNull(registry, "registry");
+	requireNonNull(registry, "registry can't be null");
 	return RegistryProxy.create(registry, BACKGROUND_SOUNDS_PATH, BackgroundSounds.class);
     }
 
     static public Braille createBraille(Registry registry)
     {
-	NullCheck.notNull(registry, "registry");
+	requireNonNull(registry, "registry can't be null");
 	return RegistryProxy.create(registry, BRAILLE_PATH, Braille.class);
     }
 
@@ -324,13 +326,13 @@ public interface Settings
 
     static public I18n createI18n(Registry registry)
     {
-	NullCheck.notNull(registry, "registry");
+	requireNonNull(registry, "registry can't be null");
 	return RegistryProxy.create(registry, I18N_PATH, I18n.class);
     }
 
     static public String[] getI18nCharsets(Registry registry)
     {
-	NullCheck.notNull(registry, "registry");
+	requireNonNull(registry, "registry can't be null");
 	final String value = createI18n(registry).getCharsets("");
 	if (value.trim().isEmpty())
 	    return new String[0];
@@ -343,13 +345,13 @@ public interface Settings
 
     static public Network createNetwork(Registry registry)
     {
-	NullCheck.notNull(registry, "registry");
+	requireNonNull(registry, "registry can't be null");
 	return RegistryProxy.create(registry, NETWORK_PATH, Network.class);
     }
 
     static public DateTime createDateTime(Registry registry)
     {
-	NullCheck.notNull(registry, "registry");
+	requireNonNull(registry, "registry can't be null");
 	return RegistryProxy.create(registry, DATETIME_PATH, DateTime.class);
     }
 }

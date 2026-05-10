@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
+
+import static java.util.Objects.*;
+
 
 public interface ListenableArea
 {
@@ -15,7 +18,7 @@ public interface ListenableArea
 	protected final int posY;
 	public ListeningInfo(String text, int posX, int posY)
 	{
-	    NullCheck.notNull(text, "text");
+	    requireNonNull(text, "text can't be null");
 	    this.text = text;
 	    this.posX = posX;
 	    this.posY = posY;

@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.util.*;
 
 import org.luwrain.core.events.*;
+
+import static java.util.Objects.*;
 
 final class UniRefProcManager
 {
@@ -15,8 +17,8 @@ final class UniRefProcManager
 
     boolean add(Luwrain luwrain, UniRefProc uniRefProc)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(uniRefProc, "uniRefProc");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(uniRefProc, "uniRefProc can't be null");
 	final String uniRefType = uniRefProc.getUniRefType();
 	if (uniRefType == null || uniRefType.trim().isEmpty())
 	    return false;
@@ -28,7 +30,7 @@ final class UniRefProcManager
 
     UniRefInfo getInfo(String uniRef)
     {
-	NullCheck.notNull(uniRef, "uniRef");
+	requireNonNull(uniRef, "uniRef can't be null");
 	if (uniRef.trim().isEmpty())
 	    return EMPTY;
 	final String uniRefType = getUniRefType(uniRef);
@@ -74,9 +76,9 @@ final class UniRefProcManager
 	Entry(Luwrain luwrain, 
 	      String uniRefType, UniRefProc uniRefProc)
 	{
-	    NullCheck.notNull(luwrain, "luwrain");
-	    NullCheck.notNull(uniRefType, "uniRefType");
-	    NullCheck.notNull(uniRefProc, "uniRefProc");
+	    requireNonNull(luwrain, "luwrain can't be null");
+	    requireNonNull(uniRefType, "uniRefType can't be null");
+	    requireNonNull(uniRefProc, "uniRefProc can't be null");
 	    if (uniRefType.trim().isEmpty())
 		throw new IllegalArgumentException("uniRefType may not be empty");
 	    this.luwrain = luwrain;

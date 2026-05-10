@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import org.luwrain.core.events.*;
+import static java.util.Objects.*;
 
 class Keyboard
 {
     static InputEvent translate(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	InputEvent e = event;
 e = translateControl(e);
 e = translateAlternative(e);
@@ -18,7 +19,7 @@ return e;
 
     static InputEvent translateAlternative(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (!event.isSpecial() || !event.withControlOnly())
 	    return event;
 	switch (event.getSpecial())

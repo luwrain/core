@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.speech;
 
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 public final class SpeakingHook implements Luwrain.HookRunner
 {
@@ -11,14 +12,14 @@ public final class SpeakingHook implements Luwrain.HookRunner
 
     public SpeakingHook(String text)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	this.text = text;
     }
 
     
     @Override public Luwrain.HookResult runHook(Luwrain.Hook hook)
     {
-	NullCheck.notNull(hook, "hook");
+	requireNonNull(hook, "hook can't be null");
 final Object res = hook.run(new Object[]{text});
 if (res == null)
 	return Luwrain.HookResult.CONTINUE;

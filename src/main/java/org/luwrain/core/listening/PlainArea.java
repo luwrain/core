@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.listening;
 
 import org.luwrain .core.*;
 import org.luwrain.core.events.*;
-
+import static java.util.Objects.*;
 
 final class PlainArea implements ListenableArea
 {
@@ -66,7 +66,7 @@ final class PlainArea implements ListenableArea
 
     @Override public void onListeningFinish(ListeningInfo listeningInfo)
     {
-	NullCheck.notNull(listeningInfo, "listeningInfo");
+	requireNonNull(listeningInfo, "listeningInfo can't be null");
 	area.onSystemEvent(new MoveHotPointEvent(listeningInfo.getPosX(), listeningInfo.getPosY(), false));
     }
 }

@@ -24,8 +24,8 @@ public class LetterResponse implements EventResponse
 
     @Override public void announce(Luwrain luwrain, Speech speech, CommonSettings sett)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(speech, "speech");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(speech, "speech can't be null");
 	speech.speakLetter(letter);
     }
 }

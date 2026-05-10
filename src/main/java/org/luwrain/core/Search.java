@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
@@ -7,6 +7,8 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.core.queries.*;
 import org.luwrain.util.*;
+
+import static java.util.Objects.*;
 
 public class Search implements Area
 {
@@ -19,9 +21,9 @@ public class Search implements Area
 
     public Search(Area area, Core core, AreaWrapperFactory.Disabling disabling)
     {
-	NullCheck.notNull(area, "area");
-	NullCheck.notNull(core, "core");
-	NullCheck.notNull(disabling, "disabling");
+	requireNonNull(area, "area can't be null");
+	requireNonNull(core, "core can't be null");
+	requireNonNull(disabling, "disabling can't be null");
 	this.area = area;
 	this.core = core;
 	this.disabling = disabling;
@@ -95,7 +97,7 @@ public class Search implements Area
 
     @Override public boolean onAreaQuery(AreaQuery query)
     {
-	NullCheck.notNull(query, "query");
+	requireNonNull(query, "query can't be null");
 	switch(query.getQueryCode())
 	{
 	case AreaQuery.BACKGROUND_SOUND:

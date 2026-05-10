@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
+import static java.util.Objects.*;
 
 final class PropertiesRegistry implements PropertiesBase, PropertiesProvider.Listener
 {
@@ -25,7 +26,7 @@ final class PropertiesRegistry implements PropertiesBase, PropertiesProvider.Lis
 
     void setLuwrainObj(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	if (this.luwrain != null)
 	    throw new IllegalStateException("Trying to set the Luwrain object twice");
 	this.luwrain = luwrain;
@@ -39,7 +40,7 @@ PropertiesProvider[] getBasicProviders()
     @Override public void onNewPropertyValue(String propName, String propValue)
     {
 	NullCheck.notEmpty(propName, "propName");
-	NullCheck.notNull(propValue, "propValue");
+	requireNonNull(propValue, "propValue can't be null");
     }
 
     /**
@@ -129,7 +130,7 @@ PropertiesProvider[] getBasicProviders()
 
     @Override public File getFileProperty(String propName)
     {
-	NullCheck.notNull(propName, "propName");
+	requireNonNull(propName, "propName can't be null");
 
 			for(Provider p: providers)
 		    if (!p.hasResponsibilitySpace())
@@ -148,7 +149,7 @@ PropertiesProvider[] getBasicProviders()
 	final Pattern[] patterns;
 	Provider(boolean basic, PropertiesProvider provider)
 	{
-	    NullCheck.notNull(provider, "provider");
+	    requireNonNull(provider, "provider can't be null");
 	    this.basic = basic;
 	    this.provider = provider;
 	    final String[] regex = provider.getPropertiesRegex();

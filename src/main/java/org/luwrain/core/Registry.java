@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
+
+import static java.util.Objects.*;
+
 
 public interface Registry
 {
@@ -29,8 +32,8 @@ public interface Registry
 
     static public String join(String part1, String part2)
     {
-	NullCheck.notNull(part1, "part1");
-	NullCheck.notNull(part2, "part2");
+	requireNonNull(part1, "part1 can't be null");
+	requireNonNull(part2, "part2 can't be null");
 	if (part1.isEmpty())
 	    throw new IllegalArgumentException("part1 may not be empty");
 	if (part2.isEmpty())
@@ -44,8 +47,8 @@ public interface Registry
 
     static public int nextFreeNum(Registry registry, String path)
     {
-	NullCheck.notNull(registry, "registry");
-	NullCheck.notNull(path, "path");
+	requireNonNull(registry, "registry can't be null");
+	requireNonNull(path, "path can't be null");
 	final String[] values = registry.getDirectories(path);
 	int res = 0;
 	for(String s: values)

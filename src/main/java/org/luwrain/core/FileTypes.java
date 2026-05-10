@@ -89,7 +89,7 @@ final class FileTypes
 	/*
 	requireNonNull(core, "core can't be null");
 	NullCheck.notEmpty(exp, "exp");
-	NullCheck.notNull(args, "args");
+	requireNonNull(args, "args can't be null");
 	if (!exp.startsWith(JOB_PREFIX))
 	    return false;
 	final JobValue jobValue = gson.fromJson(exp.substring(JOB_PREFIX.length()), JobValue.class);

@@ -21,7 +21,7 @@ public class ListItemResponse implements EventResponse
 
     public ListItemResponse(Sounds sound, String text, Suggestions suggestion)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	this.sound = sound;
 	this.text = text;
 	this.suggestion = suggestion;
@@ -29,8 +29,8 @@ public class ListItemResponse implements EventResponse
 
     @Override public void announce(Luwrain luwrain, Speech speech, CommonSettings sett)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(speech, "speech");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(speech, "speech can't be null");
 	if (sound != null)
 	    luwrain.playSound(sound); else
 	    luwrain.playSound(Sounds.LIST_ITEM);

@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.Base.*;
-import static org.luwrain.core.NullCheck.*;
+//import static org.luwrain.core.NullCheck.*;
 
 final class LaunchedApp extends LaunchedAppPopups
 {
@@ -19,7 +20,7 @@ final class LaunchedApp extends LaunchedAppPopups
 
     LaunchedApp(Application app)
     {
-	notNull(app, "app");
+	requireNonNull(app, "app can't be null");
 	this.app = app;
     }
 
@@ -113,7 +114,7 @@ final class LaunchedApp extends LaunchedAppPopups
     //Takes the reference of any kind, either to original area  or to a wrapper
     boolean setActiveArea(Area area)
     {
-	notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	if (areaWrappings == null)
 	    return false;
 	int index = 0;
@@ -134,7 +135,7 @@ final class LaunchedApp extends LaunchedAppPopups
 
     @Override public Area getCorrespondingFrontArea(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	for(OpenedArea w: areaWrappings)
 	    if (w.hasArea(area))
 		return w.getFrontArea();
@@ -143,7 +144,7 @@ final class LaunchedApp extends LaunchedAppPopups
 
     @Override public OpenedArea getAreaWrapping(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	for(OpenedArea w: areaWrappings)
 	    if (w.hasArea(area))
 		return w;
@@ -160,7 +161,7 @@ final class LaunchedApp extends LaunchedAppPopups
 
     void sendBroadcastEvent(org.luwrain.core.events.SystemEvent event)
     {
-	notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	//	super.sendBroadcastEvent(event);
 	for(OpenedArea w: areaWrappings)
 	    w.getFrontArea().onSystemEvent(event);

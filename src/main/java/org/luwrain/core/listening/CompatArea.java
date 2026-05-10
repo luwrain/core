@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.listening;
 
 import org.luwrain .core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.core.queries.*;
+import static java.util.Objects.*;
 
 final class CompatArea implements ListenableArea
 {
@@ -13,7 +14,7 @@ final class CompatArea implements ListenableArea
 
     CompatArea(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	this.area = area;
     }
 
@@ -27,7 +28,7 @@ final class CompatArea implements ListenableArea
 
     @Override public void onListeningFinish(ListeningInfo listeningInfo)
     {
-	NullCheck.notNull(listeningInfo, "listeningInfo");
+	requireNonNull(listeningInfo, "listeningInfo can't be null");
 	if (!(listeningInfo instanceof Info))
 	    return;
 	final Info info = (Info)listeningInfo;

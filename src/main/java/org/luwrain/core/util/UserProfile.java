@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.util;
 
 import java.io.*;
 import java.util.*;
-
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 public final class UserProfile
 {
@@ -17,8 +17,8 @@ public final class UserProfile
 
     public UserProfile(File dataDir, File destDir, String regVersion, String lang)
     {
-	NullCheck.notNull(dataDir, "dataDir");
-	NullCheck.notNull(destDir, "destDir");
+	requireNonNull(dataDir, "dataDir can't be null");
+	requireNonNull(destDir, "destDir can't be null");
 	NullCheck.notEmpty(regVersion, "regVersion");
 	NullCheck.notEmpty(lang, "lang");
 	this.dataDir = dataDir;

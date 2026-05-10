@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
@@ -15,8 +15,9 @@ import org.luwrain.script.*;
 import org.luwrain.controls.DefaultControlContext;
 import org.luwrain.script.core.MapScriptObject;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.Base.*;
-import static org.luwrain.core.NullCheck.*;
+//import static org.luwrain.core.NullCheck.*;
 
 final class Commands
 {
@@ -28,8 +29,8 @@ final class Commands
 
     static Command[] getCommands(Core core, org.luwrain.shell.Conversations conversations)
     {
-	notNull(core, "core");
-	notNull(conversations, "conversations");
+	requireNonNull(core, "core can't be null");
+	requireNonNull(conversations, "conversations can't be null");
 	final org.luwrain.script.Hooks hooks = new org.luwrain.script.Hooks();
 	return new Command[]{
 
@@ -308,7 +309,7 @@ luwrain -> {
 		}
 		@Override public void onCommand(Luwrain luwrain)
 		{
-		    NullCheck.notNull(luwrain, "luwrain");
+		    requireNonNull(luwrain, "luwrain can't be null");
 		    final String res = luwrain.getActiveAreaAttr(Luwrain.AreaAttr.UNIREF);
 		    if (res == null || res.isEmpty())
 		    {
@@ -334,7 +335,7 @@ luwrain -> {
 		}
 		@Override public void onCommand(Luwrain luwrain)
 		{
-		    NullCheck.notNull(luwrain, "luwrain");
+		    requireNonNull(luwrain, "luwrain can't be null");
 		    final String res = luwrain.getActiveAreaAttr(Luwrain.AreaAttr.UNIREF_UNDER_HOT_POINT);
 		    if (res == null || res.isEmpty())
 		    {
@@ -360,7 +361,7 @@ luwrain -> {
 		}
 		@Override public void onCommand(Luwrain luwrain)
 		{
-		    NullCheck.notNull(luwrain, "luwrain");
+		    requireNonNull(luwrain, "luwrain can't be null");
 		    final String res = luwrain.getActiveAreaAttr(Luwrain.AreaAttr.URL);
 		    if (res == null || res.isEmpty())
 		    {
@@ -380,7 +381,7 @@ luwrain -> {
 		}
 		@Override public void onCommand(Luwrain luwrain)
 		{
-		    NullCheck.notNull(luwrain, "luwrain");
+		    requireNonNull(luwrain, "luwrain can't be null");
 		    final String res = luwrain.getActiveAreaAttr(Luwrain.AreaAttr.URL_UNDER_HOT_POINT);
 		    if (res == null || res.isEmpty())
 		    {
@@ -469,7 +470,7 @@ luwrain -> {
 		}
 		@Override public void onCommand(Luwrain luwrain)
 		{
-		    NullCheck.notNull(luwrain, "luwrain");
+		    requireNonNull(luwrain, "luwrain can't be null");
 		    final String word = luwrain.getActiveAreaText(Luwrain.AreaTextType.WORD, true);
 		    if (word != null && !word.trim().isEmpty())
 			core.message(word, Luwrain.MessageType.REGULAR);
@@ -562,8 +563,10 @@ luwrain -> {
 	private final Handler handler;
 	Cmd(String name, Handler handler)
 	{
-	    notEmpty(name, "name");
-	    notNull(handler, "handler");
+	    requireNonNull(name, "name can't be null");
+	    if (name.isEmpty())
+		throw new IllegalArgumentException("name can't be empty");
+	    requireNonNull(handler, "handler can't be null");
 	    this.name = name;
 	    this.handler = handler;
 	}

@@ -129,7 +129,7 @@ final class ObjRegistry
 
     static void issueResultingMessage(Luwrain luwrain, int exitCode, String[] lines)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNullItems(lines, "lines");
 	final StringBuilder b = new StringBuilder();
 	if (lines.length >= 1)

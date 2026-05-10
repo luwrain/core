@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.util;
 
 import java.io.*;
 import java.util.*;
-
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 final class RegistryExtractor
 {
@@ -21,13 +21,13 @@ final class RegistryExtractor
 
     RegistryExtractor(File destDir)
     {
-	NullCheck.notNull(destDir, "destDir");
+	requireNonNull(destDir, "destDir can't be null");
 	this.destDir = destDir;
     }
 
     void extract(InputStream is) throws IOException
     {
-	NullCheck.notNull(is, "is");
+	requireNonNull(is, "is can't be null");
 	final BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 	String line = reader.readLine();
 	while(line != null)
@@ -50,7 +50,7 @@ final class RegistryExtractor
 
     private void onDir(String path) throws IOException
     {
-	NullCheck.notNull(path, "path");
+	requireNonNull(path, "path can't be null");
 	if (path.isEmpty())
 	    return;
 	saveLines();
@@ -63,7 +63,7 @@ final class RegistryExtractor
 
     private void onFile(String fileName) throws IOException
     {
-	NullCheck.notNull(fileName, "fileName");
+	requireNonNull(fileName, "fileName can't be null");
 	if (fileName.isEmpty())
 	    return;
 	if (currentDir == null)
@@ -75,7 +75,7 @@ final class RegistryExtractor
 
     private void onValue(String line) throws IOException
     {
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	if (line.isEmpty())
 	    return;
 	if (currentDir == null || currentFile == null)
@@ -99,7 +99,7 @@ final class RegistryExtractor
 
     static private void createDirectories(File file) throws IOException
     {
-	NullCheck.notNull(file, "file");
+	requireNonNull(file, "file can't be null");
 	final LinkedList<File> files = new LinkedList<>();
 	File f = file;
 	while(f != null)

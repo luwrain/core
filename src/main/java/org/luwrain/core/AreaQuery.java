@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
+
+import static java.util.Objects.*;
 
 abstract public class AreaQuery extends Event
 {
@@ -48,8 +50,8 @@ abstract public class AreaQuery extends Event
 
     static public boolean ask(Area area, AreaQuery query)
     {
-	NullCheck.notNull(area, "area");
-	NullCheck.notNull(query, "query");
+	requireNonNull(area, "area can't be null");
+	requireNonNull(query, "query can't be null");
 	return area.onAreaQuery(query) && query.hasAnswer();
     }
 }

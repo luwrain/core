@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
+
+import static java.util.Objects.*;
 
 public final class UniRefInfo implements Comparable
 {
@@ -13,7 +15,7 @@ public final class UniRefInfo implements Comparable
 
     public UniRefInfo(String value)
     {
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	this.available = false;
 	this.value = value;
 	this.type = "";
@@ -23,10 +25,10 @@ public final class UniRefInfo implements Comparable
 
     public UniRefInfo(String value, String type, String addr, String title)
     {
-	NullCheck.notNull(value, "value");
-	NullCheck.notNull(type, "type");
-	NullCheck.notNull(addr, "addr");
-	NullCheck.notNull(title, "title");
+	requireNonNull(value, "value can't be null");
+	requireNonNull(type, "type can't be null");
+	requireNonNull(addr, "addr can't be null");
+	requireNonNull(title, "title can't be null");
 	this.available = true;
 	this.value = value;
 	this.type = type;
@@ -85,7 +87,7 @@ public final class UniRefInfo implements Comparable
     static public String makeValue(String type, String addr)
     {
 	NullCheck.notEmpty(type, "type");
-	NullCheck.notNull(addr, "addr");
+	requireNonNull(addr, "addr can't be null");
 	if (type.indexOf(":") >= 0)
 	    throw new IllegalArgumentException("type (" + type + ") can't contain the ':' character");
 	final StringBuilder b = new StringBuilder();

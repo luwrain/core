@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.speech;
 
 import org.luwrain.core.*;
 import org.luwrain.i18n.*;
+import static java.util.Objects.*;
 
 public final class EventResponseSpeech implements EventResponse.Speech
 {
@@ -14,9 +15,9 @@ public final class EventResponseSpeech implements EventResponse.Speech
 
     public EventResponseSpeech(Speech speech, I18n i18n, SpeakingText speakableText)
     {
-	NullCheck.notNull(speech, "speech");
-	NullCheck.notNull(i18n, "i18n");
-	NullCheck.notNull(speakableText, "speakableText");
+	requireNonNull(speech, "speech can't be null");
+	requireNonNull(i18n, "i18n can't be null");
+	requireNonNull(speakableText, "speakableText can't be null");
 	this.speech = speech;
 	this.i18n = i18n;
 	this.speakableText = speakableText;

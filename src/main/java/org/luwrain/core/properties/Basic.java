@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.properties;
 
 import java.io.*;
 import java.util.*;
-
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 public final class Basic implements PropertiesProvider
 {
@@ -20,9 +20,9 @@ public final class Basic implements PropertiesProvider
 	 File userDataDir,
 	 File userHomeDir)
     {
-	NullCheck.notNull(dataDir, "dataDir");
-	NullCheck.notNull(userDataDir, "userDataDir");
-	NullCheck.notNull(userHomeDir, "userHomeDir");
+	requireNonNull(dataDir, "dataDir can't be null");
+	requireNonNull(userDataDir, "userDataDir can't be null");
+	requireNonNull(userHomeDir, "userHomeDir can't be null");
 	this.dataDir = dataDir;
 	this.userDataDir = userDataDir;
 	this.userHomeDir = userHomeDir;
@@ -50,7 +50,7 @@ public final class Basic implements PropertiesProvider
 
     @Override public String getProperty(String propName)
     {
-	NullCheck.notNull(propName, "propName");
+	requireNonNull(propName, "propName can't be null");
 	switch(propName)
 	{
 	case "luwrain.dir.userhome":
@@ -81,7 +81,7 @@ public final class Basic implements PropertiesProvider
     @Override public boolean setProperty(String propName, String value)
     {
 	NullCheck.notEmpty(propName, "propName");
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	return false;
     }
 

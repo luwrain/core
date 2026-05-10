@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.util.*;
+import static java.util.Objects.*;
 
 import org.luwrain.controls.ControlContext;
 
@@ -16,13 +17,13 @@ public final class UniRefUtils
         static public String makeUniRef(String component, String addr)
     {
 	NullCheck.notEmpty(component, "component");
-	NullCheck.notNull(addr, "addr");
+	requireNonNull(addr, "addr can't be null");
 	return component + ":" + addr;
     }
 
     static public UniRefInfo make(String str)
     {
-	NullCheck.notNull(str, "str");
+	requireNonNull(str, "str can't be null");
 	final String text = str.trim();
 	if (text.isEmpty())
 	    return new UniRefInfo(UniRefInfo.makeValue(UniRefProcs.TYPE_EMPTY, ""), UniRefProcs.TYPE_EMPTY, "", "");
@@ -31,22 +32,22 @@ public final class UniRefUtils
 
     static public UniRefInfo make(java.io.File file)
     {
-	NullCheck.notNull(file, "file");
+	requireNonNull(file, "file can't be null");
 	final String path = file.getAbsolutePath();
 	return new UniRefInfo(UniRefInfo.makeValue(FILE, path), FILE, path, file.getName());
     }
 
     static public UniRefInfo make(java.net.URL url)
     {
-	NullCheck.notNull(url, "url");
+	requireNonNull(url, "url can't be null");
 	final String addr = url.toString();
 	return new UniRefInfo(UniRefInfo.makeValue(UniRefProcs.TYPE_URL, addr), UniRefProcs.TYPE_URL, addr, addr);
     }
 
     static public UniRefInfo make(Luwrain luwrain, Object obj)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(obj, "obj");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(obj, "obj can't be null");
 	if (obj instanceof UniRefInfo)
 	    return (UniRefInfo)obj;
 	if (obj instanceof java.io.File)
@@ -64,7 +65,7 @@ public final class UniRefUtils
 
     static public UniRefInfo[] make(Luwrain luwrain, Object[] objs)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNullItems(objs, "objs");
 	final List<UniRefInfo> res = new ArrayList<>();
 	for(Object o: objs)
@@ -78,8 +79,8 @@ public final class UniRefUtils
 
     static public void defaultAnnouncement(ControlContext context, UniRefInfo info, Sounds defaultSound, Suggestions clickableSuggestion)
     {
-	NullCheck.notNull(context, "context");
-	NullCheck.notNull(info, "info");
+	requireNonNull(context, "context can't be null");
+	requireNonNull(info, "info can't be null");
 	if (!info.isAvailable())
 	{
 	    context.setEventResponse(DefaultEventResponse.listItem(defaultSound != null?defaultSound:Sounds.LIST_ITEM, getDefaultAnnouncementText(context, info), null));
@@ -104,8 +105,8 @@ public final class UniRefUtils
 
     static public String getDefaultAnnouncementText(ControlContext context, UniRefInfo uniRefInfo)
     {
-	NullCheck.notNull(context, "context");
-	NullCheck.notNull(uniRefInfo, "uniRefInfo");
+	requireNonNull(context, "context can't be null");
+	requireNonNull(uniRefInfo, "uniRefInfo can't be null");
 	if (!uniRefInfo.isAvailable())
 	    return context.getSpeakableText(uniRefInfo.getValue(), Luwrain.SpeakableTextType.NATURAL);
 	switch(uniRefInfo.getType())
@@ -121,14 +122,14 @@ public final class UniRefUtils
     static public String makeAlias(String title, String uniRef)
     {
 	NullCheck.notEmpty(title, "title");
-	NullCheck.notNull(uniRef, "uniRef");
+	requireNonNull(uniRef, "uniRef can't be null");
 	return ALIAS + ":" + title.replaceAll(":", "\\\\:") + ":" + uniRef;
     }
 
 
     static boolean isAlias(String uniref)
     {
-	NullCheck.notNull(uniref, "uniref");
+	requireNonNull(uniref, "uniref can't be null");
 	if (uniref.isEmpty())
 	    return false;
 	return uniref.startsWith(ALIAS + ":");
@@ -136,7 +137,7 @@ public final class UniRefUtils
 
     static private int findAliasDelim(String aliasBody)
     {
-	NullCheck.notNull(aliasBody, "aliasBody");
+	requireNonNull(aliasBody, "aliasBody can't be null");
 	int delim = 0;
 	while(delim < aliasBody.length() &&
 	      (aliasBody.charAt(delim) != ':' || (delim > 0 && aliasBody.charAt(delim - 1) == '\\')))

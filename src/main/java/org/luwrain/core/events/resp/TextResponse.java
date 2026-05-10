@@ -26,9 +26,9 @@ public class TextResponse implements EventResponse
 
     @Override public void announce(Luwrain luwrain, Speech speech, CommonSettings sett)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(speech, "speech");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(speech, "speech can't be null");
 	luwrain.playSound(sound);
 	if (!text.trim().isEmpty())
 	    speech.speak(new String[]{text});

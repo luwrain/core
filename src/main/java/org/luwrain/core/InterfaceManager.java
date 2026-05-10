@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.util.*;
-
-import static org.luwrain.core.NullCheck.*;
+import static java.util.Objects.*;
 
 final class InterfaceManager
 {
@@ -15,14 +14,14 @@ final class InterfaceManager
 
     InterfaceManager(Base base)
     {
-	notNull(base, "base");
+	requireNonNull(base, "base can't be null");
 		this.core = (Core)base;
 	this.systemObj = new LuwrainImpl(this.core);
     }
 
     Luwrain requestNew(Application app)
     {
-	notNull(app, "app");
+	requireNonNull(app, "app can't be null");
 	final Luwrain existing = findFor(app);
 	if (existing != null)
 	    return existing;
@@ -33,7 +32,7 @@ final class InterfaceManager
 
     Luwrain requestNew(Extension ext)
     {
-	notNull(ext, "ext");
+	requireNonNull(ext, "ext can't be null");
 	final Luwrain existing = findFor(ext);
 	if (existing != null)
 	    return existing;
@@ -44,7 +43,7 @@ final class InterfaceManager
 
     private Luwrain findFor(Object obj)
     {
-	notNull(obj, "obj");
+	requireNonNull(obj, "obj can't be null");
 	for(Entry e:entries)
 	    if (e.obj == obj)
 		return e.luwrain;
@@ -53,7 +52,7 @@ final class InterfaceManager
 
     Application findApp(Luwrain luwrain)
     {
-	notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	for(Entry e: entries)
 	    if (e.luwrain == luwrain &&
 		e.type == Entry.Type.APP &&
@@ -64,7 +63,7 @@ final class InterfaceManager
 
     Extension findExt(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	for(Entry e: entries)
 	    if (e.luwrain == luwrain &&
 		e.type == Entry.Type.EXT &&
@@ -75,7 +74,7 @@ final class InterfaceManager
 
 void release(Luwrain luwrain)
     {
-	notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	for(int i = 0;i < entries.size();i++)
 	    if (entries.get(i).luwrain == luwrain)
 	    {
@@ -86,7 +85,7 @@ void release(Luwrain luwrain)
 
     boolean forPopupsWithoutApp(Luwrain luwrain)
     {
-	notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	return luwrain == systemObj || findExt(luwrain) != null;
     }
 
@@ -98,9 +97,9 @@ void release(Luwrain luwrain)
 	final Luwrain luwrain;
 	Entry(Type type, Object obj, Luwrain luwrain)
 	{
-	    notNull(type, "type");
-	    notNull(obj, "obj");
-	    notNull(luwrain, "luwrain");
+	    requireNonNull(type, "type can't be null");
+	    requireNonNull(obj, "obj can't be null");
+	    requireNonNull(luwrain, "luwrain can't be null");
 	    this.type = type;
 	    this.obj = obj;
 	    this.luwrain = luwrain;

@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.queries;
 
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 public final class BeginListeningQuery extends AreaQuery
 {
@@ -16,7 +17,7 @@ public final class BeginListeningQuery extends AreaQuery
 
     public void answer(Answer answer)
     {
-	NullCheck.notNull(answer, "answer");
+	requireNonNull(answer, "answer can't be null");
 	secondAnswerCheck();
 	this.answer = answer;
 	answerTaken();
@@ -34,7 +35,7 @@ public final class BeginListeningQuery extends AreaQuery
 
 	public Answer(String text, Object extraInfo)
 	{
-	    NullCheck.notNull(text, "text");
+	    requireNonNull(text, "text can't be null");
 	    this.text = text;
 	    this.extraInfo = extraInfo;
 	}

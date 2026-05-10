@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.controls;
 
@@ -64,7 +64,7 @@ public interface ClipboardSaver<E>
 	    public final int itemIndex;
 	    public State(Type type)
 	    {
-		NullCheck.notNull(type, "type");
+		requireNonNull(type, "type can't be null");
 		this.type = type;
 		this.itemIndex = -1;
 	    }
@@ -108,7 +108,7 @@ public interface ClipboardSaver<E>
 
     public ListArea(Params<E> params)
     {
-	NullCheck.notNull(params, "params");
+	requireNonNull(params, "params can't be null");
 	NullCheck.notNull(params.context, "params.context");
 	NullCheck.notNull(params.model, "params.model");
 	NullCheck.notNull(params.appearance, "params.appearance");
@@ -184,7 +184,7 @@ public interface ClipboardSaver<E>
      */
     public boolean select(E obj, boolean announce)
     {
-	NullCheck.notNull(obj, "obj");
+	requireNonNull(obj, "obj can't be null");
 	for(int i = 0;i < listModel.getItemCount();++i)
 	{
 	    final E o = listModel.getItem(i);
@@ -537,13 +537,13 @@ public interface ClipboardSaver<E>
 
     @Override public String getAreaName()
     {
-	NullCheck.notNull(areaName, "areaName");
+	requireNonNull(areaName, "areaName can't be null");
 	return areaName;
     }
 
     public void setAreaName(String areaName)
     {
-	NullCheck.notNull(areaName, "areaName");
+	requireNonNull(areaName, "areaName can't be null");
 	this.areaName = areaName;
 	context.onAreaNewName(this);
     }
@@ -630,7 +630,7 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 
     protected boolean onBeginListeningQuery(BeginListeningQuery query)
     {
-	NullCheck.notNull(query, "query");
+	requireNonNull(query, "query can't be null");
 	final int index = selectedIndex();
 	if (index < 0)
 	    return false;
@@ -735,8 +735,8 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 
     protected boolean onTransition(Transition.Type type, Hint hint, boolean briefAnnouncement)
     {
-	NullCheck.notNull(type, "type");
-	NullCheck.notNull(hint, "hint");
+	requireNonNull(type, "type can't be null");
+	requireNonNull(hint, "hint can't be null");
 	if (noContent())
 	    return true;
 	final int index = selectedIndex();
@@ -752,7 +752,7 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 		    return false;
 	final Transition.State newState = listTransition.transition(type, current, count,
 								    listFlags.contains(Flags.EMPTY_LINE_TOP), listFlags.contains(Flags.EMPTY_LINE_BOTTOM));
-	NullCheck.notNull(newState, "newState");
+	requireNonNull(newState, "newState can't be null");
 	switch(newState.type)
 	{
 	case NO_TRANSITION:
@@ -848,7 +848,7 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	    return true;
 	}
 	final String line = listAppearance.getScreenAppearance(item, NONE_APPEARANCE_FLAGS);
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	if (line.isEmpty())
 	{
 	    context.setEventResponse(DefaultEventResponse.hint(Hint.EMPTY_LINE));
@@ -923,7 +923,7 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	    return true;
 	}
 	final String line = listAppearance.getScreenAppearance(item, NONE_APPEARANCE_FLAGS);
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	hotPointX = listAppearance.getObservableRightBound(item);
 	context.setEventResponse(DefaultEventResponse.hint(Hint.LINE_BOUND));
 	context.onAreaNewHotPoint(this);
@@ -941,7 +941,7 @@ final int rightBound = listAppearance.getObservableRightBound(item);
 	    return true;
 	}
 	final String line = listAppearance.getScreenAppearance(item, NONE_APPEARANCE_FLAGS);
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	hotPointX = listAppearance.getObservableLeftBound(item);
 	announceChar(line, hotPointX, listAppearance.getObservableRightBound(item));
 	context.onAreaNewHotPoint(this);
@@ -1077,9 +1077,9 @@ return listClipboardSaver.saveToClipboard(this, listModel, listAppearance, model
 
     protected String getObservableSubstr(E item)
     {
-	NullCheck.notNull(item, "item");
+	requireNonNull(item, "item can't be null");
 final String line = listAppearance.getScreenAppearance(item, NONE_APPEARANCE_FLAGS);
-NullCheck.notNull(line, "line");
+requireNonNull(line, "line can't be null");
 if (line.isEmpty())
 return "";
 final int leftBound = Math.min(listAppearance.getObservableLeftBound(item), line.length());
@@ -1096,7 +1096,7 @@ return line.substring(leftBound, rightBound);
 
     protected void announceChar(String  line, int pos, int rightBound)
     {
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	if (pos < rightBound)
 	    context.setEventResponse(DefaultEventResponse.letter(line.charAt(pos))); else
 	    context.setEventResponse(DefaultEventResponse.hint(Hint.LINE_BOUND));

@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.lang.reflect.*;
+import static java.util.Objects.*;
 
 public final class RegistryProxy
 {
     @SuppressWarnings("unchecked") static public <T> T create(Registry registry, String regDir, Class<T> cl)
     {
-	NullCheck.notNull(registry, "registry");
-	NullCheck.notNull(regDir, "regDir");
+	requireNonNull(registry, "registry can't be null");
+	requireNonNull(regDir, "regDir can't be null");
 	return (T)Proxy.newProxyInstance(cl.getClassLoader(), new Class[]{cl},
 					  (object, method, args)->{
 					      final String name = method.getName();

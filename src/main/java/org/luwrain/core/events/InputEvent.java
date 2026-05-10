@@ -60,7 +60,7 @@ public final class InputEvent extends Event
 			 boolean shiftPressed, boolean controlPressed,
 			 boolean altPressed)
     {
-	NullCheck.notNull(special, "special");
+	requireNonNull(special, "special can't be null");
 	this.isSpecial = true;
 	this.special = special;
 	this.nonSpecialChar = '\0';
@@ -204,7 +204,7 @@ public final class InputEvent extends Event
 
     static public Special translateSpecial(String value)
     {
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	if (value.trim().isEmpty())
 	    throw new IllegalArgumentException("value may not be empty");
 	switch(value.trim().toLowerCase())

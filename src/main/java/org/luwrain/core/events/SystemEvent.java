@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.events;
 
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 /**
  * An event addressed to one or several areas and not related to user
@@ -78,7 +79,7 @@ public class SystemEvent extends Event
 
     public SystemEvent(Code code)
     {
-	NullCheck.notNull(code, "code");
+	requireNonNull(code, "code can't be null");
 	this.type = Type.REGULAR;
 	this.code = code;
 	this.broadcastFilterAreaClassName = null;
@@ -87,8 +88,8 @@ public class SystemEvent extends Event
 
     public SystemEvent(Type type, Code code)
     {
-	NullCheck.notNull(type, "type");
-	NullCheck.notNull(code, "code");
+	requireNonNull(type, "type can't be null");
+	requireNonNull(code, "code can't be null");
 	this.type = type;
 	this.code = code;
 	this.broadcastFilterAreaClassName = null;
@@ -98,8 +99,8 @@ public class SystemEvent extends Event
     public SystemEvent(Type type, Code code,
 			    String broadcastFilterAreaClassName, String broadcastFilterUniRef)
     {
-	NullCheck.notNull(type, "type");
-	NullCheck.notNull(code, "code");
+	requireNonNull(type, "type can't be null");
+	requireNonNull(code, "code can't be null");
 	this.type = type;
 	this.code = code;
 	this.broadcastFilterAreaClassName = broadcastFilterAreaClassName;

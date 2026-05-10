@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.util.*;
+import static java.util.Objects.*;
 
 public final class CmdLine
 {
@@ -17,7 +18,7 @@ public final class CmdLine
 
     public boolean used(String option)
     {
-	NullCheck.notNull(option, "option");
+	requireNonNull(option, "option can't be null");
 	for(String s: cmdLine)
 	    if (s.equals(option))
 		return true;
@@ -38,7 +39,7 @@ public final class CmdLine
 
     public String[] getArgs(String prefix)
     {
-	NullCheck.notNull(prefix, "prefix");
+	requireNonNull(prefix, "prefix can't be null");
 		final List<String> res = new ArrayList<>();
 	for(String s: cmdLine)
 	{

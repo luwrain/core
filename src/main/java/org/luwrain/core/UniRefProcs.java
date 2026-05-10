@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.io.*;
-
 import org.luwrain.util.*;
+import static java.util.Objects.*;
 
 public final class UniRefProcs
 {
@@ -20,7 +20,7 @@ public final class UniRefProcs
 
     static UniRefProc[] createStandardUniRefProcs(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	return new UniRefProc[]{
 
 	    //file
@@ -39,7 +39,7 @@ public final class UniRefProcs
 		@Override public boolean openUniRef(String uniRef, Luwrain luwrain)
 		{
 		    NullCheck.notEmpty(uniRef, "uniRef");
-		    NullCheck.notNull(luwrain, "luwrain");
+		    requireNonNull(luwrain, "luwrain can't be null");
 		    if (!uniRef.startsWith(PREFIX))
 			return false;
 		    luwrain.openFile(uniRef.substring(PREFIX.length()));
@@ -64,7 +64,7 @@ public final class UniRefProcs
 		@Override public boolean openUniRef(String uniRef, Luwrain luwrain)
 		{
 		    NullCheck.notEmpty(uniRef, "uniRef");
-		    NullCheck.notNull(luwrain, "luwrain");
+		    requireNonNull(luwrain, "luwrain can't be null");
 		    if (!uniRef.startsWith(PREFIX))
 			return false;
 		    luwrain.launchApp("reader", new String[]{uniRef.substring(PREFIX.length())});
@@ -143,7 +143,7 @@ public final class UniRefProcs
 		}
 		@Override public UniRefInfo getUniRefInfo(String uniRef)
 		{
-		    NullCheck.notNull(uniRef, "uniRef");
+		    requireNonNull(uniRef, "uniRef can't be null");
 		    final String prefix = TYPE_COMMAND + ":";
 		    if (!uniRef.startsWith(prefix))
 			return null;
@@ -169,7 +169,7 @@ public final class UniRefProcs
 		}
 		@Override public UniRefInfo getUniRefInfo(String uniRef)
 		{
-		    NullCheck.notNull(uniRef, "uniRef");
+		    requireNonNull(uniRef, "uniRef can't be null");
 		    		final String prefix = TYPE_ALIAS + ":";
 		    if (!uniRef.startsWith(prefix))
 			return null;
@@ -183,8 +183,8 @@ public final class UniRefProcs
 		}
 		@Override public boolean openUniRef(String uniRef, Luwrain luwrain)
 		{
-		    NullCheck.notNull(uniRef, "uniRef");
-		    NullCheck.notNull(luwrain, "luwrain");
+		    requireNonNull(uniRef, "uniRef can't be null");
+		    requireNonNull(luwrain, "luwrain can't be null");
 		    		    		final String prefix = TYPE_ALIAS + ":";
 		    if (!uniRef.startsWith(prefix))
 			return false;
@@ -201,7 +201,7 @@ public final class UniRefProcs
 		}
 		private int findDelim(String str)
 		{
-		    NullCheck.notNull(str, "str");
+		    requireNonNull(str, "str can't be null");
 		    int delim = 0;
 		    while(delim < str.length() &&
 			  (str.charAt(delim) != ':' || (delim > 0 && str.charAt(delim - 1) == '\\')))

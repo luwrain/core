@@ -5,8 +5,8 @@ package org.luwrain.core.properties;
 
 import java.io.*;
 import java.util.*;
-
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 public final class PropertiesFiles implements PropertiesProvider
 {
@@ -17,7 +17,7 @@ public final class PropertiesFiles implements PropertiesProvider
 
     public void load(File propsDir)
     {
-	NullCheck.notNull(propsDir, "propsDir");
+	requireNonNull(propsDir, "propsDir can't be null");
 	final File[] systemPropertiesFiles = propsDir.listFiles();
 	if (systemPropertiesFiles != null)
 	    for (File f: systemPropertiesFiles)
@@ -49,7 +49,7 @@ return props.getProperty(propName);
     @Override public boolean setProperty(String propName, String value)
     {
 	NullCheck.notEmpty(propName, "propName");
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	return false;
     }
 
@@ -60,7 +60,7 @@ return props.getProperty(propName);
 
     private void readProps(File file)
     {
-	NullCheck.notNull(file, "file");
+	requireNonNull(file, "file can't be null");
 	if (file.isDirectory() || !file.getName().endsWith(".properties"))
 	    return;
 	try {

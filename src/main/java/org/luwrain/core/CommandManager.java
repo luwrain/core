@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.util.*;
+import static java.util.Objects.*;
 
 final class CommandManager
 {
@@ -11,8 +12,8 @@ final class CommandManager
 
     boolean add(Luwrain luwrain, Command command)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(command, "command");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(command, "command can't be null");
 	final String name = command.getName();
 	if (name == null || name.trim().isEmpty())
 	    return false;
@@ -50,7 +51,7 @@ final class CommandManager
 
     void deleteByInstance(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	final List<String> deleting = new ArrayList<>();
 		for(Map.Entry<String, Entry> e: commands.entrySet())
 		    if (e.getValue().luwrain == luwrain)
@@ -66,9 +67,9 @@ final class CommandManager
 	final Command command;
 	Entry(Luwrain luwrain, String name, Command command)
 	{
-	    NullCheck.notNull(luwrain, "luwrain ");
+	    requireNonNull(luwrain, "luwrain can't be null");
 	    NullCheck.notEmpty(name, "name");
-	    NullCheck.notNull(command, "command");
+	    requireNonNull(command, "command can't be null");
 	    this.luwrain = luwrain;
 	    this.name = name;
 	    this.command = command;

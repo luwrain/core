@@ -109,14 +109,14 @@ public final class WavePlayers
 
 	PlayerInstance(MediaResourcePlayer.Listener listener)
 	{
-	    NullCheck.notNull(listener, "listener");
+	    requireNonNull(listener, "listener can't be null");
 	    this.listener = listener;
 	}
 
 	@Override public MediaResourcePlayer.Result play(URL url, MediaResourcePlayer.Params params)
 	{
-	    NullCheck.notNull(url, "url");
-	    NullCheck.notNull(params, "params");
+	    requireNonNull(url, "url can't be null");
+	    requireNonNull(params, "params can't be null");
 	    NullCheck.notNull(params.flags, "params.flags");
 	    if (params.playFromMsec < 0)
 		throw new IllegalArgumentException("params.playFromMsec (" + params.playFromMsec + ") may not be negative");

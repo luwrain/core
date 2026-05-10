@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.util;
 
 import java.io.*;
 import java.util.*;
-
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 public final class Checks
 {
@@ -18,7 +18,7 @@ public final class Checks
 
     static public String detectLang(CmdLine cmdLine)
     {
-	NullCheck.notNull(cmdLine, "cmdLine");
+	requireNonNull(cmdLine, "cmdLine can't be null");
 	final String cmdLineArg = cmdLine.getFirstArg(CMDARG_LANG);
 	if (cmdLineArg != null)
 	    switch(cmdLineArg.trim().toLowerCase())

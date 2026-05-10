@@ -33,8 +33,8 @@ final class  Base
 
     static String getTextForHint(Luwrain luwrain, org.luwrain.core.Hint hint)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(hint, "hint");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(hint, "hint can't be null");
 	switch(hint)
 	{
 	case SPACES:
@@ -98,7 +98,7 @@ final class  Base
 
     static Sounds getSoundForHint(org.luwrain.core.Hint hint)
     {
-	NullCheck.notNull(hint, "hint");
+	requireNonNull(hint, "hint can't be null");
 	switch (hint)
 	{
 	case NO_ITEMS_ABOVE:

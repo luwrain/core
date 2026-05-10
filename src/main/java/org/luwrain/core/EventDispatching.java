@@ -102,7 +102,7 @@ return;
 
     private void onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	onBeforeEventProcessing();
 	if (systemHotKey(event))
 	    return;
@@ -154,7 +154,7 @@ return;
 
     private boolean systemHotKey(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	final String commandName = globalKeys.getCommandName(event);
 	if (commandName != null)
 	{
@@ -278,7 +278,7 @@ if (layout.get() != null)
 	final Runnable runnable;
 	RunnableEvent(Runnable runnable)
 	{
-	    NullCheck.notNull(runnable, "runnable");
+	    requireNonNull(runnable, "runnable can't be null");
 	    this.runnable = runnable;
 	}
     }
@@ -289,7 +289,7 @@ if (layout.get() != null)
 	private Object result = null;
 	CallableEvent(Callable callable)
 	{
-	    NullCheck.notNull(callable, "callable");
+	    requireNonNull(callable, "callable can't be null");
 	    this.callable = callable;
 	}
 	void setResult(Object result)

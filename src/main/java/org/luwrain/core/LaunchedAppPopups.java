@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.util.*;
 
-import static org.luwrain.core.NullCheck.*;
+import static java.util.Objects.*;
 
 class LaunchedAppPopups
 {
@@ -14,7 +14,7 @@ class LaunchedAppPopups
     //Returns the index of the new popup
     int addPopup(Area popup)
     {
-	NullCheck.notNull(popup, "popup");
+	requireNonNull(popup, "popup can't be null");
 	//	popups.add(popup);
 	final OpenedArea wrapping = new OpenedArea(popup);
 	popupWrappings.add(wrapping);
@@ -54,7 +54,7 @@ class LaunchedAppPopups
     */
     Area getCorrespondingFrontArea(Area area)
     {
-	notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	for(OpenedArea w: popupWrappings)
 	    if (w.hasArea(area))
 		return w.getFrontArea();
@@ -72,7 +72,7 @@ class LaunchedAppPopups
      */
     OpenedArea getAreaWrapping(Area area)
     {
-	notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	for(OpenedArea w: popupWrappings)
 	    if (w.hasArea(area))
 		return w;
@@ -81,7 +81,7 @@ class LaunchedAppPopups
 
         void sendBroadcastEvent(org.luwrain.core.events.SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	for(OpenedArea area: popupWrappings)
 	    area.area.onSystemEvent(event);
     }

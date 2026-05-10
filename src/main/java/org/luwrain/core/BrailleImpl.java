@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
+
+import static java.util.Objects.*;
 
 public final class BrailleImpl
 {
@@ -13,8 +15,8 @@ public final class BrailleImpl
     void init(Registry registry, Braille braille,
 	      EventConsumer eventConsumer)
     {
-	NullCheck.notNull(registry, "registry");
-	NullCheck.notNull(eventConsumer, "eventConsumer");
+	requireNonNull(registry, "registry can't be null");
+	requireNonNull(eventConsumer, "eventConsumer can't be null");
 	this.braille = braille;
 	if (braille == null)
 	{
@@ -39,7 +41,7 @@ public final class BrailleImpl
 
     void textToSpeak(String text)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	if (braille == null)
 	    return;
 	braille.writeText(text);

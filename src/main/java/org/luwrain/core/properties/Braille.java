@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.properties;
 
 import java.io.*;
 import java.util.*;
-
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 public final class Braille implements PropertiesProvider
 {
@@ -15,7 +15,7 @@ public final class Braille implements PropertiesProvider
 
     public Braille(org.luwrain.core.BrailleImpl braille)
     {
-	NullCheck.notNull(braille, "braille");
+	requireNonNull(braille, "braille can't be null");
 	this.braille = braille;
     }
 
@@ -57,7 +57,7 @@ public final class Braille implements PropertiesProvider
     @Override public boolean setProperty(String propName, String value)
     {
 	NullCheck.notEmpty(propName, "propName");
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	return false;
     }
 

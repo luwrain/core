@@ -112,7 +112,7 @@ private Map<String, String> parseParams(List<String> values)
     {
 	/*
 	NullCheck.notEmpty(engineName, "engineName");
-	NullCheck.notNull(paramsLine, "paramsLine");
+	requireNonNull(paramsLine, "paramsLine can't be null");
 	final Map<String, String> params = new HashMap<>();
 	if (!parseParams(paramsLine, params))
 	    return null;
@@ -138,7 +138,7 @@ private Map<String, String> parseParams(List<String> values)
     //Always cancels any previous text to speak
     public void speak(String text, int relPitch, int relRate)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	if (defaultChannel == null || text.isEmpty())
 	    return;
 	defaultChannel.speak(text, null, makePitch(relPitch), makeRate(relRate), true);
@@ -147,7 +147,7 @@ private Map<String, String> parseParams(List<String> values)
     //Always cancels any previous text to speak
     public void speakEventResponse(String text)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	if (defaultChannel == null || text.isEmpty())
 	    return;
 	defaultChannel.speak(text, null, makePitch(0), makeRate(0), true);

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.properties;
 
@@ -9,6 +9,8 @@ import java.util.*;
 import org.luwrain.core.*;
 import org.luwrain.speech.*;
 
+import static java.util.Objects.*;
+
 public final class Speech implements PropertiesProvider
 {
     private final org.luwrain.core.Speech speech;
@@ -16,7 +18,7 @@ public final class Speech implements PropertiesProvider
 
     public Speech(org.luwrain.core.Speech speech)
     {
-	NullCheck.notNull(speech, "speech");
+	requireNonNull(speech, "speech can't be null");
 	this.speech = speech;
     }
 
@@ -47,7 +49,7 @@ public final class Speech implements PropertiesProvider
     @Override public boolean setProperty(String propName, String value)
     {
 	NullCheck.notEmpty(propName, "propName");
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	return false;
     }
 

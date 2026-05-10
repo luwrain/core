@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import org.luwrain.core.queries.*;
+import static java.util.Objects.*;
 
 final class AreaText
 {
@@ -11,13 +12,13 @@ final class AreaText
 
     AreaText(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	this.area = area;
     }
 
     String get(Luwrain.AreaTextType type)
     {
-	NullCheck.notNull(type, "type");
+	requireNonNull(type, "type can't be null");
 	switch(type)
 	{
 	case WORD:

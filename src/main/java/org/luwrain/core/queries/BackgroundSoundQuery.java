@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core.queries;
 
 import java.nio.file.*;
 
 import org.luwrain.core.*;
+
+import static java.util.Objects.*;
 
 public final class BackgroundSoundQuery extends AreaQuery
 {
@@ -18,7 +20,7 @@ public final class BackgroundSoundQuery extends AreaQuery
 
     public void answer(Answer answer)
     {
-	NullCheck.notNull(answer, "answer");
+	requireNonNull(answer, "answer can't be null");
 	secondAnswerCheck();
 	this.answer = answer;
 	answerTaken();
@@ -42,7 +44,7 @@ public final class BackgroundSoundQuery extends AreaQuery
 
 	public Answer(BkgSounds bkgSound)
 	{
-	    NullCheck.notNull(bkgSound, "bkgSound");
+	    requireNonNull(bkgSound, "bkgSound can't be null");
 	    this.bkgSound = bkgSound;
 	    this.url = null;
 	}

@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.util.*;
 import java.io.*;
+
+import static java.util.Objects.*;
 
 public final class Standalone
 {
@@ -18,7 +20,7 @@ public final class Standalone
     public Standalone(String unixDataDirName, String winDataDirName)
     {
 	NullCheck.notEmpty(unixDataDirName, "unixDataDirName");
-	NullCheck.notNull(winDataDirName, "winDataDirName");
+	requireNonNull(winDataDirName, "winDataDirName can't be null");
 	standalone = STANDALONE.exists() && STANDALONE.isFile();
 	// Windows
 	if(System.getenv().containsKey(ENV_APP_DATA) && !System.getenv().get(ENV_APP_DATA).trim().isEmpty())

@@ -172,13 +172,13 @@ final class LuwrainImpl implements Luwrain
 
     @Override public void sendBroadcastEvent(SystemEvent e)
     {
-	NullCheck.notNull(e, "e");
+	requireNonNull(e, "e can't be null");
 	core.enqueueEvent(e);
     }
 
     @Override public void sendInputEvent(InputEvent e)
     {
-	NullCheck.notNull(e, "e");
+	requireNonNull(e, "e can't be null");
 	core.enqueueEvent(e);
     }
 
@@ -256,13 +256,13 @@ final class LuwrainImpl implements Luwrain
 
     @Override public void crash(org.luwrain.app.crash.App app)
     {
-	NullCheck.notNull(app, "app");
+	requireNonNull(app, "app can't be null");
 	runUiSafely(()->core.launchAppCrash(app));
     }
 
         @Override public void crash(Throwable e)
     {
-	NullCheck.notNull(e, "e");
+	requireNonNull(e, "e can't be null");
 	e.printStackTrace();
 	final Luwrain instance = this;
 	runUiSafely(()->core.launchAppCrash(this, e));
@@ -270,20 +270,20 @@ final class LuwrainImpl implements Luwrain
 
     @Override public void launchApp(String shortcutName)
     {
-	NullCheck.notNull(shortcutName, "shortcutName");
+	requireNonNull(shortcutName, "shortcutName can't be null");
 	runUiSafely(()->core.launchApp(shortcutName, new String[0]));
     }
 
     @Override public void launchApp(String shortcutName, String[] args)
     {
-	NullCheck.notNull(shortcutName, "shortcutName");
+	requireNonNull(shortcutName, "shortcutName can't be null");
 	NullCheck.notNullItems(args, "args");
 	runUiSafely(()->core.launchApp(shortcutName, args != null?args:new String[0]));
     }
 
     @Override public void message(String text)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	if (text.trim().isEmpty())
 	    return;
 	runUiSafely(()->{
@@ -294,8 +294,8 @@ final class LuwrainImpl implements Luwrain
 
     @Override public void message(String text, MessageType messageType)
     {
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(messageType, "messageType");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(messageType, "messageType can't be null");
 	if (text.trim().isEmpty())
 	    return;
 	runUiSafely(()->{
@@ -306,8 +306,8 @@ final class LuwrainImpl implements Luwrain
 
     @Override public void message(String text, Sounds sound)
     {
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(sound, "sound");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(sound, "sound can't be null");
 	if (text.trim().isEmpty())
 	    return;
 	runUiSafely(()->{
@@ -389,14 +389,14 @@ final class LuwrainImpl implements Luwrain
 
     @Override public int getAreaVisibleHeight(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	core.mainCoreThreadOnly();
 	return core.getAreaVisibleHeightIface(this, area);
     }
 
     @Override public int getAreaVisibleWidth(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	core.mainCoreThreadOnly();
 	return core.getAreaVisibleWidthIface(this, area);
     }
@@ -463,15 +463,15 @@ final class LuwrainImpl implements Luwrain
 
     @Override public String suggestContentType(java.net.URL url, ContentTypes.ExpectedType expectedType)
     {
-	NullCheck.notNull(url, "url");
-	NullCheck.notNull(expectedType, "expectedType");
+	requireNonNull(url, "url can't be null");
+	requireNonNull(expectedType, "expectedType can't be null");
 	return core.contentTypes.suggestContentType(url, expectedType);
     }
 
     @Override public String suggestContentType(java.io.File file, ContentTypes.ExpectedType expectedType)
     {
-	NullCheck.notNull(file, "file");
-	NullCheck.notNull(expectedType, "expectedType");
+	requireNonNull(file, "file can't be null");
+	requireNonNull(expectedType, "expectedType can't be null");
 	return core.contentTypes.suggestContentType(file, expectedType);
     }
 
@@ -483,7 +483,7 @@ final class LuwrainImpl implements Luwrain
 
         @Override public void playSound(File file)
     {
-	NullCheck.notNull(file, "file");
+	requireNonNull(file, "file can't be null");
 	runUiSafely(()->core.soundManager.playIcon(file));
     }
 
@@ -512,7 +512,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public boolean runCommand(String command)
     {
-	NullCheck.notNull(command, "command");
+	requireNonNull(command, "command can't be null");
 	core.mainCoreThreadOnly();
 	return core.runCommand(command);
     }
@@ -529,7 +529,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public void speak(String text)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	runUiSafely(()->{
 		core.braille.textToSpeak(text);
 		core.speech.speak(core.speakingText.processRegular(text), 0, 0);
@@ -538,8 +538,8 @@ final class LuwrainImpl implements Luwrain
 
     @Override public void speak(String text, Sounds sound)
     {
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(sound, "sound");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(sound, "sound can't be null");
 	runUiSafely(()->{
 		playSound(sound);
 		speak(text);
@@ -548,7 +548,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public void speak(String text, int pitch)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	runUiSafely(()->{
 		core.braille.textToSpeak(text);
 		core.speech.speak(core.speakingText.processRegular(text), pitch, 0);
@@ -557,7 +557,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public void speak(String text, int pitch, int rate)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	runUiSafely(()->core.speech.speak(core.speakingText.processRegular(text), pitch, rate));
     }
 
@@ -640,14 +640,14 @@ final class LuwrainImpl implements Luwrain
 
     @Override public String staticStr(LangStatic id)
     {
-	NullCheck.notNull(id, "id");
+	requireNonNull(id, "id can't be null");
 	core.mainCoreThreadOnly();
 	return i18n().staticStr(id);
     }
 
     @Override public UniRefInfo getUniRefInfo(String uniRef)
     {
-	NullCheck.notNull(uniRef, "uniRef");
+	requireNonNull(uniRef, "uniRef can't be null");
 	return core.uniRefProcs.getInfo(uniRef);
     }
 
@@ -660,7 +660,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public boolean openUniRef(UniRefInfo uniRefInfo)
     {
-	NullCheck.notNull(uniRefInfo, "uniRefInfo");
+	requireNonNull(uniRefInfo, "uniRefInfo can't be null");
 	core.mainCoreThreadOnly();
 	return core.uniRefProcs.open(uniRefInfo.getValue());
     }
@@ -683,7 +683,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public Object runLaterSync(Callable callable)
     {
-	NullCheck.notNull(callable, "callable");
+	requireNonNull(callable, "callable can't be null");
 	final Core.CallableEvent event = new Core.CallableEvent(callable);
 	core.enqueueEvent(event);
 	try {
@@ -699,7 +699,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public Object callUiSafely(Callable callable)
     {
-	NullCheck.notNull(callable, "callable");
+	requireNonNull(callable, "callable can't be null");
 	if (core.isMainCoreThread())
 	{
 	    try {
@@ -756,7 +756,7 @@ final class LuwrainImpl implements Luwrain
 					    OsCommand.Output output, OsCommand.Listener listener)
     {
 	NullCheck.notEmpty(cmd, "cmd");
-	NullCheck.notNull(dir, "dir");
+	requireNonNull(dir, "dir can't be null");
 	core.mainCoreThreadOnly();
 	return core.os.runOsCommand(cmd, (!dir.isEmpty())?dir:getFileProperty("luwrain.dir.userhome").getAbsolutePath(), output, listener);
     }
@@ -771,7 +771,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public void setEventResponse(EventResponse eventResponse)
     {
-	NullCheck.notNull(eventResponse, "eventResponse");
+	requireNonNull(eventResponse, "eventResponse can't be null");
 	core.mainCoreThreadOnly();
 	core.setEventResponse(eventResponse);
     }
@@ -796,7 +796,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public void executeBkg(Runnable runnable)
     {
-	NullCheck.notNull(runnable, "runnable");
+	requireNonNull(runnable, "runnable can't be null");
 	//FIXME:maintaining the registry of executed tasks with their associations to Luwrain objects
 	new Thread(()->{
 		try {
@@ -812,7 +812,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public boolean registerExtObj(ExtensionObject extObj)
     {
-	NullCheck.notNull(extObj, "extObj");
+	requireNonNull(extObj, "extObj can't be null");
 	core.mainCoreThreadOnly();
 	if (this != core.luwrain)
 	    throw new RuntimeException("registerExtObj() may be called only for privileged interfaces");
@@ -822,7 +822,7 @@ final class LuwrainImpl implements Luwrain
     @Override public org.luwrain.speech.Channel loadSpeechChannel(String engineName, String params) throws org.luwrain.speech.SpeechException
     {
 	NullCheck.notEmpty(engineName, "engineName");
-	NullCheck.notNull(params, "params");
+	requireNonNull(params, "params can't be null");
 	return core.speech.loadChannel(engineName, params);
     }
 
@@ -835,22 +835,22 @@ final class LuwrainImpl implements Luwrain
 
         @Override public String getSpeakableText(String text, SpeakableTextType type)
     {
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(type, "type");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(type, "type can't be null");
 	return core.i18n.getSpeakableText(text, type);
     }
 
         @Override public boolean runHooks(String hookName, HookRunner runner)
     {
 	NullCheck.notEmpty(hookName, "hookName");
-	NullCheck.notNull(runner, "runner");
+	requireNonNull(runner, "runner can't be null");
 	core.extensions.runHooks(hookName, runner);
 	return true;
     }
 
     @Override public void showGraphical(Interaction.GraphicalMode graphicalMode)
     {
-	NullCheck.notNull(graphicalMode, "graphicalMode");
+	requireNonNull(graphicalMode, "graphicalMode can't be null");
 	core.interaction.showGraphical(graphicalMode);
     }
 
@@ -870,7 +870,7 @@ final class LuwrainImpl implements Luwrain
     @Override public String escapeString(String style, String text)
     {
 	notNull(style, "style");
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	return core.os.escapeString(style, text);
     }
 
@@ -904,7 +904,7 @@ final class LuwrainImpl implements Luwrain
 
     static private String extractUrl(String uniRef)
     {
-	NullCheck.notNull(uniRef, "uniRef");
+	requireNonNull(uniRef, "uniRef can't be null");
 	if (!uniRef.startsWith("url:"))
 	    return null;
 	return uniRef.substring("url:".length());

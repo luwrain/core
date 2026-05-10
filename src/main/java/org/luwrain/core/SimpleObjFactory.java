@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.util.function.*;
+import static java.util.Objects.*;
 
 public class SimpleObjFactory implements ObjFactory
 {
@@ -14,8 +15,8 @@ protected final Supplier<Object> func;
     public SimpleObjFactory(String extName, String className, Supplier<Object> func)
     {
 	NullCheck.notEmpty(extName, "extName");
-	NullCheck.notNull(className, "className");
-NullCheck.notNull(func, "func");
+	requireNonNull(className, "className can't be null");
+requireNonNull(func, "func can't be null");
 	this.extName = extName;
 this.className = className;
 	this.func = func;

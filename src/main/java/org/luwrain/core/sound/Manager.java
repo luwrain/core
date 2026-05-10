@@ -124,7 +124,7 @@ this.configs = requireNonNull(configs, "configs can't be null");
 
     private String getFileUrl(String fileName)
     {
-	NullCheck.notNull(fileName, "fileName");
+	requireNonNull(fileName, "fileName can't be null");
 	if (fileName.isEmpty())
 	    return "";
 	Path path = Paths.get(fileName);

@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
+
+import static java.util.Objects.*;
 
 public final class ContentTypes
 {
@@ -14,7 +16,7 @@ public final class ContentTypes
     static public final String UNKNOWN = "content/unknown";
     static public boolean isUnknown(String value)
     {
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	return value.trim().toLowerCase().equals(UNKNOWN.trim().toLowerCase());
     }
 
@@ -61,7 +63,7 @@ public final class ContentTypes
     }
     static public boolean isAppDoc(String value)
     {
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	final String v = value.trim().toLowerCase();
 	for(String s: APP_DOC)
 	    if (s.trim().toLowerCase().equals(v))
@@ -79,7 +81,7 @@ public final class ContentTypes
     }
     static public boolean isAppDocX(String value)
     {
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	final String v = value.trim().toLowerCase();
 	for(String s: APP_DOCX)
 	    if (s.trim().toLowerCase().equals(v))
@@ -97,7 +99,7 @@ public final class ContentTypes
     }
     static public boolean isAppXlsX(String value)
     {
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	final String v = value.trim().toLowerCase();
 	for(String s: APP_XLSX)
 	    if (s.trim().toLowerCase().equals(v))

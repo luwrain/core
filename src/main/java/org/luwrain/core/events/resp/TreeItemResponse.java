@@ -23,8 +23,8 @@ public class TreeItemResponse implements EventResponse
 
     public TreeItemResponse(Type type, Sounds sound, String text, int level, Suggestions suggestion)
     {
-	NullCheck.notNull(type, "type");
-	NullCheck.notNull(text, "text");
+	requireNonNull(type, "type can't be null");
+	requireNonNull(text, "text can't be null");
 	this.type = type;
 	this.sound = sound;
 	this.text = text;
@@ -46,8 +46,8 @@ public class TreeItemResponse implements EventResponse
 
     @Override public void announce(Luwrain luwrain, Speech speech, CommonSettings sett)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(speech, "speech");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(speech, "speech can't be null");
 	if (sound != null)
 	    luwrain.playSound(sound); else
 	    switch(type)

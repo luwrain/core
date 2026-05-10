@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
@@ -7,6 +7,8 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.regex.*;
+
+import static java.util.Objects.*;
 
 //Must be thread-safe
 final class FileContentType
@@ -42,8 +44,8 @@ final class FileContentType
 
     String suggestContentType(File file, ContentTypes.ExpectedType expectedType)
     {
-	NullCheck.notNull(file, "file");
-	NullCheck.notNull(expectedType, "expectedType");
+	requireNonNull(file, "file can't be null");
+	requireNonNull(expectedType, "expectedType can't be null");
 	if (file.getAbsolutePath().isEmpty())
 	    return "";
 	final String res = find(file.getName());
@@ -62,8 +64,8 @@ final class FileContentType
 
     String suggestContentType(URL url, ContentTypes.ExpectedType expectedType)
     {
-	NullCheck.notNull(url, "url");
-	NullCheck.notNull(expectedType, "expectedType");
+	requireNonNull(url, "url can't be null");
+	requireNonNull(expectedType, "expectedType can't be null");
 	final String res = find(url.getFile());
 	if (!res.isEmpty())
 	    return res;
@@ -91,7 +93,7 @@ final class FileContentType
     static private boolean match(String pattern, String line)
     {
 	NullCheck.notEmpty(pattern, "pattern");
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	final Pattern pat = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
 	final Matcher matcher = pat.matcher(line);
 	return matcher.find();

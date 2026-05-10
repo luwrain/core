@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
@@ -12,6 +12,7 @@ import java.awt.datatransfer.DataFlavor;
 
 import com.google.gson.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.util.TextUtils.*;
 
 public final class Clipboard implements ClipboardOwner, java.util.function.Supplier<Object>
@@ -149,8 +150,8 @@ public final class Clipboard implements ClipboardOwner, java.util.function.Suppl
     @SuppressWarnings("unchecked")
     private <E> Obj saveObj(E o, String s)
     {
-	NullCheck.notNull(o, "o");
-	NullCheck.notNull(s, "s");
+	requireNonNull(o, "o can't be null");
+	requireNonNull(s, "s can't be null");
 	if (o instanceof String)
 	    return new Obj<String>(String.class, null, o.toString(), (String)o);
 	if (o instanceof java.net.URL)
@@ -167,7 +168,7 @@ public final class Clipboard implements ClipboardOwner, java.util.function.Suppl
 
     private <E> E restore(Obj<E> obj)
     {
-	NullCheck.notNull(obj, "obj");
+	requireNonNull(obj, "obj can't be null");
 	if (obj.obj != null)
 	    return obj.obj;
 	NullCheck.notNull(obj.content, "obj.content");
@@ -188,8 +189,8 @@ static private final class Obj<E>
     final E obj;
     Obj(Class<E> cl, String content, String str, E obj)
     {
-	NullCheck.notNull(cl, "cl");
-	NullCheck.notNull(str, "str");
+	requireNonNull(cl, "cl can't be null");
+	requireNonNull(str, "str can't be null");
 	this.cl = cl;
 	this.content = content;
 		this.str = str;

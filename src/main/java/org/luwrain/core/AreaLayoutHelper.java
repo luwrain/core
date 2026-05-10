@@ -24,22 +24,22 @@ public class AreaLayoutHelper
 
     public AreaLayoutHelper(UpdateNotification notification)
     {
-	NullCheck.notNull(notification, "notification");
+	requireNonNull(notification, "notification can't be null");
 	this.notification = notification;
     }
 
     public AreaLayoutHelper(UpdateNotification notification, Area basicArea)
     {
-	NullCheck.notNull(notification, "notification");
-	NullCheck.notNull(basicArea, "basicArea");
+	requireNonNull(notification, "notification can't be null");
+	requireNonNull(basicArea, "basicArea can't be null");
 	this.notification = notification;
 	this.basicArea = basicArea;
     }
 
     public AreaLayoutHelper(UpdateNotification notification, AreaLayout basicLayout)
     {
-	NullCheck.notNull(notification, "notification");
-	NullCheck.notNull(basicLayout, "basicLayout");
+	requireNonNull(notification, "notification can't be null");
+	requireNonNull(basicLayout, "basicLayout can't be null");
 	this.notification = notification;
 	this.basicLayout = basicLayout;
     }
@@ -69,8 +69,8 @@ public class AreaLayoutHelper
 
     public boolean openAdditionalArea(Area area, Position pos)
     {
-	NullCheck.notNull(area, "area");
-	NullCheck.notNull(pos, "pos");
+	requireNonNull(area, "area can't be null");
+	requireNonNull(pos, "pos can't be null");
 	if (basicLayout != null)
 	    return false;
 	additionalArea = area;
@@ -100,14 +100,14 @@ public class AreaLayoutHelper
 
     public void openTempArea(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	tempLayout = new AreaLayout(area);
 	notification.onLayoutUpdate();
     }
 
     public void openTempLayout(AreaLayout layout)
     {
-	NullCheck.notNull(layout, "layout");
+	requireNonNull(layout, "layout can't be null");
 	tempLayout = layout;
 	notification.onLayoutUpdate();
     }
@@ -152,9 +152,9 @@ public class AreaLayoutHelper
 
     static public boolean activateNextArea(Luwrain luwrain, AreaLayout layout, Area activeArea)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(layout, "layout");
-	NullCheck.notNull(activeArea, "activeArea");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(layout, "layout can't be null");
+	requireNonNull(activeArea, "activeArea can't be null");
 	final Area area = layout.getNextArea(activeArea);
 	if (area == null)
 	    return false;
@@ -164,9 +164,9 @@ public class AreaLayoutHelper
 
     static public boolean activatePrevArea(Luwrain luwrain, AreaLayout layout, Area activeArea)
     {
-	NullCheck.notNull(luwrain, "luwrain");
-	NullCheck.notNull(layout, "layout");
-	NullCheck.notNull(activeArea, "activeArea");
+	requireNonNull(luwrain, "luwrain can't be null");
+	requireNonNull(layout, "layout can't be null");
+	requireNonNull(activeArea, "activeArea can't be null");
 	final Area area = layout.getPrevArea(activeArea);
 	if (area == null)
 	    return false;

@@ -523,7 +523,7 @@ onNewAreasLayout();
     //May return -1
     int getAreaVisibleHeightIface(Luwrain instance, Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	mainCoreThreadOnly();
 	Area effectiveArea = null;
 	if (instance != null)
@@ -558,7 +558,7 @@ onNewAreasLayout();
     //May return -1
     int getAreaVisibleWidthIface(Luwrain instance, Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	mainCoreThreadOnly();
 	Area effectiveArea = null;
 	if (instance != null)
@@ -580,8 +580,8 @@ onNewAreasLayout();
 
     void message(String text, Luwrain.MessageType messageType)
     {
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(messageType, "messageType");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(messageType, "messageType can't be null");
 	mainCoreThreadOnly();
 	switch(messageType)
 	{

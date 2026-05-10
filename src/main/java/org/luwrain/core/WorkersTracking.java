@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Copyright 2012-2025 Michael Pozhidaev <msp@luwrain.org>
+// Copyright 2012-2026 Michael Pozhidaev <msp@luwrain.org>
 
 package org.luwrain.core;
 
 import java.util.*;
 import java.util.concurrent.*;
+
+import static java.util.Objects.*;
 
 class WorkersTracking 
 {
@@ -90,7 +92,7 @@ final Worker worker;
 Entry(String name, Worker worker)
 	{
 	    NullCheck.notEmpty(name, "name");
-	    NullCheck.notNull(worker, "worker");
+	    requireNonNull(worker, "worker can't be null");
 	    this.name = name;
 	    this.worker = worker;
 	}
