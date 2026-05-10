@@ -33,6 +33,11 @@ public final class Configs implements AutoCloseable
 this.mvMap = store.openMap("main");
     }
 
+    public synchronized List<String> getKeys()
+    {
+	return mvMap.keySet().stream().toList();
+    }
+
     public synchronized <E> E load(Class<E> cl)
     {
 	requireNonNull(cl, "cl can't be null");
@@ -46,6 +51,26 @@ this.mvMap = store.openMap("main");
     {
 	requireNonNull(obj, "obj can't be null");
 	mvMap.put(obj.getClass().getName(), gson.toJson(obj));
+        }
+
+        public synchronized <E> boolean delete(Class<E> cl)
+    {
+	requireNonNull(cl, "cl can't be null");
+	if (!mvMap.containsKey(cl.getName()))
+	    return false;
+	mvMap.remove(cl.getName());
+	return true;
+        }
+
+            public synchronized boolean delete(String clName)
+    {
+	requireNonNull(clName, "clName can't be null");
+	if (clName.trim().isEmpty())
+	    throw new IllegalArgumentException("clName can't be empty");
+	if (!mvMap.containsKey(clName))
+	    return false;
+	mvMap.remove(clName);
+	return true;
         }
 
     public synchronized <C> void update(Class<C> configClass, ConfigUpdate<C> func)

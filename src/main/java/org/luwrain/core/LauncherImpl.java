@@ -48,7 +48,7 @@ a = Args.parse(args);
 	    	    System.out.println("User data: " + userDataDir.getAbsolutePath());
 		    return;
 	}
-	new     Launch(a, appDir, dataDir, userDataDir, userHomeDir, a.lang != null?a.lang.trim():"en").run();
+	System.exit(new     Launch(a, appDir, dataDir, userDataDir, userHomeDir, a.lang != null?a.lang.trim():"en").run());
     }
 
     private File getDataDir(Args args, File appDir)

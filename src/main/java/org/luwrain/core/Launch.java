@@ -30,7 +30,7 @@ final class Launch
 	conf.setPacksDir(new File(userDataDir, "packs"));
 		conf.setUserVarDir(new File(userDataDir, "var"));
 	conf.setSoundsDir(new File(dataDir, "sounds"));
-	log.debug("starting LUWRAIN: Java " + System.getProperty("java.version") + " by " + System.getProperty("java.vendor") + " (installed in " + System.getProperty("java.home") + ")");
+	log.trace("starting LUWRAIN: Java " + System.getProperty("java.version") + " by " + System.getProperty("java.vendor") + " (installed in " + System.getProperty("java.home") + ")");
 	new JniLoader().autoload(this.getClass().getClassLoader());
 	if (lang.isEmpty())
 	{
@@ -43,12 +43,30 @@ final class Launch
 	conf.setCoreClassLoader(this.classLoader);
     }
 
-    void run()
+    int run()
     {
 	try {
-	    final Configs configs = new Configs(new File(conf.getUserDataDir(), "conf"));
+	    try (final Configs configs = new Configs(new File(conf.getUserDataDir(), "conf"))){
+
+	    if (args.printConfKeys)
+	    {
+		final var res = new ArrayList<String>(configs.getKeys());
+		Collections.sort(res);
+		res.forEach(e -> System.out.println(e));
+		return 0;
+	    }
+
+	    	    if (args.deleteConfKey != null)
+	    {
+		if (!configs.delete(args.deleteConfKey))
+		{
+		    System.err.println("ERROR: No configuration key: " + args.deleteConfKey);
+		    return 1;
+		}
+		return 0;
+	    }
+
 	    conf.setConfigs(configs);
-	    try {
 		try {
 		    initOs();
 		    conf.setOperatingSystem(os);
@@ -62,17 +80,14 @@ final class Launch
 			interaction.close();
 		}
 	    }
-	    finally {
-		configs.close();
-	    }
-	    System.exit(0);
+	    return 0;
 	}
 	catch(Throwable e)
 	{
 	    log.fatal("Fatal LUWRAIN error , exiting", e);
 	    System.err.println();
 	    System.err.println("FATAL: " + e.getMessage());
-	    System.exit(1);
+	    return 1;
 	}
     }
 

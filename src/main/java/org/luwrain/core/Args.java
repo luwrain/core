@@ -58,6 +58,18 @@ final class Args
 	       required = false)
 	boolean printDirs;
 
+        @Parameter(names = "--conf-keys",
+	       description = "Print configurations keys",
+	       required = false)
+	       boolean printConfKeys;
+
+            @Parameter(names = "--delete-conf-key",
+	       description = "Delete the configuration key",
+	       required = false)
+	       String deleteConfKey;
+
+
+
     @Parameter(names = {"-h", "--help"},
 	       description = "Print the help screen and exit",
 	       help = true,

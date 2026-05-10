@@ -15,6 +15,8 @@ final class GlobalKeys
     static final HotKey[] DEFAULT_KEYMAP = {
 	//Basic
 	cmd(Special.ENTER, Modifiers.CONTROL, "ok"),
+		cmd(Special.TAB, Modifiers.ALT, "switch-next-app"),
+				cmd('f', Modifiers.CONTROL, "search"),
 	cmd(Special.ENTER, Modifiers.SHIFT, "properties"),
 	cmd(Special.ESCAPE, Modifiers.CONTROL, "close"),
 
@@ -39,6 +41,8 @@ final class GlobalKeys
 
 		//Basic apps
 	cmd('j', Modifiers.SHIFT, Modifiers.ALT, "jobs"),
+		cmd('a', Modifiers.ALT, "ai"),
+				cmd('e', Modifiers.ALT, "notepad"),
 	cmd('p', Modifiers.SHIFT, Modifiers.ALT, "control-panel"),
 		cmd('f', Modifiers.ALT, "web"),
     };
