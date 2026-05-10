@@ -1,5 +1,5 @@
 /*
-   Copyright 2012-20255 Michael Pozhidaev <msp@luwrain.org>
+   Copyright 2012-20265 Michael Pozhidaev <msp@luwrain.org>
 
    This file is part of LUWRAIN.
 
