@@ -154,10 +154,15 @@ public final class Popups
     static public File path(Luwrain luwrain, String name, String prefix, File startFrom, FileAcceptance acceptance)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notEmpty(name, "name");
-	NullCheck.notEmpty(prefix, "prefix");
-	final FilePopup popup = new FilePopup(luwrain, name, prefix,
-					      acceptance, startFrom != null?startFrom:luwrain.getFileProperty(Luwrain.PROP_DIR_USERHOME), new File(luwrain.getDir("~")),
+		requireNonNull(name, "name can't be null");
+	if (name.isEmpty())
+	    throw new IllegalArgumentException("name can't be empty");
+		requireNonNull(prefix, "prefix can't be null");
+	if (prefix.isEmpty())
+	    throw new IllegalArgumentException("prefix can't be empty");
+	final FilePopup popup = new FilePopup(luwrain, name, prefix, acceptance,
+					      startFrom != null?startFrom:new File(luwrain.getPath("~")),
+					      new File(luwrain.getPath("~")),
 					      loadFilePopupFlags(luwrain), Popups.DEFAULT_POPUP_FLAGS){
 		@Override public boolean onInputEvent(InputEvent event)
 		{
@@ -212,7 +217,9 @@ public final class Popups
         static public File path(Luwrain luwrain, String name, String prefix, FileAcceptance acceptance)
     {
 	requireNonNull(luwrain, "luwrain can't be null");
-	NullCheck.notEmpty(name, "name");
+	requireNonNull(name, "name can't be null");
+	if (name.isEmpty())
+	    throw new IllegalArgumentException("name can't be empty");
 	requireNonNull(prefix, "prefix can't be null");
 		return path(luwrain, name, prefix, null, acceptance);
     }

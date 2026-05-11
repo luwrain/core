@@ -7,7 +7,6 @@ import java.util.*;
 import java.io.*;
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
-
 import static java.util.Objects.*;
 
 public class FilePopup extends EditListPopup
@@ -25,7 +24,7 @@ public class FilePopup extends EditListPopup
 	super(luwrain,
 	      new Model(defaultDir, flags .contains(Flags.SKIP_HIDDEN)), 
 	      name, prefix, getPathWithEndingSeparator(startFrom), popupFlags);
-	this.defaultDir = defaultDir;
+	this.defaultDir = requireNonNull(defaultDir, "defaultDir can't be null");
 	this.acceptance = acceptance;
 	if (!defaultDir.isDirectory())
 	    throw new IllegalArgumentException(defaultDir.getAbsolutePath() + " must address a directory");
@@ -58,7 +57,7 @@ public class FilePopup extends EditListPopup
     {
 	requireNonNull(file, "file can't be null");
 	final String str = file.toString();
-	//Checking if there is nothing to do
+	//Checking if str already has the separator on its end
 	if (str.endsWith(SEPARATOR))
 	    return str;
 	if (file.exists() && file.isDirectory())

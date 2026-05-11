@@ -216,7 +216,9 @@ final class LuwrainImpl implements Luwrain
     {
 	switch(requireNonNull(pathId, "pathId can't be null"))
 	{
-	case PATH_SYS_DATA_DIR:
+	case "~":
+	    	    return core.conf.getUserHomeDir().getAbsolutePath();
+		    	case PATH_SYS_DATA_DIR:
 	    return core.conf.getDataDir().getAbsolutePath();
 	    	case PATH_SYS_JS_DIR:
 	    return core.conf.getJsDir().getAbsolutePath();

@@ -9,7 +9,7 @@ import com.beust.jcommander.*;
 final class Args
 {
     @Parameter(names = {"-s", "--speech"},
-	       description = "Preferable speech engine",
+	       description = "Set the preferable speech engine",
 	       arity = 1,
 	       required = false)
 	String speech;
@@ -31,13 +31,13 @@ final class Args
 	List<String> defSpeechParams;
 
         @Parameter(names = "--lang",
-	       description = "Preferable language  of user interface",
+	       description = "Set the preferable language  of user interface",
 	       arity = 1,
 	       required = false)
 	String lang;
 
             @Parameter(names = "--os",
-	       description = "Preferable interface  to operating system",
+	       description = "Preferable interface  to the operating system",
 	       arity = 1,
 	       required = false)
 	String os;
