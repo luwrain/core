@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
+import org.apache.logging.log4j.*;
 
 import org.luwrain.core.events.*;
 import org.luwrain.core.queries.*;
@@ -17,10 +18,11 @@ import org.luwrain.script.core.MapScriptObject;
 
 import static java.util.Objects.*;
 import static org.luwrain.core.Base.*;
-//import static org.luwrain.core.NullCheck.*;
 
 final class Commands
 {
+    static private final Logger log = LogManager.getLogger();
+    
     static private final int
 	SPEECH_STEP = 5,
 	VOLUME_STEP = 5;
@@ -500,23 +502,35 @@ luwrain -> {
 								  luwrain.i18n().getStaticStr("RunPopupPrefix"), "", osCmdHistory);
 			if (cmd == null || cmd.trim().isEmpty())
 			    return;
+			log.trace("User is asking to run the command: {}", cmd);
 			final String dir;
 			final Area area = core.tiles.getActiveArea();
 			if (area != null)
 			{
-			    final CurrentDirQuery query = new CurrentDirQuery();
+			    log.trace("has the active area");
+			    final var query = new CurrentDirQuery();
 			    if (AreaQuery.ask(area, query))
-				dir = query.getAnswer(); else
+			    {
+				dir = query.getAnswer();
+				log.trace("Active area provided its current directory: {}, running {} in this directory", dir, cmd);
+			    }else
+			    {
 				dir = "";
+				log.trace("Active area refuses to provide its current directory");
+			    }
 			} else
+			{
 			    dir = "";
-			luwrain.newJob("sys", new String[]{ cmd.trim() }, "", EnumSet.noneOf(Luwrain.JobFlags.class), new EmptyJobListener(){
+			    log.trace("No active directory, running the command {} in the user's home directory", cmd);
+			}
+			luwrain.newJob("sys", new String[]{ cmd.trim() }, dir, EnumSet.noneOf(Luwrain.JobFlags.class), new EmptyJobListener(){
 				@Override public void onStatusChange(Job instance)
 				{
 				    if (instance.getStatus() != Job.Status.FINISHED)
 					return;
-				    final List<String> output = instance.getInfo("main");
+				    final var output = instance.getInfo("main");
 				    final String name = instance.getInstanceName();
+				    log.trace("Job instance {} finished with exit code {} and {} lines of the output", name, instance.getExitCode(), output.size());
 				    luwrain.runUiSafely(()->{
 					    //output can't be null
 					    if (output.size() >= 2)
