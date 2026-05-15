@@ -7,8 +7,9 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.cpanel.*;
+import static java.util.Objects.*;
 
-class HardwareCpuMem extends SimpleArea implements SectionArea
+final class HardwareCpuMem extends SimpleArea implements SectionArea
 {
     private final ControlPanel controlPanel;
     private final Luwrain luwrain;
@@ -16,7 +17,7 @@ class HardwareCpuMem extends SimpleArea implements SectionArea
     HardwareCpuMem(ControlPanel controlPanel)
     {
 	super(new DefaultControlContext(controlPanel.getCoreInterface()), "Процессор и память");
-	NullCheck.notNull(controlPanel, "controlPanel");
+	requireNonNull(controlPanel, "controlPanel can't be null");
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
 	fillData();
@@ -43,7 +44,7 @@ class HardwareCpuMem extends SimpleArea implements SectionArea
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (controlPanel.onInputEvent(event))
 	    return true;
 	return super.onInputEvent(event);
@@ -51,7 +52,7 @@ class HardwareCpuMem extends SimpleArea implements SectionArea
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (controlPanel.onSystemEvent(event))
 	    return true;
 	return super.onSystemEvent(event);
@@ -64,7 +65,7 @@ class HardwareCpuMem extends SimpleArea implements SectionArea
 
     static HardwareCpuMem create(ControlPanel controlPanel)
     {
-	NullCheck.notNull(controlPanel, "controlPanel");
+	requireNonNull(controlPanel, "controlPanel can't be null");
 	return new HardwareCpuMem(controlPanel);
     }
 }

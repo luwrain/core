@@ -12,7 +12,9 @@ import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.cpanel.*;
 
-class SoundSchemes extends ListArea<SoundSchemes.Item> implements SectionArea
+import static java.util.Objects.*;
+
+final class SoundSchemes extends ListArea<SoundSchemes.Item> implements SectionArea
 {
     static private final String SCHEMES_DIR = "sounds/schemes";
 
@@ -22,13 +24,13 @@ class SoundSchemes extends ListArea<SoundSchemes.Item> implements SectionArea
     SoundSchemes(ControlPanel controlPanel, ListArea.Params<Item> params)
     {
 	super(params);
-	NullCheck.notNull(controlPanel, "controlPanel");
+	requireNonNull(controlPanel, "controlPanel can't be null");
 	this.controlPanel = controlPanel;
     }
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (controlPanel.onInputEvent(event))
 	    return true;
 	return super.onInputEvent(event);
@@ -36,7 +38,7 @@ class SoundSchemes extends ListArea<SoundSchemes.Item> implements SectionArea
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (controlPanel.onSystemEvent(event))
 	    return true;
 	return super.onSystemEvent(event);
@@ -49,7 +51,7 @@ class SoundSchemes extends ListArea<SoundSchemes.Item> implements SectionArea
 
     static private Item[] loadItems(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	final List<Item> items = new ArrayList<>();
 	final List<Path> dirs = new ArrayList<>();
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(luwrain.getFileProperty("luwrain.dir.data").toPath().resolve(SCHEMES_DIR))) {
@@ -84,7 +86,7 @@ return items.toArray(new Item[items.size()]);
 
     static SoundSchemes create(ControlPanel controlPanel)
     {
-	NullCheck.notNull(controlPanel, "controlPanel");
+	requireNonNull(controlPanel, "controlPanel can't be null");
 	final Luwrain luwrain = controlPanel.getCoreInterface();
 	final ListArea.Params<Item> params = new ListArea.Params<>();
 	params.context = new DefaultControlContext(luwrain);
@@ -118,7 +120,7 @@ return items.toArray(new Item[items.size()]);
 	}
 	@Override public boolean onListClick(ListArea area, int index, Item item)
 	{
-	    NullCheck.notNull(item, "item");
+	    requireNonNull(item, "item can't be null");
 	    /*FIXME:newreg 	    final Settings.SoundScheme scheme = Settings.createCurrentSoundScheme(luwrain.getRegistry());
 	    Path path = item.path;
 	    if (path.startsWith(luwrain.getFileProperty("luwrain.dir.data").toPath()))

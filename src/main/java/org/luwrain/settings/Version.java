@@ -7,6 +7,7 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.cpanel.*;
+import static java.util.Objects.*;
 
 final class Version extends SimpleArea implements SectionArea
 {
@@ -16,7 +17,7 @@ final class Version extends SimpleArea implements SectionArea
     Version(ControlPanel controlPanel)
     {
 	super(new DefaultControlContext(controlPanel.getCoreInterface()), controlPanel.getCoreInterface().i18n().getStaticStr("CpVersion"));
-	NullCheck.notNull(controlPanel, "controlPanel");
+	requireNonNull(controlPanel, "controlPanel can't be null");
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
 	fillData();
@@ -42,7 +43,7 @@ final class Version extends SimpleArea implements SectionArea
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (controlPanel.onInputEvent(event))
 	    return true;
 	return super.onInputEvent(event);
@@ -50,7 +51,7 @@ final class Version extends SimpleArea implements SectionArea
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (controlPanel.onSystemEvent(event))
 	    return true;
 	return super.onSystemEvent(event);
@@ -63,7 +64,7 @@ final class Version extends SimpleArea implements SectionArea
 
     static Version create(ControlPanel controlPanel)
     {
-	NullCheck.notNull(controlPanel, "controlPanel");
+	requireNonNull(controlPanel, "controlPanel can't be null");
 	return new Version(controlPanel);
     }
 }

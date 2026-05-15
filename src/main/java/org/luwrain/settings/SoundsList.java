@@ -14,6 +14,8 @@ import org.luwrain.cpanel.*;
 import org.luwrain.player.*;
 import org.luwrain.util.*;
 
+import static java.util.Objects.*;
+
 final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea, ListArea.ClickHandler<SoundsList.Item>
 {
     static private final Sounds[] allSounds = new Sounds[]{
@@ -70,8 +72,8 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
     SoundsList(ControlPanel controlPanel, ListArea.Params<Item> params)
     {
 	super(params);
-	NullCheck.notNull(controlPanel, "controlPanel");
-	NullCheck.notNull(params, "params");
+	requireNonNull(controlPanel, "controlPanel can't be null");
+	requireNonNull(params, "params can't be null");
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
 	setListClickHandler(this);
@@ -79,7 +81,7 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
 
     @Override public boolean onListClick(ListArea area, int index, Item item)
     {
-	NullCheck.notNull(item, "item");
+	requireNonNull(item, "item can't be null");
 	final File file = Popups.existingFile(luwrain, luwrain.i18n().getStaticStr("CpSoundsListChangePopupName"));
 	if (file == null || file.isDirectory())
 	    return true;
@@ -111,7 +113,7 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (controlPanel.onInputEvent(event))
 	    return true;
 	if (!event.isSpecial() && !event.isModified())
@@ -125,7 +127,7 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (controlPanel.onSystemEvent(event))
 	    return true;
 	return super.onSystemEvent(event);
@@ -139,7 +141,7 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
     static private Item[] loadItems(Luwrain luwrain)
     {
 
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	//	final Registry registry = luwrain.getRegistry();
 	final List<Item> res = new ArrayList<>();
 		/* FIXME:newreg 
@@ -159,7 +161,7 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
 
     static SoundsList create(ControlPanel controlPanel)
     {
-	NullCheck.notNull(controlPanel, "controlPanel");
+	requireNonNull(controlPanel, "controlPanel can't be null");
 	final Luwrain luwrain = controlPanel.getCoreInterface();
 	final ListArea.Params<Item> params = new ListArea.Params<>();
 	params.context = new DefaultControlContext(luwrain);
@@ -171,7 +173,7 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
 
     static private String getI18nName(Sounds sound)
     {
-	NullCheck.notNull(sound, "sound");
+	requireNonNull(sound, "sound can't be null");
 	final StringBuilder b = new StringBuilder();
 	final String str = sound.toString();
 	boolean wasLetter = false;
@@ -191,7 +193,7 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
 
     static private String getRegistryPath(Sounds sound)
     {
-	NullCheck.notNull(sound, "sound");
+	requireNonNull(sound, "sound can't be null");
 	final String str = sound.toString();
 	return Registry.join(Settings.CURRENT_SOUND_SCHEME_PATH, str.toLowerCase().replaceAll("_", "-"));
     }
@@ -203,9 +205,9 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
 	File file;
 	Item(Sounds sound, String title, File file)
 	{
-	    NullCheck.notNull(sound, "sound");
-	    NullCheck.notNull(title, "title");
-	    NullCheck.notNull(file, "file");
+	    requireNonNull(sound, "sound can't be null");
+	    requireNonNull(title, "title can't be null");
+	    requireNonNull(file, "file can't be null");
 	    this.sound = sound;
 	    this.title = title;
 	    this.file = file;

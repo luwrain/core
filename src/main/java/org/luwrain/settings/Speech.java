@@ -9,33 +9,34 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.cpanel.*;
+import static java.util.Objects.*;
 
 final class Speech extends FormArea implements SectionArea
 {
     private final ControlPanel controlPanel;
     private final Luwrain luwrain;
-    private final Settings.SpeechParams sett;
+    private org.luwrain.io.json.Speech params;
 
     Speech(ControlPanel controlPanel, String name)
     {
 	super(new DefaultControlContext(controlPanel.getCoreInterface()), name);
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
-	this.sett = null;//FIXME:newreg Settings.createSpeechParams(luwrain.getRegistry());
-	addEdit("main-engine-name", luwrain.i18n().getStaticStr("CpSpeechMainEngineName"), sett.getMainEngineName(""));
-	addEdit("main-engine-params", luwrain.i18n().getStaticStr("CpSpeechMainEngineParams"), sett.getMainEngineParams(""));
-	addEdit("listening-engine-name", luwrain.i18n().getStaticStr("CpSpeechListeningEngineName"), sett.getListeningEngineName(""));
-	addEdit("listening-engine-params", luwrain.i18n().getStaticStr("CpSpeechListeningEngineParams"), sett.getListeningEngineParams(""));
-	addEdit("listening-pitch", luwrain.i18n().getStaticStr("CpSpeechListeningPitch"), "" + sett.getListeningPitch(50));
-	addEdit("listening-rate", luwrain.i18n().getStaticStr("CpSpeechListeningRate"), "" + sett.getListeningRate(50));
+	this.params = requireNonNullElse(luwrain.loadConf(org.luwrain.io.json.Speech.class), new org.luwrain.io.json.Speech());
+	addEdit("main-engine-name", luwrain.i18n().getStaticStr("CpSpeechMainEngineName"), requireNonNullElse(params.getMainEngineName(), ""));
+	addEdit("main-engine-params", luwrain.i18n().getStaticStr("CpSpeechMainEngineParams"), requireNonNullElse(params.getMainEngineParams(), ""));
+	addEdit("listening-engine-name", luwrain.i18n().getStaticStr("CpSpeechListeningEngineName"), requireNonNullElse(params.getListeningEngineName(), ""));
+	addEdit("listening-engine-params", luwrain.i18n().getStaticStr("CpSpeechListeningEngineParams"), requireNonNullElse(params.getListeningEngineParams(), ""));
+	addEdit("listening-pitch", luwrain.i18n().getStaticStr("CpSpeechListeningPitch"), "" + params.getListeningPitch());
+	addEdit("listening-rate", luwrain.i18n().getStaticStr("CpSpeechListeningRate"), "" + params.getListeningRate());
     }
 
     @Override public boolean saveSectionData()
     {
-	sett.setMainEngineName(getEnteredText("main-engine-name"));
-	sett.setMainEngineParams(getEnteredText("main-engine-params"));
-	sett.setListeningEngineName(getEnteredText("listening-engine-name"));
-	sett.setListeningEngineParams(getEnteredText("listening-engine-params"));
+	params.setMainEngineName(getEnteredText("main-engine-name"));
+	params.setMainEngineParams(getEnteredText("main-engine-params"));
+	params.setListeningEngineName(getEnteredText("listening-engine-name"));
+	params.setListeningEngineParams(getEnteredText("listening-engine-params"));
 	final int listeningPitch;
 	try {
 	    listeningPitch = Integer.parseInt(getEnteredText("listening-pitch"));
@@ -50,7 +51,7 @@ final class Speech extends FormArea implements SectionArea
 	    luwrain.message(luwrain.i18n().getStaticStr("CpSpeechInvalidListeningPitch"), Luwrain.MessageType.ERROR);
 	    return false;
 	}
-	sett.setListeningPitch(listeningPitch);
+	params.setListeningPitch(listeningPitch);
 	final int listeningRate;
 	try {
 	    listeningRate = Integer.parseInt(getEnteredText("listening-rate"));
@@ -65,7 +66,8 @@ final class Speech extends FormArea implements SectionArea
 	    luwrain.message(luwrain.i18n().getStaticStr("CpSpeechInvalidListeningRate"), Luwrain.MessageType.ERROR);
 	    return false;
 	}
-	sett.setListeningRate(listeningRate);
+	params.setListeningRate(listeningRate);
+	luwrain.saveConf(params);
 	return true;
     }
 
@@ -85,7 +87,7 @@ final class Speech extends FormArea implements SectionArea
 
     static Speech create(ControlPanel controlPanel)
     {
-	NullCheck.notNull(controlPanel, "controlPanel");
+	requireNonNull(controlPanel, "controlPanel can't be null");
 	final Luwrain luwrain = controlPanel.getCoreInterface();
 	return new Speech(controlPanel, luwrain.i18n().getStaticStr("CpSpeechGeneral"));
     }

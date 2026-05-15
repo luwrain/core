@@ -32,8 +32,8 @@ final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
     MainMenu(ControlPanel controlPanel, EditableListArea.Params<UniRefInfo> params)
     {
 	super(params);
-	NullCheck.notNull(controlPanel, "controlPanel");
-	NullCheck.notNull(params, "params");
+	requireNonNull(controlPanel, "controlPanel can't be null");
+	requireNonNull(params, "params can't be null");
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
 	//	this.sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
@@ -51,7 +51,7 @@ final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (controlPanel.onInputEvent(event))
 	    return true;
 	return super.onInputEvent(event);
@@ -59,7 +59,7 @@ final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (controlPanel.onSystemEvent(event))
 	    return true;
 	return super.onSystemEvent(event);
@@ -90,7 +90,7 @@ final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
 	params.model = new ListUtils.DefaultEditableModel<UniRefInfo>(UniRefInfo.class, uniRefs){
 		@Override public UniRefInfo adjust(Object o)
 		{
-		    NullCheck.notNull(o, "o");
+		    requireNonNull(o, "o can't be null");
 		    return UniRefUtils.make(luwrain, o);
 		}
 	    };
@@ -106,12 +106,12 @@ final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
 	Appearance(Luwrain luwrain) { super(new DefaultControlContext(luwrain)); }
 	@Override public boolean isSectionItem(UniRefInfo info)
 	{
-	    NullCheck.notNull(info, "info");
+	    requireNonNull(info, "info can't be null");
 	    return info.getType().equals(UniRefProcs.TYPE_SECTION);
 	}
 	@Override public String getSectionScreenAppearance(UniRefInfo info)
 	{
-	    NullCheck.notNull(info, "info");
+	    requireNonNull(info, "info can't be null");
 	    final String title = info.getTitle();
 	    if (!title.startsWith(STATIC_PREFIX))
 		return title;
@@ -119,7 +119,7 @@ final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
 	}
     	@Override public String getNonSectionScreenAppearance(UniRefInfo info)
 	{
-	    NullCheck.notNull(info, "info");
+	    requireNonNull(info, "info can't be null");
 	    final String title = info.getTitle();
 	    if (!title.startsWith(STATIC_PREFIX))
 		return title;
@@ -127,12 +127,12 @@ final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
 	}
 	@Override public void announceNonSection(UniRefInfo info)
 	{
-	    NullCheck.notNull(info, "info");
+	    requireNonNull(info, "info can't be null");
 	    context.setEventResponse(text(Sounds.DESKTOP_ITEM, context.getSpeakableText(getNonSectionScreenAppearance(info), Luwrain.SpeakableTextType.NATURAL)));
 	}
 	public void announceSection(UniRefInfo info)
 	{
-	    NullCheck.notNull(info, "info");
+	    requireNonNull(info, "info can't be null");
 	    context.setEventResponse(text(Sounds.DOC_SECTION, context.getSpeakableText(getNonSectionScreenAppearance(info), Luwrain.SpeakableTextType.NATURAL)));//FIXME:DefaultEventResponse.listItem()
 	}
     }

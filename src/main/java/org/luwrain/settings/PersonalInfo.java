@@ -7,8 +7,8 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.cpanel.*;
-//import org.luwrain.util.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.util.TextUtils.*;
 
 final class PersonalInfo extends FormArea implements SectionArea
@@ -21,7 +21,7 @@ final class PersonalInfo extends FormArea implements SectionArea
     PersonalInfo(ControlPanel controlPanel)
     {
 	super(new DefaultControlContext(controlPanel.getCoreInterface()), controlPanel.getCoreInterface().i18n().getStaticStr("CpPersonalInfoSection"));
-	NullCheck.notNull(controlPanel, "controlPanel");
+	requireNonNull(controlPanel, "controlPanel can't be null");
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
 	//	this.registry = luwrain.getRegistry();
@@ -48,7 +48,7 @@ fillForm();
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (controlPanel.onInputEvent(event))
 	    return true;
 	return super.onInputEvent(event);
@@ -56,7 +56,7 @@ fillForm();
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (controlPanel.onSystemEvent(event))
 	    return true;
 	return super.onSystemEvent(event);
