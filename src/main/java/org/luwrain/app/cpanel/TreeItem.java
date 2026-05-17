@@ -8,7 +8,9 @@ import java.util.*;
 import org.luwrain.core.NullCheck;
 import org.luwrain.cpanel.*;
 
-class TreeItem 
+import static java.util.Objects.*;
+
+final class TreeItem 
 {
     Element el;
     Factory factory;
@@ -18,8 +20,8 @@ class TreeItem
 
     TreeItem(Element el, Factory factory)
     {
-	NullCheck.notNull(el, "el");
-	NullCheck.notNull(factory, "factory");
+	requireNonNull(el, "el can't be null");
+	requireNonNull(factory, "factory can't be null");
 	this.el = el;
 	this.factory = factory;
     }

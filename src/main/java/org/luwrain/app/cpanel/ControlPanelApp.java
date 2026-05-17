@@ -10,18 +10,21 @@ import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.cpanel.*;
 
+import static java.util.Objects.*;
+
 public class ControlPanelApp implements Application, MonoApp, Actions
 {
     private Luwrain luwrain;
-    private Base base = null;
+    private Base base;
     private Strings strings;
     private ControlPanelImpl iface;
 
+        private TreeArea sectionsArea;
     private final Factory[] factories;
 
     private Section currentSection = null;
-    private TreeArea sectionsArea;
-    private SectionArea currentOptionsArea = null;
+    SectionArea currentOptionsArea = null;
+    AdditionalSectionArea additionalArea = null;
 
     public ControlPanelApp(Factory[] factories)
     {
@@ -31,7 +34,7 @@ public class ControlPanelApp implements Application, MonoApp, Actions
 
     @Override public InitResult onLaunchApp(Luwrain luwrain)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	final Object o = luwrain.i18n().getStrings(Strings.class.getName());
 	if (o == null || !(o instanceof Strings))
 	    return new InitResult(InitResult.Type.NO_STRINGS_OBJ, Strings.class.getName());
@@ -45,17 +48,17 @@ public class ControlPanelApp implements Application, MonoApp, Actions
 
     private void createArea()
     {
-	final TreeArea.Params treeParams = new TreeArea.Params();
+	final var treeParams = new TreeArea.Params();
 	treeParams.context = new DefaultControlContext(luwrain);
 	treeParams.model = base.getTreeModel();
 	treeParams.name = strings.sectionsAreaName();
 	treeParams.clickHandler = (area, obj)->openSection(obj);
-
+	
 	sectionsArea = new TreeArea(treeParams){
 
 		@Override public boolean onInputEvent(InputEvent event)
 		{
-		    NullCheck.notNull(event, "event");
+		    requireNonNull(event, "event can't be null");
 		    if (event.isSpecial() && !event.isModified())
 			switch (event.getSpecial())
 			{
@@ -70,7 +73,7 @@ public class ControlPanelApp implements Application, MonoApp, Actions
 
 		@Override public boolean onSystemEvent(SystemEvent event)
 		{
-		    NullCheck.notNull(event, "event");
+		    requireNonNull(event, "event can't be null");
 		    if (event.getType() != SystemEvent.Type.REGULAR)
 			return super.onSystemEvent(event);
 		    switch (event.getCode())
@@ -81,7 +84,7 @@ public class ControlPanelApp implements Application, MonoApp, Actions
 			closeApp();
 			return true;
 		    }
-		    return false;
+		    return super.onSystemEvent(event);
 		}
 		@Override public Action[] getAreaActions()
 		{
@@ -108,7 +111,7 @@ public class ControlPanelApp implements Application, MonoApp, Actions
 
     private boolean onTreeAction(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 		    final Object selected = sectionsArea.selected();
 		    if (selected == null || !(selected instanceof Section))
 			return false;
@@ -118,7 +121,7 @@ public class ControlPanelApp implements Application, MonoApp, Actions
 
     private  boolean openSection(Object obj)
     {
-	NullCheck.notNull(obj, "obj");
+	requireNonNull(obj, "obj can't be null");
 	if (!(obj instanceof Section))
 	    return false;
 	final Section sect = (Section)obj;
@@ -130,6 +133,7 @@ public class ControlPanelApp implements Application, MonoApp, Actions
 	    if (!currentOptionsArea.saveSectionData())
 		return true;
 	    currentOptionsArea = null;
+	    additionalArea = null;
 	    currentSection = null;
 	}
 	currentSection = sect;
@@ -144,7 +148,7 @@ public class ControlPanelApp implements Application, MonoApp, Actions
 	luwrain.setActiveArea(sectionsArea);
     }
 
-    private boolean gotoOptions()
+    boolean gotoOptions()
     {
 	if (currentSection == null || currentOptionsArea == null)
 	    return false;
@@ -155,7 +159,11 @@ public class ControlPanelApp implements Application, MonoApp, Actions
     @Override public AreaLayout getAreaLayout()
     {
 	if (currentSection != null && currentOptionsArea != null)
+	{
+	    if (additionalArea != null)
+		return new AreaLayout(AreaLayout.LEFT_TOP_BOTTOM, sectionsArea, currentOptionsArea, additionalArea);
 	    return new AreaLayout(AreaLayout.LEFT_RIGHT, sectionsArea, currentOptionsArea);
+	}
 	return new AreaLayout(sectionsArea);
     }
 
@@ -166,11 +174,11 @@ public class ControlPanelApp implements Application, MonoApp, Actions
 
     @Override public MonoApp.Result onMonoAppSecondInstance(Application app)
     {
-	NullCheck.notNull(app, "app");
+	requireNonNull(app, "app can't be null");
 	return MonoApp.Result.BRING_FOREGROUND;
     }
 
-    public void closeApp()
+    @Override public void closeApp()
     {
 	if (currentOptionsArea != null && !currentOptionsArea.saveSectionData())
 	    return;

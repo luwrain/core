@@ -14,4 +14,6 @@ public interface ControlPanel
     boolean onInputEvent(InputEvent event);
     void refreshSectionsTree();
     Luwrain getCoreInterface();
+    boolean openAdditionalSectionArea(SectionArea sectionArea, AdditionalSectionArea additionalArea);
+    boolean closeAdditionalSectionArea(SectionArea sectionArea);
 }

@@ -10,7 +10,9 @@ import org.luwrain.controls.*;
 import org.luwrain.cpanel.*;
 import org.luwrain.settings.StandardFactory;
 
-class Base
+import static java.util.Objects.*;
+
+final class Base
 {
     private final Luwrain luwrain;
     private final Factory[] factories;
@@ -21,7 +23,7 @@ class Base
 
     Base(Luwrain luwrain, Factory[] factories)
     {
-	NullCheck.notNull(luwrain, "luwrain");
+	requireNonNull(luwrain, "luwrain can't be null");
 	NullCheck.notNullItems(factories, "factories");
 	this.luwrain = luwrain;
 	this.standardFactory = new StandardFactory(luwrain);
@@ -89,7 +91,7 @@ treeItems);
 
     void addOnDemandElements(TreeItem treeItem)
     {
-	NullCheck.notNull(treeItem, "treeItem");
+	requireNonNull(treeItem, "treeItem can't be null");
 	if (treeItem.onDemandFilled)
 	    return;
 	final Element[] toAdd = treeItem.factory.getOnDemandElements(treeItem.el);

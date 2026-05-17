@@ -17,17 +17,45 @@ import static java.util.Objects.*;
 final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
 {
     private final ControlPanel controlPanel;
+    private final Luwrain luwrain;
 
     HotKeys(ControlPanel controlPanel, ListArea.Params<Item> params)
     {
 	super(params);
 	this.controlPanel = requireNonNull(controlPanel, "controlPanel can't be empty");
+	this.luwrain = controlPanel.getCoreInterface();
 	setListClickHandler((area, index, item)->editItem(item));
     }
 
     @Override public boolean saveSectionData()
     {
 	return true;
+    }
+
+    private boolean onInsert()
+    {
+	luwrain.message("Insert");
+	return true;
+    }
+
+    private boolean onDelete()
+    {
+		luwrain.message("Delete");
+	return true;
+    }
+
+        private boolean editItem(Item item)
+    {
+	return false;
+    }
+
+
+    @Override public Action[] getAreaActions()
+    {
+	return new Action[]{
+	    new Action("insert", "Insert", new InputEvent(InputEvent.Special.INSERT)),
+	    	    new Action("delete", "Delete", new InputEvent(InputEvent.Special.DELETE))
+	};
     }
 
     @Override public boolean onInputEvent(InputEvent event)
@@ -41,12 +69,15 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
     {
 	if (controlPanel.onSystemEvent(event))
 	    return true;
-	return super.onSystemEvent(event);
-    }
+	if (event.getType() == SystemEvent.Type.REGULAR && event.getCode() == SystemEvent.Code.ACTION)
+	{
+	    if (ActionEvent.isAction(event, "insert"))
+		return onInsert();
+	    	    if (ActionEvent.isAction(event, "delete"))
+		return onDelete();
+	}
 
-    private boolean editItem(Item item)
-    {
-	return false;
+	return super.onSystemEvent(event);
     }
 
     static private List<Item> loadItems(Luwrain luwrain)
@@ -73,12 +104,13 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
 
     static final class Item implements Comparable
     {
-	final String command, title;
-	final InputEvent event;
+	String command, title, script;
+	InputEvent event;
 
 	Item(Luwrain luwrain, HotKey hotKey)
 	{
 	    this.command = requireNonNullElse(hotKey.getCommand(), "");
+	    this.script = hotKey.getScript();
 	    this.event = hotKey.getInputEvent();
 	    this.title = luwrain.i18n().getCommandTitle(command);
 	}

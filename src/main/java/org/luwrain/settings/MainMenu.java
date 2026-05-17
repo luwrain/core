@@ -24,10 +24,8 @@ import static org.luwrain.core.DefaultEventResponse.*;
 
 final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
 {
-    //    private final Gson gson = new Gson();
     private final ControlPanel controlPanel;
     private final Luwrain luwrain;
-    //    private final CommonSettings sett;
 
     MainMenu(ControlPanel controlPanel, EditableListArea.Params<UniRefInfo> params)
     {
@@ -36,7 +34,6 @@ final class MainMenu extends EditableListArea<UniRefInfo> implements SectionArea
 	requireNonNull(params, "params can't be null");
 	this.controlPanel = controlPanel;
 	this.luwrain = controlPanel.getCoreInterface();
-	//	this.sett = null;//FIXME:newreg Settings.createUserInterface(luwrain.getRegistry());
     }
 
     @Override public boolean saveSectionData()
