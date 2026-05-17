@@ -23,6 +23,71 @@ public final class TextUtils
 	return Arrays.asList(splitLines(text));
     }
 
+    static public Integer parseIntInBounds(Luwrain luwrain,
+					   String str, int notLessThan, int notGreaterThan,
+					   String noTextMessage, String invalidFormatMessage,
+					   String tooSmallMessage, String tooLargeMessage)
+    {
+	if (str == null || str.trim().isEmpty())
+	{
+	    luwrain.message(noTextMessage, Luwrain.MessageType.ERROR);
+	    return null;
+	}
+	final int value;
+	try {
+	    value = Integer.parseInt(str.trim());
+	}
+	catch(NumberFormatException ex)
+	{
+	    luwrain.message(invalidFormatMessage, Luwrain.MessageType.ERROR);
+	    return null;
+	}
+	if (value < notLessThan)
+	{
+	    luwrain.message(tooSmallMessage, Luwrain.MessageType.ERROR);
+	    return null;
+	}
+	if (value > notGreaterThan)
+	{
+	    luwrain.message(tooLargeMessage, Luwrain.MessageType.ERROR);
+	    return null;
+	}
+	return Integer.valueOf(value);
+    }
+
+        static public Double parseDoubleInBounds(Luwrain luwrain,
+					   String str, double notLessThan, double notGreaterThan,
+					   String noTextMessage, String invalidFormatMessage,
+					   String tooSmallMessage, String tooLargeMessage)
+    {
+	if (str == null || str.trim().isEmpty())
+	{
+	    luwrain.message(noTextMessage, Luwrain.MessageType.ERROR);
+	    return null;
+	}
+	final double value;
+	try {
+	    value = Double.parseDouble(str.trim().replaceAll(",", "."));
+	}
+	catch(NumberFormatException ex)
+	{
+	    luwrain.message(invalidFormatMessage, Luwrain.MessageType.ERROR);
+	    return null;
+	}
+	if (value < notLessThan)
+	{
+	    luwrain.message(tooSmallMessage, Luwrain.MessageType.ERROR);
+	    return null;
+	}
+	if (value > notGreaterThan)
+	{
+	    luwrain.message(tooLargeMessage, Luwrain.MessageType.ERROR);
+	    return null;
+	}
+	return Double.valueOf(value);
+    }
+
+
 
     static public String notLonger(String str, int maxLength)
     {
