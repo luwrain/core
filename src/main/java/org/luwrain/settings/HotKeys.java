@@ -13,17 +13,20 @@ import org.luwrain.cpanel.*;
 import org.luwrain.io.json.HotKey;
 
 import static java.util.Objects.*;
+import static org.luwrain.popups.Popups.*;
 
 final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
 {
     private final ControlPanel controlPanel;
     private final Luwrain luwrain;
+    private final List<Item> items;
 
-    HotKeys(ControlPanel controlPanel, ListArea.Params<Item> params)
+    private HotKeys(ControlPanel controlPanel, List<Item> items, ListArea.Params<Item> params)
     {
 	super(params);
 	this.controlPanel = requireNonNull(controlPanel, "controlPanel can't be empty");
 	this.luwrain = controlPanel.getCoreInterface();
+	this.items = items;
 	setListClickHandler((area, index, item)->editItem(item));
     }
 
@@ -34,7 +37,13 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
 
     private boolean onInsert()
     {
-	luwrain.message("Insert");
+	final String cmd = "Command", scr = "Script";
+	final String res = (String)fixedList(luwrain, "New hot key", new Object[]{cmd, scr});
+	if (res == cmd)
+	{
+	    //	    getListModel().
+	}
+	luwrain.message(res);
 	return true;
     }
 
@@ -94,12 +103,13 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
     {
 	requireNonNull(controlPanel, "controlPanel can't be null");
 	final var luwrain = controlPanel.getCoreInterface();
+	final var items = new ArrayList<>(loadItems(luwrain));
 	final var params = new ListArea.Params<Item>();
 	params.context = new DefaultControlContext(luwrain);
 	params.appearance = new ListUtils.DefaultAppearance<>(params.context, Suggestions.LIST_ITEM);
 	params.name = luwrain.getString("static:CpHotKeys");
-	params.model = new ListModel<>(loadItems(luwrain));
-	return new HotKeys(controlPanel, params);
+	params.model = new ListModel<>(items);
+	return new HotKeys(controlPanel, items, params);
     }
 
     static final class Item implements Comparable
