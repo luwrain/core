@@ -34,7 +34,7 @@ final class ControlPanelImpl implements org.luwrain.cpanel.ControlPanel
 	app.refreshSectionsTree();
     }
 
-    @Override public boolean onInputEvent(InputEvent event)
+    @Override public boolean onInputEvent(SectionArea area, InputEvent event)
     {
 	requireNonNull(event, "event can't be null");
 	if (event.isSpecial() && !event.isModified())
@@ -44,7 +44,7 @@ final class ControlPanelImpl implements org.luwrain.cpanel.ControlPanel
 		close();
 		return true;
 	    case TAB:
-		if (app.additionalArea != null)
+		if (app.currentOptionsArea != null && app.currentOptionsArea == area && app.additionalArea != null)
 		    luwrain.setActiveArea(app.additionalArea); else
 		    gotoSectionsTree();
 		return true;
@@ -52,7 +52,7 @@ final class ControlPanelImpl implements org.luwrain.cpanel.ControlPanel
 	return false;
     }
 
-    @Override public boolean onSystemEvent(SystemEvent event)
+    @Override public boolean onSystemEvent(SectionArea area, SystemEvent event)
     {
 	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)

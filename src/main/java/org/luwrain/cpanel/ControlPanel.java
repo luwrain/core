@@ -10,8 +10,8 @@ public interface ControlPanel
 {
     void close();
     void gotoSectionsTree();
-    boolean onSystemEvent(SystemEvent event);
-    boolean onInputEvent(InputEvent event);
+    boolean onSystemEvent(SectionArea area, SystemEvent event);
+    boolean onInputEvent(SectionArea area, InputEvent event);
     void refreshSectionsTree();
     Luwrain getCoreInterface();
     boolean openAdditionalSectionArea(SectionArea sectionArea, AdditionalSectionArea additionalArea);

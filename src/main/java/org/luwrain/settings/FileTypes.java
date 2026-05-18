@@ -28,14 +28,14 @@ final class FileTypes extends ListArea<FileTypes.Item> implements SectionArea
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	if (controlPanel.onInputEvent(event))
+	if (controlPanel.onInputEvent(this, event))
 	    return true;
 	return super.onInputEvent(event);
     }
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	if (controlPanel.onSystemEvent(event))
+	if (controlPanel.onSystemEvent(this, event))
 	    return true;
 	return super.onSystemEvent(event);
     }

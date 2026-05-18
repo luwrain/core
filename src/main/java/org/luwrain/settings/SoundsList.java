@@ -113,8 +113,7 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	requireNonNull(event, "event can't be null");
-	if (controlPanel.onInputEvent(event))
+	if (controlPanel.onInputEvent(this, event))
 	    return true;
 	if (!event.isSpecial() && !event.isModified())
 	    switch(event.getChar())
@@ -127,8 +126,7 @@ final class SoundsList extends ListArea<SoundsList.Item> implements SectionArea,
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	requireNonNull(event, "event can't be null");
-	if (controlPanel.onSystemEvent(event))
+	if (controlPanel.onSystemEvent(this, event))
 	    return true;
 	return super.onSystemEvent(event);
     }
