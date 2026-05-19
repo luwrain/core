@@ -145,14 +145,14 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 
         public boolean onInputEvent(Area area, InputEvent event)
     {
-	NullCheck.notNull(area, "area");
-	NullCheck.notNull(event, "event");
+	requireNonNull(area, "area can't be null");
+	requireNonNull(event, "event can't be null");
 	return onInputEvent(area, event, null);
     }
 
     public boolean onSystemEvent(Area area, SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return false;
 	switch(event.getCode())
@@ -171,7 +171,7 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 
     public boolean onSystemEvent(Area area, SystemEvent event, LayoutBase.Actions actions)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() == SystemEvent.Type.REGULAR)
 	switch(event.getCode())
 	{
@@ -184,8 +184,8 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 
     public boolean onAreaQuery(Area area, AreaQuery query)
     {
-	NullCheck.notNull(area, "area");
-	NullCheck.notNull(query, "query");
+	requireNonNull(area, "area can't be null");
+	requireNonNull(query, "query can't be null");
 			    switch(query.getQueryCode())
 		    {
 		    case AreaQuery.BACKGROUND_SOUND:
@@ -305,7 +305,7 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 
     public void crash(Throwable t)
     {
-	NullCheck.notNull(t, "t");
+	requireNonNull(t, "t can't be null");
 	luwrain.crash(t);
     }
 
@@ -316,20 +316,20 @@ abstract public class AppBase<S> extends TaskCancelling implements Application
 
     public void setEventResponse(EventResponse resp)
     {
-	NullCheck.notNull(resp, "resp");
+	requireNonNull(resp, "resp can't be null");
 	luwrain.setEventResponse(resp);
     }
 
     public void message(String text, Luwrain.MessageType type)
     {
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(type, "type");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(type, "type can't be null");
 	luwrain.message(text, type);
     }
 
     public void message(String text)
     {
-	NullCheck.notNull(text, "text");
+	requireNonNull(text, "text can't be null");
 	luwrain.message(text);
     }
 

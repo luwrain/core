@@ -38,7 +38,7 @@ public final class App extends AppBase<Strings>
 
         @Override public boolean onInputEvent(Area area, InputEvent event)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	if (super.onInputEvent(area, event))
 	    return true;
 	if (event.isSpecial())

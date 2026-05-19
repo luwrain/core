@@ -13,6 +13,7 @@ import org.luwrain.controls.*;
 import org.luwrain.app.base.*;
 import org.luwrain.controls.ConsoleUtils.*;
 
+import static java.util.Objects.*;
 import static org.luwrain.core.DefaultEventResponse.*;
 
 final class MainLayout extends LayoutBase implements ConsoleArea.InputHandler
@@ -36,21 +37,21 @@ final class MainLayout extends LayoutBase implements ConsoleArea.InputHandler
 		})){
 		@Override public boolean onInputEvent(InputEvent event)
 		{
-		    NullCheck.notNull(event, "event");
+		    requireNonNull(event, "event can't be null");
 		    if (app.onInputEvent(this, event))
 			return true;
 		    return super.onInputEvent(event);
 		}
 		@Override public boolean onSystemEvent(SystemEvent event)
 		{
-		    NullCheck.notNull(event, "event");
+		    requireNonNull(event, "event can't be null");
 		    if (app.onSystemEvent(this, event))
 			return true;
 		    return super.onSystemEvent(event);
 		}
 		@Override public boolean onAreaQuery(AreaQuery query)
 		{
-		    NullCheck.notNull(query, "query");
+		    requireNonNull(query, "query can't be null");
 		    if (app.onAreaQuery(this, query))
 			return true;
 		    return super.onAreaQuery(query);

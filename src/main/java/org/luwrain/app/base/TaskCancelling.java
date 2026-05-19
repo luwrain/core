@@ -5,8 +5,8 @@ package org.luwrain.app.base;
 
 import java.util.*;
 import java.util.concurrent.*;
-
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 public class TaskCancelling
 {
@@ -50,7 +50,7 @@ public class TaskCancelling
 
     synchronized public boolean isRunningTaskId(TaskId taskId)
     {
-	NullCheck.notNull(taskId, "taskId");
+	requireNonNull(taskId, "taskId can't be null");
 	return this.id == taskId.getId() && !this.cancelled;
     }
 }

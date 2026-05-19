@@ -11,6 +11,8 @@ import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.app.base.*;
 
+import static java.util.Objects.*;
+
 final class MainLayout extends LayoutBase
 {
     private final App app;
@@ -18,33 +20,33 @@ final class MainLayout extends LayoutBase
 
     MainLayout(App app)
     {
-	NullCheck.notNull(app, "app");
+	requireNonNull(app, "app can't be null");
 	this.app = app;
 	this.simpleArea = new SimpleArea(new DefaultControlContext(app.getLuwrain()), app.getStrings().appName()){
 		@Override public boolean onInputEvent(InputEvent event)
 		{
-		    NullCheck.notNull(event, "event");
+		    requireNonNull(event, "event can't be null");
 		    if (app.onInputEvent(this, event))
 			return true;
 		    return super.onInputEvent(event);
 		}
 		@Override public boolean onSystemEvent(SystemEvent event)
 		{
-		    NullCheck.notNull(event, "event");
+		    requireNonNull(event, "event can't be null");
 		    if (app.onSystemEvent(this, event))
 			return true;
 		    return super.onSystemEvent(event);
 		}
 		@Override public boolean onAreaQuery(AreaQuery query)
 		{
-		    NullCheck.notNull(query, "query");
+		    requireNonNull(query, "query can't be null");
 		    if (app.onAreaQuery(this, query))
 			return true;
 		    return super.onAreaQuery(query);
 		}
 		@Override public void announceLine(int index, String line)
 		{
-		    NullCheck.notNull(line, "line");
+		    requireNonNull(line, "line can't be null");
 		    defaultLineAnnouncement(context, index, app.getLuwrain().getSpeakableText(line, Luwrain.SpeakableTextType.PROGRAMMING));
 		}
 	    };
@@ -78,7 +80,7 @@ final class MainLayout extends LayoutBase
 
     private void fillException(Throwable t)
     {
-		NullCheck.notNull(t, "t");
+		requireNonNull(t, "t can't be null");
 	    	simpleArea.update((lines)->{
 	if (t instanceof java.io.FileNotFoundException && t.getMessage() != null)
 	{

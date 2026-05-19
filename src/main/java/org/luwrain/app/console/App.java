@@ -6,11 +6,11 @@ package org.luwrain.app.console;
 import java.util.*;
 import org.apache.logging.log4j.*;
 import org.apache.logging.log4j.core.*;
-
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
 import org.luwrain.app.base.*;
+import static java.util.Objects.*;
 
 public final class App extends AppBase<Strings> implements MonoApp
 {
@@ -50,7 +50,7 @@ public final class App extends AppBase<Strings> implements MonoApp
 
     @Override public MonoApp.Result onMonoAppSecondInstance(Application app)
     {
-	NullCheck.notNull(app, "app");
+	requireNonNull(app, "app can't be null");
 	return MonoApp.Result.BRING_FOREGROUND;
     }
 }

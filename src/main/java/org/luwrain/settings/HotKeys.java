@@ -8,6 +8,7 @@ import java.util.*;
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
+import org.luwrain.controls.edit.*;
 import org.luwrain.controls.list.*;
 import org.luwrain.cpanel.*;
 import org.luwrain.io.json.HotKey;
@@ -20,6 +21,7 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
     private final ControlPanel controlPanel;
     private final Luwrain luwrain;
     private final List<Item> items;
+    private ScriptArea scriptArea;
 
     private HotKeys(ControlPanel controlPanel, List<Item> items, ListArea.Params<Item> params)
     {
@@ -39,11 +41,23 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
     {
 	final String cmd = "Command", scr = "Script";
 	final String res = (String)fixedList(luwrain, "New hot key", new Object[]{cmd, scr});
+	if (res == null)
+	    return true;
+	final HotKey hotKey = new HotKey();
 	if (res == cmd)
 	{
-	    //	    getListModel().
+	    hotKey.setCommand("");
+	    hotKey.setScript(null);
+	    hotKey.setInputEvent(null);
 	}
-	luwrain.message(res);
+		if (res == scr)
+	{
+	    	    hotKey.setScript("");
+	    hotKey.setCommand(null);
+	    hotKey.setInputEvent(null);
+	}
+		items.add(new Item(luwrain, hotKey));
+		refresh();
 	return true;
     }
 
@@ -55,7 +69,33 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
 
         private boolean editItem(Item item)
     {
+	final String
+	editCommand = luwrain.getString("static:CpHotKeysEditCommand"),
+	editHotKey = luwrain.getString("static:CpHotKeysEditHotKey"),
+	editScript = luwrain.getString("static:CpHotKeysEditScript");
+	if (item.script == null)
+	{
+	    final var res = fixedList(luwrain, luwrain.getString("static:CpHotKeysWhatEditCommand"), new String[]{ editCommand, editHotKey});
+	    if (res == null)
+		return true;
+	} else
+	{
+	    	    final var res = fixedList(luwrain, luwrain.getString("static:CpHotKeysWhatEditScript"), new String[]{ editScript, editHotKey});
+		    if (res == null)
+			return true;
+		    if (res == editScript)
+				openScriptArea(item);
+	}
 	return false;
+    }
+
+    private void openScriptArea(Item item)
+    {
+	final var params = new EditArea.Params();
+	params.context = new DefaultControlContext(luwrain);
+	params.appearance = new DefaultEditAreaAppearance(params.context);
+	scriptArea = new ScriptArea(params, item);
+	controlPanel.openAdditionalSectionArea(this, scriptArea);
     }
 
 
@@ -112,6 +152,37 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
 	return new HotKeys(controlPanel, items, params);
     }
 
+final class ScriptArea extends EditArea implements AdditionalSectionArea
+{
+    final Item item;
+    ScriptArea(EditArea.Params params, Item item)
+    {
+	super(params);
+	this.item = requireNonNull(item, "item can't be null");
+    }
+
+    @Override public boolean onInputEvent(InputEvent event)
+    {
+	if (controlPanel.onInputEvent(this, event))
+	    return true;
+	return super.onInputEvent(event);
+    }
+    
+    @Override public boolean onSystemEvent(SystemEvent event)
+    {
+	if (controlPanel.onSystemEvent(this, event))
+	    return true;
+	if (event.getType() == SystemEvent.Type.REGULAR)
+	    switch(event.getCode())
+	    {
+	    case OK:
+	    controlPanel.closeAdditionalSectionArea(HotKeys.this);
+		return true;
+	    }
+	return super.onSystemEvent(event);
+    }
+}
+
     static final class Item implements Comparable
     {
 	String command, title, script;
@@ -119,10 +190,12 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
 
 	Item(Luwrain luwrain, HotKey hotKey)
 	{
-	    this.command = requireNonNullElse(hotKey.getCommand(), "");
+	    this.command = hotKey.getCommand();
 	    this.script = hotKey.getScript();
 	    this.event = hotKey.getInputEvent();
-	    this.title = luwrain.i18n().getCommandTitle(command);
+	    if (command != null && !command.isEmpty())
+	    this.title = luwrain.i18n().getCommandTitle(command); else
+		this.title = "FIXME: Command not assigned";
 	}
 
 	@Override public String toString()
@@ -142,6 +215,8 @@ final class HotKeys extends ListArea<HotKeys.Item> implements SectionArea
 
 	static private String hotKeyToString(InputEvent event)
 	{
+	    if (event == null)
+		return "";
 	    final var b = new StringBuilder();
 	    if (event.withControl())
 		b.append("Ctrl+");

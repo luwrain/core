@@ -439,7 +439,7 @@ public interface ActionHandler
     public interface ConsoleParams<E> { void setConsoleParams(ConsoleArea.Params<E> params); }
     public <E> ConsoleArea.Params<E> consoleParams(ConsoleParams<E> l)
     {
-	NullCheck.notNull(l, "l");
+	requireNonNull(l, "l can't be null");
 	final ConsoleArea.Params<E> params = new ConsoleArea.Params<E>();
 	params.context = getControlContext();
 	l.setConsoleParams(params);

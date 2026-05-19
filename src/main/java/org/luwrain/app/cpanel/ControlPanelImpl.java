@@ -67,6 +67,38 @@ final class ControlPanelImpl implements org.luwrain.cpanel.ControlPanel
 	}
     }
 
+        @Override public boolean onInputEvent(AdditionalSectionArea area, InputEvent event)
+    {
+	requireNonNull(event, "event can't be null");
+	if (event.isSpecial() && !event.isModified())
+	    switch(event.getSpecial())
+	    {
+	    case ESCAPE:
+		close();
+		return true;
+	    case TAB:
+		    gotoSectionsTree();
+		return true;
+	    }
+	return false;
+    }
+
+    @Override public boolean onSystemEvent(AdditionalSectionArea area, SystemEvent event)
+    {
+	requireNonNull(event, "event can't be null");
+	if (event.getType() != SystemEvent.Type.REGULAR)
+	    return false;
+	switch(event.getCode())
+	{
+	case CLOSE:
+	    close();
+	    return true;
+	default:
+	    return false;
+	}
+    }
+
+
         @Override public boolean openAdditionalSectionArea(SectionArea sectionArea, AdditionalSectionArea additionalArea)
     {
 	requireNonNull(sectionArea, "sectionArea can't be null");

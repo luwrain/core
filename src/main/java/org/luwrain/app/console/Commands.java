@@ -6,8 +6,8 @@ package org.luwrain.app.console;
 import java.util.*;
 import java.io.*;
 import org.apache.logging.log4j.*;
-
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 final class Commands
 {
@@ -19,7 +19,7 @@ final class Commands
 	private final Luwrain luwrain;
 	Prop(Luwrain luwrain)
 	{
-	    NullCheck.notNull(luwrain, "luwrain");
+	    requireNonNull(luwrain, "luwrain can't be null");
 	    this.luwrain = luwrain;
 	}
 	@Override public boolean onCommand(String text, App app)
