@@ -9,18 +9,41 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 
 import static java.util.Objects.*;
+import static org.luwrain.core.DefaultEventResponse.*;
 
 public class CalendarArea implements Area
 {
-    private final ControlContext context;
-    private Calendar calendar;
-    private int[][] table;
-    private int tableX = 0, tableY = 0;
+    public interface ChangeListener
+    {
+	void onCalendarChange(Date date);
+    }
+
+    static public class Params
+    {
+	public ControlContext context;
+	public Calendar calendar;
+	public ChangeListener changeListener;
+    }
+
+        protected final ControlContext context;
+        protected final Calendar calendar;
+    protected final ChangeListener changeListener;
+    protected int[][] table;
+    protected int tableX = 0, tableY = 0;
+
+    public CalendarArea(Params params)
+    {
+	requireNonNull(params, "params");
+	this.context = requireNonNull(params.context, "params.context");
+	this.calendar = requireNonNull(params.calendar, "params.calendar");
+	this.changeListener =  params.changeListener;
+    }
 
     public CalendarArea(ControlContext context, Calendar calendar)
     {
 	this.context = requireNonNull(context, "context can't be null");
 	this.calendar = requireNonNull(calendar, "calendar can't be null");
+	this.changeListener = null;
 	refresh();
     }
 
@@ -50,6 +73,7 @@ public class CalendarArea implements Area
 
     @Override public boolean onInputEvent(InputEvent event)
     {
+	requireNonNull(event, "event");
 	if (!event.isSpecial() || event.isModified())
 	    return false;
 	switch(event.getSpecial())
@@ -78,7 +102,9 @@ public class CalendarArea implements Area
 	context.onAreaNewContent(this);
 	context.onAreaNewHotPoint(this);
 	context.onAreaNewName(this);
-	context.say(constructDayStringForSpeech(calendar));
+	context.setEventResponse(text(constructDayStringForSpeech(calendar)));
+	if (changeListener != null)
+	    changeListener.onCalendarChange(calendar.getTime());
 	return true;
     }
 
@@ -102,12 +128,6 @@ public class CalendarArea implements Area
 	//FIXME:Customizable behaviour;
 	//FIXME:ROOT locale;
 	return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ROOT) + ", " + calendar.get(Calendar.YEAR);
-    }
-
-    public void setCalendar(Calendar calendar)
-    {
-	this.calendar = calendar;
-	refresh();
     }
 
     public Calendar getCalendar()
@@ -140,9 +160,9 @@ public class CalendarArea implements Area
 		}
     }
 
-    private int[][] fillTable()
+    protected int[][] fillTable()
     {
-	Calendar c = (Calendar)calendar.clone();
+	final Calendar c = (Calendar)calendar.clone();
 	int[][] res = new int[c.getActualMaximum(Calendar.WEEK_OF_MONTH)][];
 	for(int i = 0;i < res.length;++i)
 	    res[i] = new int[7];
@@ -160,7 +180,7 @@ public class CalendarArea implements Area
 	return res;
     }
 
-    private String constructLine(int index)
+    protected String constructLine(int index)
     {
 	if (table == null || index >= table.length)
 	    return "";
