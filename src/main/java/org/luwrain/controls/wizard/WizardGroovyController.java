@@ -52,4 +52,13 @@ public class WizardGroovyController
 	closure.call();
 	frames.put(id, f);
     }
+
+    public void show(String id)
+    {
+		requireNonNull(id, "id can't be null");
+		final var frame = frames.get(id);
+		if (frame == null)
+		    throw new IllegalArgumentException("No frame: " + id);
+		area.show(frame);
+    }
     }
