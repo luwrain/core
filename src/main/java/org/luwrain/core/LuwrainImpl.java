@@ -463,19 +463,23 @@ final class LuwrainImpl implements Luwrain
     }
 
 
+    /*
     @Override public String suggestContentType(java.net.URL url, ContentTypes.ExpectedType expectedType)
     {
 	requireNonNull(url, "url can't be null");
 	requireNonNull(expectedType, "expectedType can't be null");
 	return core.contentTypes.suggestContentType(url, expectedType);
     }
+    */
 
+    /*
     @Override public String suggestContentType(java.io.File file, ContentTypes.ExpectedType expectedType)
     {
 	requireNonNull(file, "file can't be null");
 	requireNonNull(expectedType, "expectedType can't be null");
 	return core.contentTypes.suggestContentType(file, expectedType);
     }
+    */
 
     //sound can be null, means to stop a playback
     @Override public void playSound(Sounds sound)

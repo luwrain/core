@@ -34,7 +34,7 @@ final class BkgPlayer
 	MediaResourcePlayer player = null;
 	if (players != null)
 	    for(var p: players)
-		if (p.getSupportedMimeType().equals(ContentTypes.SOUND_MP3_DEFAULT))
+		if (p.getSupportedMimeType().equals("audio/mpeg"))
 		{
 		    player = p;
 		    break;

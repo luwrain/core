@@ -56,7 +56,7 @@ abstract class Base implements EventConsumer
     final org.luwrain.core.sound.Manager soundManager;
 
     final FileTypes fileTypes = new FileTypes();
-    final FileContentType contentTypes = new FileContentType();
+    //    final FileContentType contentTypes = new FileContentType();
     private final Clipboard clipboard = new Clipboard();
     AnnouncementType announcement = null;
 

@@ -113,6 +113,7 @@ public final class ContentTypes
     };
     static public final String SOUND_WAVE_DEFAULT = SOUND_WAVE[0];
 
+    /*
     static public final String[] SOUND_MP3 = new String[]{
 	"audio/mpeg",
 	"audio/MPA",
@@ -120,4 +121,5 @@ public final class ContentTypes
     };
 
     static public final String SOUND_MP3_DEFAULT = SOUND_MP3[0];
+    */
 }

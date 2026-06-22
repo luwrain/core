@@ -11,7 +11,7 @@ import java.util.regex.*;
 import static java.util.Objects.*;
 
 //Must be thread-safe
-final class FileContentType
+class FileContentType
 {
     private final Map<String, String> contentTypes = new HashMap<>();
 
@@ -32,7 +32,7 @@ final class FileContentType
 	//Audio
 	contentTypes.put(".*\\.wav$", ContentTypes.SOUND_WAVE_DEFAULT);
 	contentTypes.put(".*\\.wave$", ContentTypes.SOUND_WAVE_DEFAULT);
-	contentTypes.put(".*\\.mp3$", ContentTypes.SOUND_MP3_DEFAULT);
+	//	contentTypes.put(".*\\.mp3$", ContentTypes.SOUND_MP3_DEFAULT);
 
 	contentTypes.put(".*\\.xhtml$", "application/xhtml");
 	contentTypes.put(".*\\.xhtm$", "application/xhtml");
@@ -55,8 +55,10 @@ final class FileContentType
 	{
 	case TEXT:
 	    return ContentTypes.TEXT_PLAIN_DEFAULT;
+	    /*
 	case AUDIO:
 	    return ContentTypes.SOUND_MP3_DEFAULT;
+	    */
 	default:
 	    return ContentTypes.DATA_BINARY_DEFAULT;
 	}
@@ -73,8 +75,10 @@ final class FileContentType
 	{
 	case TEXT:
 	    return ContentTypes.TEXT_PLAIN_DEFAULT;
+	    /*
 	case AUDIO:
 	    return ContentTypes.SOUND_MP3_DEFAULT;
+	    */
 	default:
 	    return ContentTypes.DATA_BINARY_DEFAULT;
 	}

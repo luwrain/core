@@ -266,11 +266,11 @@ String getPath(String pathId);
     String staticStr(org.luwrain.i18n.LangStatic id);//FIXME:
 
         //never returns null
-    String suggestContentType(java.net.URL url, ContentTypes.ExpectedType expectedType);
+    //    String suggestContentType(java.net.URL url, ContentTypes.ExpectedType expectedType);
     String getSpeakableText(String text, SpeakableTextType type);
 
         //never returns null
-    String suggestContentType(java.io.File file, ContentTypes.ExpectedType expectedType);
+    //    String suggestContentType(java.io.File file, ContentTypes.ExpectedType expectedType);
     boolean unloadDynamicExtension(String extId);
     boolean xQuit();
     void xSetSpeechRate(int value);
