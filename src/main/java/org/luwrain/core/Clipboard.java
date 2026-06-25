@@ -3,7 +3,9 @@
 
 package org.luwrain.core;
 
+import java.util.*;
 import java.io.*;
+import org.apache.logging.log4j.*;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.ClipboardOwner;
@@ -13,11 +15,12 @@ import java.awt.datatransfer.DataFlavor;
 import com.google.gson.*;
 
 import static java.util.Objects.*;
+import static java.util.stream.Collectors.*;
 import static org.luwrain.util.TextUtils.*;
 
 public final class Clipboard implements ClipboardOwner, java.util.function.Supplier<Object>
 {
-    static private final String LOG_COMPONENT = Base.LOG_COMPONENT;
+    static private final Logger log = LogManager.getLogger();
 
     private final Gson gson = new Gson();
     private Obj<?>[] objs = null;
@@ -68,20 +71,17 @@ public final class Clipboard implements ClipboardOwner, java.util.function.Suppl
     {
 	if (this.objs == null || this.objs.length == 0)
 	    return;
-	final StringBuilder b = new StringBuilder();
-	final String lineSep = System.lineSeparator();
-	for(Obj o: this.objs)
-	    b.append(o.str).append(lineSep);
 	try {
-	    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(new String(b)), this);
+	    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(new String(	Arrays.asList(this.objs).stream()
+														.map( e -> e.str)
+														.collect(joining(System.lineSeparator())))), this);
 	}
-	catch(Throwable e)
+	catch(Throwable ex)
 	{
-	    Log.error(LOG_COMPONENT, "unable to set the system clipboard: " + e.getClass().getName() + ": " + e.getMessage());
-	    e.printStackTrace();
+	    log.error("Unable to set the system clipboard", ex);
 	}
     }
-
+    
     @Override public Object[] get()
     {
 	if (this.objs == null)
@@ -119,14 +119,13 @@ public final class Clipboard implements ClipboardOwner, java.util.function.Suppl
 	final String s ;
 	try {
 	    s = (String)Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-	    Log.debug(LOG_COMPONENT, "system clipboard content is '" + s + "'");
+	    log.trace("System clipboard content is {}", s);
 	    if (s == null)
 		return new String[0];
 	}
-	catch(Throwable e)
+	catch(Throwable ex)
 	{
-	    Log.error(LOG_COMPONENT, "unable to set the system clipboard: " + e.getClass().getName() + ": " + e.getMessage());
-	    e.printStackTrace();
+	    log.error("Unable to set the system clipboard {}", ex);
 	    return null;
 	}
 	return splitLines(s);
@@ -177,7 +176,7 @@ public final class Clipboard implements ClipboardOwner, java.util.function.Suppl
 
             @Override public void              lostOwnership(java.awt.datatransfer.Clipboard clipboard, Transferable contents)
     {
-	Log.debug(LOG_COMPONENT, "the clipboard lost ownership");
+	log.warn("the clipboard lost ownership");
 	this.objs = null;
     }
 
