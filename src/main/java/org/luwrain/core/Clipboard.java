@@ -72,7 +72,7 @@ public final class Clipboard implements ClipboardOwner, java.util.function.Suppl
 	if (this.objs == null || this.objs.length == 0)
 	    return;
 	try {
-	    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(new String(	Arrays.asList(this.objs).stream()
+	    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(new String(	Arrays.stream(this.objs)
 														.map( e -> e.str)
 														.collect(joining(System.lineSeparator())))), this);
 	}

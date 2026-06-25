@@ -10,8 +10,8 @@ import org.luwrain.core.events.*;
 import org.luwrain.core.queries.*;
 import org.luwrain.controls.*;
 
-import static org.luwrain.core.NullCheck.*;
-
+import static java.util.Objects.*;
+import static java.util.stream.Collectors.*;
 
 //Completely skips EnvironmentEvent.CLEAR
 public class MultilineEdit
@@ -158,10 +158,10 @@ public class MultilineEdit
 
     public MultilineEdit(Params params)
     {
-	notNull(params, "params");
-	notNull(params.model, "params.model");
-			  notNull(params.appearance, "params.appearance");
-	notNull(params.regionPoint, "params.regionPoint");
+	requireNonNull(params, "params can't be null");
+	requireNonNull(params.model, "params.model can't be null");
+			  requireNonNull(params.appearance, "params.appearance can't be null");
+	requireNonNull(params.regionPoint, "params.regionPoint can't be null");
 	this.context = params.context;
 	this.regionPoint = params.regionPoint;
 	this.model = params.model;
@@ -210,7 +210,7 @@ public class MultilineEdit
 
     public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (!event.isSpecial())//&&
 	    return onChar(event);
 	if (event.isModified())
@@ -232,7 +232,7 @@ public class MultilineEdit
 
     public boolean onSystemEvent(SystemEvent event)
     {
-	notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return false;
 	switch(event.getCode())
@@ -250,7 +250,7 @@ public class MultilineEdit
 
     public boolean onAreaQuery(AreaQuery query)
     {
-	notNull(query, "query");
+	requireNonNull(query, "query can't be null");
 	return regionTextQueryTranslator.onAreaQuery(query, model.getHotPointX(), model.getHotPointY());
     }
 
@@ -313,7 +313,10 @@ public class MultilineEdit
     {
 	if (context.getClipboard().isEmpty())
 	    return false;
-	final ModificationResult res = model.insertRegion(model.getHotPointX(), model.getHotPointY(), context.getClipboard().getStrings());
+	final List<String> lines = Arrays.stream(context.getClipboard().getStrings())
+	.flatMap(e -> Arrays.stream(e.split("\n")))
+	.collect(toList());
+	final var res = model.insertRegion(model.getHotPointX(), model.getHotPointY(), lines.toArray(new String[lines.size()]));
 	return res != null?res.isPerformed():false;
     }
 }

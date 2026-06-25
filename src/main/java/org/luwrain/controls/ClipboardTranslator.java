@@ -8,6 +8,8 @@ import java.util.*;
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 
+import static java.util.Objects.*;
+
 public class ClipboardTranslator
 {
     public enum Flags {ALLOWED_EMPTY, ALLOWED_WITHOUT_REGION_POINT};
@@ -25,9 +27,9 @@ public class ClipboardTranslator
 
     public ClipboardTranslator(Provider provider, AbstractRegionPoint regionPoint, Set<Flags> flags)
     {
-	NullCheck.notNull(provider, "provider");
-	NullCheck.notNull(regionPoint, "regionPoint");
-	NullCheck.notNull(flags, "flags");
+	requireNonNull(provider, "provider can't be null");
+	requireNonNull(regionPoint, "regionPoint can't be null");
+	requireNonNull(flags, "flags can't be null");
 	this.provider = provider;
 	this.regionPoint = regionPoint;
 	this.flags = flags;
@@ -35,7 +37,7 @@ public class ClipboardTranslator
 
     public boolean onSystemEvent(SystemEvent event, int hotPointX, int hotPointY)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return false;
 	if (hotPointX < 0 || hotPointY < 0)
