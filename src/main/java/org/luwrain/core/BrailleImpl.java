@@ -12,10 +12,10 @@ public final class BrailleImpl
     private boolean active = false;
     private String errorMessage = "";
 
-    void init(Registry registry, Braille braille,
+    void init(Luwrain luwrain, Braille braille,
 	      EventConsumer eventConsumer)
     {
-	requireNonNull(registry, "registry can't be null");
+	requireNonNull(luwrain, "luwrain can't be null");
 	requireNonNull(eventConsumer, "eventConsumer can't be null");
 	this.braille = braille;
 	if (braille == null)
@@ -24,8 +24,8 @@ public final class BrailleImpl
 	    errorMessage = "No braille support in the operating system";
 	    return;
 	}
-	final Settings.Braille settings = Settings.createBraille(registry);
-	if (!settings.getEnabled(false))
+	final var conf = requireNonNullElse(luwrain.loadConf(org.luwrain.io.json.Braille.class), new org.luwrain.io.json.Braille(false));
+	if (!conf.isEnabled())
 	    return;
 	final InitResult res = braille.init(eventConsumer);
 	if (res.isOk())

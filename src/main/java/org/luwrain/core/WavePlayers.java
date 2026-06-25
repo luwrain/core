@@ -231,7 +231,7 @@ public final class WavePlayers
 
 	@Override public String getSupportedMimeType()
 	{
-	    return ContentTypes.SOUND_WAVE_DEFAULT;
+	    return "audio/vnd.wave";
 	}
 
 	@Override public String getExtObjName()

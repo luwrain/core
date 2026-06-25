@@ -3,13 +3,12 @@
 
 package org.luwrain.io.json;
 
-import java.util.*;
 import lombok.*;
 
 @Data
 @NoArgsConstructor
-public final class PersonalInfo
+@AllArgsConstructor
+public class Braille
 {
-    private String  fullName, mailAddr;
-    private List<String> signature;
+    private boolean enabled;
 }
