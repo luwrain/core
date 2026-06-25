@@ -39,10 +39,12 @@ final class GlobalKeys
 	cmd(Special.ALTERNATIVE_DELETE, "clear"),
 	cmd(Special.DELETE, Modifiers.SHIFT, "clear-region"),
 
-		//Basic apps
+	//Basic apps
 	cmd('j', Modifiers.SHIFT, Modifiers.ALT, "jobs"),
-		cmd('a', Modifiers.ALT, "ai"),
-				cmd('e', Modifiers.ALT, "notepad"),
+	cmd('a', Modifiers.ALT, "ai"),
+	cmd('e', Modifiers.ALT, "notepad"),
+	cmd('p', Modifiers.ALT, "player"),
+	cmd('s', Modifiers.ALT, "player-pause"),
 	cmd('p', Modifiers.SHIFT, Modifiers.ALT, "control-panel"),
 		cmd('f', Modifiers.ALT, "web"),
     };
