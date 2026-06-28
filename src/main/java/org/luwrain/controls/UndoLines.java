@@ -4,8 +4,8 @@
 package org.luwrain.controls;
 
 import java.util.*;
-
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 public class UndoLines implements MutableMarkedLines 
 {
@@ -14,7 +14,7 @@ public class UndoLines implements MutableMarkedLines
 
     public UndoLines(MutableLines lines)
     {
-	NullCheck.notNull(lines, "lines");
+	requireNonNull(lines, "lines can't be null");
 	this.lines = lines;
     }
 
@@ -50,7 +50,7 @@ public class UndoLines implements MutableMarkedLines
 
     @Override public boolean add(String line)
     {
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	final Command cmd = new AddLine(lines, line);
 	cmd.redo(lines);
 	saveCommand(cmd);
@@ -89,7 +89,7 @@ public class UndoLines implements MutableMarkedLines
 
     protected void saveCommand(Command command)
     {
-	NullCheck.notNull(command, "command");
+	requireNonNull(command, "command can't be null");
 	commands.add(command);
     }
 
@@ -105,19 +105,19 @@ public class UndoLines implements MutableMarkedLines
 	private final String line;
 	public AddLine(MutableLines lines, String line)
 	{
-	    NullCheck.notNull(lines, "lines");
-	    NullCheck.notNull(line, "line");
+	    requireNonNull(lines, "lines can't be null");
+	    requireNonNull(line, "line can't be null");
 	    this.addedLineIndex = lines.getLineCount();
 	    this.line = line;
 	}
 	@Override public void redo(MutableLines lines)
 	{
-	    NullCheck.notNull(lines, "lines");
+	    requireNonNull(lines, "lines can't be null");
 	    lines.add(line);
 	}
 	@Override public void undo(MutableLines lines)
 	{
-	    NullCheck.notNull(lines, "lines");
+	    requireNonNull(lines, "lines can't be null");
 	    lines.removeLine(addedLineIndex);
 	}
     }
@@ -128,7 +128,7 @@ public class UndoLines implements MutableMarkedLines
 	private final String line;
 	public RemoveLine(MutableLines lines, int index)
 	{
-	    NullCheck.notNull(lines, "lines");
+	    requireNonNull(lines, "lines can't be null");
 	    if (index < 0 || index >= lines.getLineCount())
 		throw new IllegalArgumentException("index (" + String.valueOf(index) + ") must be non-negative and less than " + String.valueOf(lines.getLineCount()));
 	    this.removingLineIndex = lines.getLineCount();
@@ -136,12 +136,12 @@ public class UndoLines implements MutableMarkedLines
 	}
 	@Override public void redo(MutableLines lines)
 	{
-	    NullCheck.notNull(lines, "lines");
+	    requireNonNull(lines, "lines can't be null");
 	    lines.removeLine(removingLineIndex);
 	}
 	@Override public void undo(MutableLines lines)
 	{
-	    NullCheck.notNull(lines, "lines");
+	    requireNonNull(lines, "lines can't be null");
 	    lines.add(removingLineIndex, line);
 	}
     }

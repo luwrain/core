@@ -7,13 +7,15 @@ import java.io.File;
 
 import org.luwrain.core.*;
 
+import static java.util.Objects.*;
+
 public class WrappingControlContext implements ControlContext
 {
     protected ControlContext context;
 
     public WrappingControlContext(ControlContext context)
     {
-	NullCheck.notNull(context, "context");
+	requireNonNull(context, "context can't be null");
 	this.context = context;
     }
 

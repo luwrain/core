@@ -4,8 +4,8 @@
 package org.luwrain.controls;
 
 import java.util.*;
-
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 public final class ConsoleUtils
 {
@@ -18,7 +18,7 @@ public final class ConsoleUtils
 	protected final Source<E> source;
 	public ArrayModel(Source<E> source)
 	{
-	    NullCheck.notNull(source, "source");
+	    requireNonNull(source, "source can't be null");
 	    this.source = source;
 	}
 	@Override public int getItemCount()
@@ -42,7 +42,7 @@ public final class ConsoleUtils
 	protected final List<E> source;
 	public ListModel(List<E> source)
 	{
-	    NullCheck.notNull(source, "source");
+	    requireNonNull(source, "source can't be null");
 	    this.source = source;
 	}
 	@Override public int getItemCount()

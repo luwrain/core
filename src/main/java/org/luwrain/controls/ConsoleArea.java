@@ -8,7 +8,9 @@ import org.luwrain.core.events.*;
 import org.luwrain.core.queries.*;
 import org.luwrain.i18n.LangStatic;//FIXME:deleting
 
+import static java.util.Objects.*;
 import static org.luwrain.core.DefaultEventResponse.*;
+
 
 public class ConsoleArea<E> extends NavigationArea implements  EmbeddedEditLines
 {
@@ -64,7 +66,7 @@ public class ConsoleArea<E> extends NavigationArea implements  EmbeddedEditLines
     public ConsoleArea(Params<E> params)
     {
 	super(params.context);
-	NullCheck.notNull(params, "params");
+	requireNonNull(params, "params can't be null");
 	NullCheck.notNull(params.model, "params.model");
 	NullCheck.notNull(params.appearance, "params.appearance");
 	NullCheck.notNull(params.name, "params.name");
@@ -99,14 +101,14 @@ public class ConsoleArea<E> extends NavigationArea implements  EmbeddedEditLines
 
     public void setInputPrefix(String prefix)
     {
-	NullCheck.notNull(prefix, "prefix");
+	requireNonNull(prefix, "prefix can't be null");
 	this.enteringPrefix = prefix;
 	refresh();
     }
 
     public void setInput(String value)
     {
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	this.enteringText = value;
 	refresh();
     }
@@ -156,7 +158,7 @@ public class ConsoleArea<E> extends NavigationArea implements  EmbeddedEditLines
 
     @Override protected boolean onAltHome(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (this.inputPos != InputPos.TOP)
 	    return super.onAltHome(event);
 	moveHotPointToInput();
@@ -170,7 +172,7 @@ public class ConsoleArea<E> extends NavigationArea implements  EmbeddedEditLines
 
         @Override protected boolean onAltEnd(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (this.inputPos != InputPos.BOTTOM)
 	    return super.onAltEnd(event);
 	moveHotPointToInput();
@@ -217,7 +219,7 @@ public class ConsoleArea<E> extends NavigationArea implements  EmbeddedEditLines
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (!edit.isPosCovered(getHotPointX(), getHotPointY()) && !event.isSpecial())
 	    setHotPoint(enteringPrefix.length() + enteringText.length(), getEnteringLineIndex());
 	if (edit.isPosCovered(getHotPointX(), getHotPointY()))
@@ -253,7 +255,7 @@ public class ConsoleArea<E> extends NavigationArea implements  EmbeddedEditLines
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return super.onSystemEvent(event);
 	if (edit.isPosCovered(getHotPointX(), getHotPointY()) && edit.onSystemEvent(event))
@@ -271,7 +273,7 @@ public class ConsoleArea<E> extends NavigationArea implements  EmbeddedEditLines
 
     @Override public boolean onAreaQuery(AreaQuery query)
     {
-	NullCheck.notNull(query, "query");
+	requireNonNull(query, "query can't be null");
 	if (edit.isPosCovered(getHotPointX(), getHotPointY()) && edit.onAreaQuery(query))
 	    return true;
 	return super.onAreaQuery(query);
@@ -317,7 +319,7 @@ public class ConsoleArea<E> extends NavigationArea implements  EmbeddedEditLines
 
     @Override public void setEmbeddedEditLine(int x, int y, String line)
     {
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	enteringText = line;
 	refresh();
     }
@@ -329,7 +331,7 @@ public class ConsoleArea<E> extends NavigationArea implements  EmbeddedEditLines
 
     @Override public void announceLine(int index, String line)
     {
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	switch(inputPos)
 	{
 	case BOTTOM:

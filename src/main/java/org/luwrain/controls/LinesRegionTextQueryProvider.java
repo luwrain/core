@@ -4,8 +4,8 @@
 package org.luwrain.controls;
 
 import java.util.*;
-
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 public class LinesRegionTextQueryProvider implements RegionTextQueryTranslator.Provider
 {
@@ -13,7 +13,7 @@ public class LinesRegionTextQueryProvider implements RegionTextQueryTranslator.P
 
     public LinesRegionTextQueryProvider(Lines lines)
     {
-	NullCheck.notNull(lines, "lines");
+	requireNonNull(lines, "lines can't be null");
 	this.lines = lines;
     }
 

@@ -4,8 +4,8 @@
 package org.luwrain.controls;
 
 import java.io.File;
-
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 public class DefaultControlContext implements ControlContext
 {
@@ -23,14 +23,14 @@ public class DefaultControlContext implements ControlContext
 
     @Override public void say(String text, Sounds sound)
     {
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(sound, "sound");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(sound, "sound can't be null");
 	luwrain.speak(text, sound);
     }
 
     @Override public void sayStaticStr(org.luwrain.i18n.LangStatic id)
     {
-	NullCheck.notNull(id, "id");
+	requireNonNull(id, "id can't be null");
 	say(staticStr(id));
     }
 
@@ -71,19 +71,19 @@ public class DefaultControlContext implements ControlContext
 
     @Override public String staticStr(org.luwrain.i18n.LangStatic id)
     {
-	NullCheck.notNull(id, "id");
+	requireNonNull(id, "id can't be null");
 	return luwrain.i18n().staticStr(id);
     }
 
     @Override public String getStaticStr(String id)
     {
-	NullCheck.notNull(id, "id");
+	requireNonNull(id, "id can't be null");
 	return luwrain.i18n().getStaticStr(id);
     }
 
     @Override public void playSound(Sounds sound)
     {
-	NullCheck.notNull(sound, "sound");
+	requireNonNull(sound, "sound can't be null");
 	luwrain.playSound(sound);
     }
 
@@ -99,7 +99,7 @@ public class DefaultControlContext implements ControlContext
 
     @Override public void setEventResponse(EventResponse eventResponse)
     {
-	NullCheck.notNull(eventResponse, "eventResponse");
+	requireNonNull(eventResponse, "eventResponse can't be null");
 	luwrain.setEventResponse(eventResponse);
     }
 
@@ -130,14 +130,14 @@ public class DefaultControlContext implements ControlContext
 
     @Override public void onAreaNewBackgroundSound(Area area)
     {
-	NullCheck.notNull(area, "area");
+	requireNonNull(area, "area can't be null");
 	luwrain.onAreaNewBackgroundSound(area);
     }
 
     @Override public     String getSpeakableText(String text, Luwrain.SpeakableTextType type)
     {
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(type, "type");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(type, "type can't be null");
 	return luwrain.getSpeakableText(text, type);
     }
 
@@ -149,14 +149,14 @@ public class DefaultControlContext implements ControlContext
 
     @Override public void message(String text, Luwrain.MessageType messageType)
     {
-	NullCheck.notNull(text, "text");
-	NullCheck.notNull(messageType, "messageType");
+	requireNonNull(text, "text can't be null");
+	requireNonNull(messageType, "messageType can't be null");
 	luwrain.message(text, messageType);
     }
 
     @Override public void runUiSafely(Runnable runnable)
     {
-	NullCheck.notNull(runnable, "runnable");
+	requireNonNull(runnable, "runnable can't be null");
 	luwrain.runUiSafely(runnable);
     }
 }

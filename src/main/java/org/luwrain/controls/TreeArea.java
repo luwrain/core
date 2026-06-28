@@ -9,6 +9,8 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.core.events.resp.*;
 
+import static java.util.Objects.*;
+
 public class TreeArea implements Area
 {
     public interface ClickHandler
@@ -68,7 +70,7 @@ public class TreeArea implements Area
 
     public TreeArea(Params params)    
     {
-	NullCheck.notNull(params, "params");
+	requireNonNull(params, "params can't be null");
 	NullCheck.notNull(params.context, "params.context");
 	NullCheck.notNull(params.model, "params.model");
 	NullCheck.notNull(params.name, "params.name");
@@ -87,7 +89,7 @@ public class TreeArea implements Area
 
     public void setClickHandler(ClickHandler clickHandler)
     {
-	NullCheck.notNull(clickHandler, "clickHandler");
+	requireNonNull(clickHandler, "clickHandler can't be null");
 	this.clickHandler = clickHandler;
     }
 
@@ -99,7 +101,7 @@ public class TreeArea implements Area
     /*
     public void setModel(Model model)
     {
-	NullCheck.notNull(model, "model");
+	requireNonNull(model, "model can't be null");
 	this.model = model;
     }
     */
@@ -131,7 +133,7 @@ public class TreeArea implements Area
 
     public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (items == null || items.length < 1)
 	{
 	    context.setEventResponse(DefaultEventResponse.hint(Hint.NO_CONTENT));
@@ -594,7 +596,7 @@ announce(items[hotPointY], briefAnnouncement);
 
     protected boolean isLeaf(Object o)
     {
-	NullCheck.notNull(o, "o");
+	requireNonNull(o, "o can't be null");
 	model.beginChildEnumeration(o);
 	final boolean res = model.getChildCount(o) <= 0;
 	model.endChildEnumeration(o);
@@ -603,7 +605,7 @@ announce(items[hotPointY], briefAnnouncement);
 
     protected void announce(VisibleItem item, boolean briefAnnouncement)
     {
-	NullCheck.notNull(item, "item");
+	requireNonNull(item, "item can't be null");
 	if (item.title.isEmpty())
 	{
 	    context.setEventResponse(DefaultEventResponse.hint(Hint.EMPTY_LINE));

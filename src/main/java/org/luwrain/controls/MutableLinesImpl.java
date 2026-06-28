@@ -24,7 +24,7 @@ public class MutableLinesImpl extends ArrayList<String> implements MutableLines
 
     @Override public void update(Updating updating)
     {
-	NullCheck.notNull(updating, "updating");
+	requireNonNull(updating, "updating can't be null");
 	updating.update(this);
     }
 
@@ -59,7 +59,7 @@ public class MutableLinesImpl extends ArrayList<String> implements MutableLines
 
     @Override public void setLine(int index, String line)
     {
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	if (index < 0)
 	    throw new IllegalArgumentException("index (" + String.valueOf(index) + " can't be negative");
 	if (index >= size())

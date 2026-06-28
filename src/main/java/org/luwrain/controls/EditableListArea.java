@@ -7,6 +7,7 @@ import java.util.*;
 
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
+import static java.util.Objects.*;
 
 public class EditableListArea<E> extends ListArea<E>
 {
@@ -32,7 +33,7 @@ public class EditableListArea<E> extends ListArea<E>
     public EditableListArea(Params<E> params)
     {
 	super(params);
-	NullCheck.notNull(params, "params");
+	requireNonNull(params, "params can't be null");
 	NullCheck.notNull(params.model, "params.model");
 	if (!(params.model instanceof EditableListArea.Model))
 	    throw new IllegalArgumentException("params.model must be an instance of EditableModel");
@@ -47,7 +48,7 @@ public class EditableListArea<E> extends ListArea<E>
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.isSpecial() && !event.isModified())
 	    switch(event.getSpecial())
 	    { 
@@ -59,7 +60,7 @@ public class EditableListArea<E> extends ListArea<E>
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return super.onSystemEvent(event);
 	switch(event.getCode())

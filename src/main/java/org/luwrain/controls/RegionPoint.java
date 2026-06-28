@@ -6,6 +6,8 @@ package org.luwrain.controls;
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 
+import static java.util.Objects.*;
+
 public class RegionPoint implements AbstractRegionPoint
 {
     protected int hotPointX = -1;
@@ -13,7 +15,7 @@ public class RegionPoint implements AbstractRegionPoint
 
     public boolean onSystemEvent(SystemEvent event, int hotPointX, int hotPointY)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (hotPointX < 0 || hotPointY < 0)
 	    throw new IllegalArgumentException("hotPointX and hotPointY must be greater or equal to zero");
 	if (event.getType() == SystemEvent.Type.REGULAR)

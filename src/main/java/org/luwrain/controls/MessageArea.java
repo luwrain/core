@@ -5,9 +5,9 @@ package org.luwrain.controls;
 
 import java.io.*;
 import java.util.*;
-
 import org.luwrain.core.*;
 import org.luwrain.controls.edit.*;
+import static java.util.Objects.*;
 
 public class MessageArea extends FormArea
 {
@@ -36,7 +36,7 @@ public class MessageArea extends FormArea
 	Attachment(String name, File file)
 	{
 	    NullCheck.notEmpty(name, "name");
-	    NullCheck.notNull(file, "file");
+	    requireNonNull(file, "file can't be null");
 	    this.name = name;
 	    this.file = file;
 	}
@@ -51,7 +51,7 @@ public class MessageArea extends FormArea
     public MessageArea(Params params)
     {
 	super(params.context, params.name);
-	NullCheck.notNull(params, "params");
+	requireNonNull(params, "params can't be null");
 	NullCheck.notNullItems(params.text, "params.text");
 		NullCheck.notNullItems(params.attachments, "params.attachments");
 		this.maxLineLen = params.maxLineLen;
@@ -71,7 +71,7 @@ public class MessageArea extends FormArea
 
     public void setTo(String value)
     {
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	setEnteredText(value, "value");
     }
 
@@ -87,7 +87,7 @@ public class MessageArea extends FormArea
 
     public void setCc(String value)
     {
-	NullCheck.notNull(value, "value");
+	requireNonNull(value, "value can't be null");
 	setEnteredText(CC_NAME, value);
     }
 
@@ -103,7 +103,7 @@ public class MessageArea extends FormArea
 
     public String getText(String lineSeparator)
     {
-	NullCheck.notNull(lineSeparator, "lineSeparator");
+	requireNonNull(lineSeparator, "lineSeparator can't be null");
 	return lines.getText(lineSeparator);
     }
 
@@ -143,7 +143,7 @@ return (MessageArea.Attachment)obj;
 
     public void addAttachment(File file)
     {
-	NullCheck.notNull(file, "file");
+	requireNonNull(file, "file can't be null");
 	for(Attachment a: getAttachments())
 	    if (a.file.equals(file))
 	    {

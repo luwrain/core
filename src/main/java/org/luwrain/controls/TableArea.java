@@ -8,6 +8,7 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.util.*;
 import org.luwrain.i18n.LangStatic;//FIXME:deleting
+import static java.util.Objects.*;
 
 /**
  * The area class with table behaviour.  The data to be provided is
@@ -55,8 +56,8 @@ int getColWidth(TableArea.Model model, int  colIndex);
 
     public TableArea(ControlContext environment, TableArea.Model model)
     {
-	NullCheck.notNull(environment, "environment");
-	NullCheck.notNull(model, "model");
+	requireNonNull(environment, "environment can't be null");
+	requireNonNull(model, "model can't be null");
 	this.environment = environment;
 	this.model = model;
 	this.appearance = new DefaultTableAppearance(environment);

@@ -9,6 +9,8 @@ import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.core.queries.*;
 
+import static java.util.Objects.*;
+
 public class RegionTextQueryTranslator
 {
     //FIXME:what to do on default action
@@ -25,9 +27,9 @@ public class RegionTextQueryTranslator
 
     public RegionTextQueryTranslator(Provider provider, AbstractRegionPoint regionPoint, Set<Flags> flags)
     {
-	NullCheck.notNull(provider, "provider");
-	NullCheck.notNull(regionPoint, "regionPoint");
-	NullCheck.notNull(flags, "flags");
+	requireNonNull(provider, "provider can't be null");
+	requireNonNull(regionPoint, "regionPoint can't be null");
+	requireNonNull(flags, "flags can't be null");
 	this.provider = provider;
 	this.regionPoint = regionPoint;
 	this.flags = flags;
@@ -35,7 +37,7 @@ public class RegionTextQueryTranslator
 
     public boolean onSystemEvent(SystemEvent event, int hotPointX, int hotPointY)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return false;
 	if (hotPointX < 0 || hotPointY < 0)
@@ -51,7 +53,7 @@ public class RegionTextQueryTranslator
 
     public boolean onAreaQuery(AreaQuery query, int hotPointX, int hotPointY)
     {
-	NullCheck.notNull(query, "query");
+	requireNonNull(query, "query can't be null");
 	if (query.getQueryCode() != AreaQuery.REGION_TEXT || !(query instanceof RegionTextQuery))
 	    return false;
 	if (hotPointX < 0 || hotPointY < 0)
@@ -61,7 +63,7 @@ public class RegionTextQueryTranslator
 
     protected boolean onRegionTextQuery(RegionTextQuery query, int hotPointX, int hotPointY)
     {
-	NullCheck.notNull(query, "query");
+	requireNonNull(query, "query can't be null");
 	if (!regionPoint.isInitialized())
 	{
 	    if (!flags.contains(Flags.ALLOWED_WITHOUT_REGION_POINT))

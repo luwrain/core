@@ -85,7 +85,7 @@ public class MutableMarkedLinesImpl extends ArrayList<MutableMarkedLinesImpl.Lin
     //index is the position of newly inserted line
     @Override public void add(int index, String line)
     {
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	if (index < 0 || index > size())
 	    throw new IllegalArgumentException("Illegal index value (" + index + ")");
 	if (index < size())

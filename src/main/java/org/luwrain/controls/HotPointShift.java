@@ -4,6 +4,7 @@
 package org.luwrain.controls;
 
 import org.luwrain.core.*;
+import static java.util.Objects.*;
 
 public class HotPointShift implements HotPointControl
 {
@@ -13,7 +14,7 @@ public class HotPointShift implements HotPointControl
 
     public HotPointShift(HotPointControl control, int offsetX, int offsetY)
     {
-	NullCheck.notNull(control, "control");
+	requireNonNull(control, "control can't be null");
 	if (offsetX < 0)
 	    throw new IllegalArgumentException("offsetX can't be negative");
 	if (offsetY < 0)

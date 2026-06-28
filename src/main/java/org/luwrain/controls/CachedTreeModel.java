@@ -6,6 +6,7 @@ package org.luwrain.controls;
 import java.util.*;
 
 import org.luwrain.core.NullCheck;
+import static java.util.Objects.*;
 
 public class CachedTreeModel implements TreeArea.Model
 {
@@ -16,7 +17,7 @@ public class CachedTreeModel implements TreeArea.Model
 
 	CacheItem(Object parent)
 	{
-	    NullCheck.notNull(parent, "parent");
+	    requireNonNull(parent, "parent can't be null");
 	    this.parent = parent;
 	}
     }
@@ -26,7 +27,7 @@ public class CachedTreeModel implements TreeArea.Model
 
     public CachedTreeModel(CachedTreeModelSource source)
     {
-	NullCheck.notNull(source, "source");
+	requireNonNull(source, "source can't be null");
 	this.source = source;
     }
 
@@ -37,7 +38,7 @@ public class CachedTreeModel implements TreeArea.Model
 
     @Override public void beginChildEnumeration(Object node)
     {
-	NullCheck.notNull(node, "node");
+	requireNonNull(node, "node can't be null");
 	CacheItem newItem = null;
 	for(CacheItem c: cache)
 	    if (c.parent.equals(node))

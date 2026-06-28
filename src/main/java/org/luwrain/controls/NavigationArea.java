@@ -42,13 +42,13 @@ hotPointY = 0;
 
     public NavigationArea(ControlContext context)
     {
-	NullCheck.notNull(context, "context");
+	requireNonNull(context, "context can't be null");
 	this.context = context;
     }
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (!event.isSpecial() || event.isModified())
 	    return false;
 	switch (event.getSpecial())
@@ -83,7 +83,7 @@ hotPointY = 0;
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return false;
 	switch(event.getCode())
@@ -105,7 +105,7 @@ hotPointY = 0;
 
     @Override public boolean onAreaQuery(AreaQuery query)
     {
-	NullCheck.notNull(query, "query");
+	requireNonNull(query, "query can't be null");
 	return regionTextQueryTranslator.onAreaQuery(query, hotPointX, hotPointY);
     }
 
@@ -408,7 +408,7 @@ hotPointY = 0;
 
     public void announceLine(int index, String line)
     {
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	defaultLineAnnouncement(context, index, line);
     }
 

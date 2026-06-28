@@ -48,7 +48,7 @@ public interface WizardItem
 	public WizardClickable(String text, WizardClickHandler handler)
 	{
 	    NullCheck.notEmpty(text, "text");
-	    NullCheck.notNull(handler, "handler");
+	    requireNonNull(handler, "handler can't be null");
 	    this.text = text;
 	    this.handler = handler;
 	}
@@ -58,7 +58,7 @@ public interface WizardItem
 	}
 	public boolean  click(WizardValues values)
 	{
-	    NullCheck.notNull(values, "values");
+	    requireNonNull(values, "values can't be null");
 	    return handler.handle(values);
 	}
     }
@@ -69,8 +69,8 @@ public interface WizardItem
 	private final String text;
 	public WizardInput(String prefix, String text)
 	{
-	    NullCheck.notNull(prefix, "prefix");
-	    NullCheck.notNull(text, "text");
+	    requireNonNull(prefix, "prefix can't be null");
+	    requireNonNull(text, "text can't be null");
 	    this.prefix = prefix;
 	    this.text = text;
 	}
@@ -90,8 +90,8 @@ public interface WizardItem
 	private final String text;
 	public WizardPasswd(String prefix, String text)
 	{
-	    NullCheck.notNull(prefix, "prefix");
-	    NullCheck.notNull(text, "text");
+	    requireNonNull(prefix, "prefix can't be null");
+	    requireNonNull(text, "text can't be null");
 	    this.prefix = prefix;
 	    this.text = text;
 	}
@@ -123,26 +123,26 @@ public interface WizardItem
 	}
 	public Frame addInput(String prefix, String text)
 	{
-	    NullCheck.notNull(prefix, "prefix");
-	    NullCheck.notNull(text, "text");
+	    requireNonNull(prefix, "prefix can't be null");
+	    requireNonNull(text, "text can't be null");
 	    items.add(new WizardInput(prefix, text));
 	    return this;
 	}
 	public Frame addINput(String prefix)
 	{
-	    NullCheck.notNull(prefix, "prefix");
+	    requireNonNull(prefix, "prefix can't be null");
 	    return addInput(prefix, "");
 	}
 		public Frame addPasswd(String prefix, String text)
 	{
-	    NullCheck.notNull(prefix, "prefix");
-	    NullCheck.notNull(text, "text");
+	    requireNonNull(prefix, "prefix can't be null");
+	    requireNonNull(text, "text can't be null");
 	    items.add(new WizardPasswd(prefix, text));
 	    return this;
 	}
 	public Frame addPasswd(String prefix)
 	{
-	    NullCheck.notNull(prefix, "prefix");
+	    requireNonNull(prefix, "prefix can't be null");
 	    return addPasswd(prefix, "");
 	}
 
@@ -168,7 +168,7 @@ public interface WizardItem
 
     public void show(Frame frame)
     {
-	NullCheck.notNull(frame, "frame");
+	requireNonNull(frame, "frame can't be null");
 	clear();
 	values.edits.clear();
 	defaultClickable = null;
@@ -251,7 +251,7 @@ public interface WizardItem
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.isSpecial() && !event.isModified())
 	    switch(event.getSpecial())
 	    {
@@ -265,7 +265,7 @@ public interface WizardItem
 
     @Override public void announceLine(int index, String line)
     {
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	if (line.trim().isEmpty())
 	{
 	    	super.announceLine(index, line);

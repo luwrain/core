@@ -6,9 +6,8 @@ package org.luwrain.controls;
 import java.util.*;
 import java.io.*;
 import java.util.function.Function;
-
 import org.luwrain.core.*;
-
+import static java.util.Objects.*;
 import static org.luwrain.core.DefaultEventResponse.*;
 
 public class ListUtils
@@ -17,8 +16,8 @@ public class ListUtils
     {
 	@Override public String getScreenAppearance(E item, Set<Flags> flags)
 	{
-	    NullCheck.notNull(item, "item");
-	    NullCheck.notNull(flags, "flags");
+	    requireNonNull(item, "item can't be null");
+	    requireNonNull(flags, "flags can't be null");
 	    return item.toString();
 	}
 	@Override public int getObservableLeftBound(E item)
@@ -27,7 +26,7 @@ public class ListUtils
 	}
 	@Override public int getObservableRightBound(E item)
 	{
-	    NullCheck.notNull(item, "item");
+	    requireNonNull(item, "item can't be null");
 	    return getScreenAppearance(item, EnumSet.noneOf(Flags.class)).length();
 	}
     }
@@ -38,20 +37,20 @@ public class ListUtils
 	protected final Suggestions suggestion;
 	public DefaultAppearance(ControlContext context, Suggestions suggestion)
 	{
-	    NullCheck.notNull(context, "context");
+	    requireNonNull(context, "context can't be null");
 	    this.context = context;
 	    this.suggestion = suggestion;
 	}
 	public DefaultAppearance(ControlContext context)
 	{
-	    NullCheck.notNull(context, "context");
+	    requireNonNull(context, "context can't be null");
 	    this.context = context;
 	    this.suggestion = Suggestions.LIST_ITEM;
 	}
 	@Override public void announceItem(E item, Set<Flags> flags)
 	{
-	    NullCheck.notNull(item, "item");
-	    NullCheck.notNull(flags, "flags");
+	    requireNonNull(item, "item can't be null");
+	    requireNonNull(flags, "flags can't be null");
 	    context.setEventResponse(DefaultEventResponse.listItem(item.toString(), flags.contains(Flags.BRIEF)?null:suggestion));
 	}
     }
@@ -61,57 +60,57 @@ public class ListUtils
 	protected final ControlContext context;
 	public DoubleLevelAppearance(ControlContext context)
 	{
-	    NullCheck.notNull(context, "context");
+	    requireNonNull(context, "context can't be null");
 	    this.context = context;
 	}
 	abstract public boolean isSectionItem(E item);
 	public void announceNonSection(E item)
 	{
-	    NullCheck.notNull(item, "item");
+	    requireNonNull(item, "item can't be null");
 	    context.setEventResponse(listItem(getNonSectionScreenAppearance(item)));
 	}
 	public String getNonSectionScreenAppearance(E item)
 	{
-	    NullCheck.notNull(item, "item");
+	    requireNonNull(item, "item can't be null");
 	    return item.toString();
 	}
 	public void announceSection(E item)
 	{
-	    NullCheck.notNull(item, "item");
+	    requireNonNull(item, "item can't be null");
 	    context.playSound(Sounds.DOC_SECTION);
 	    context.say(getSectionScreenAppearance(item));
 	}
 	public String getSectionScreenAppearance(E item)
 	{
-	    NullCheck.notNull(item, "item");
+	    requireNonNull(item, "item can't be null");
 	    return item.toString();
 	}
 	@Override public void announceItem(E item, Set<Flags> flags)
 	{
-	    NullCheck.notNull(item, "item");
-	    NullCheck.notNull(flags, "flags");
+	    requireNonNull(item, "item can't be null");
+	    requireNonNull(flags, "flags can't be null");
 	    if (isSectionItem(item))
 		announceSection(item); else
 		announceNonSection(item);
 	}
 	@Override public String getScreenAppearance(E item, Set<Flags> flags)
 	{
-	    NullCheck.notNull(item, "item");
-	    NullCheck.notNull(flags, "flags");
+	    requireNonNull(item, "item can't be null");
+	    requireNonNull(flags, "flags can't be null");
 	    if (isSectionItem(item))
 		return getSectionScreenAppearance(item);
 	    return "  " + getNonSectionScreenAppearance(item);
 	}
 	@Override public int getObservableLeftBound(E item)
 	{
-	    NullCheck.notNull(item, "item");
+	    requireNonNull(item, "item can't be null");
 	    if (isSectionItem(item))
 		return 0;
 	    return 2;
 	}
 	@Override public int getObservableRightBound(E item)
 	{
-	    NullCheck.notNull(item, "item");
+	    requireNonNull(item, "item can't be null");
 	    return getScreenAppearance(item, EnumSet.noneOf(Flags.class)).length();
 	}
     }
@@ -122,8 +121,8 @@ public class ListUtils
 	@Override public State transition(Type type, State fromState, int itemCount,
 					  boolean hasEmptyLineTop, boolean hasEmptyLineBottom)
 	{
-	    NullCheck.notNull(type, "type");
-	    NullCheck.notNull(fromState, "fromState");
+	    requireNonNull(type, "type can't be null");
+	    requireNonNull(fromState, "fromState can't be null");
 	    if (itemCount == 0)
 		throw new IllegalArgumentException("itemCount must be positive and non-zero (itemCount=" + itemCount + ")");
 	    switch(type)
@@ -195,14 +194,14 @@ public class ListUtils
 	protected final ListArea.Model<E> model;
 	public DoubleLevelTransition(ListArea.Model<E> model)
 	{
-	    NullCheck.notNull(model, "model");
+	    requireNonNull(model, "model can't be null");
 	    this.model = model;
 	}
 	abstract public boolean isSectionItem(E item);
 	@Override public State transition(Type type, State fromState, int itemCount, boolean hasEmptyLineTop, boolean hasEmptyLineBottom)
 	{
-	    NullCheck.notNull(type, "type");
-	    NullCheck.notNull(fromState, "fromState");
+	    requireNonNull(type, "type can't be null");
+	    requireNonNull(fromState, "fromState can't be null");
 	    switch(type)
 	    {
 	    case PAGE_UP:
@@ -281,7 +280,7 @@ public class ListUtils
 	protected final Source<E> source;
 	public ArrayModel(Source<E> source)
 	{
-	    NullCheck.notNull(source, "source");
+	    requireNonNull(source, "source can't be null");
 	    this.source = source;
 	}
 	@Override public int getItemCount()
@@ -304,7 +303,7 @@ public class ListUtils
 	protected final List<E> source;
 	public ListModel(List<E> source)
 	{
-	    NullCheck.notNull(source, "source");
+	    requireNonNull(source, "source can't be null");
 	    this.source = source;
 	}
 	@Override public int getItemCount()
@@ -325,7 +324,7 @@ public class ListUtils
 	protected final Class<E> itemClass;
 	public DefaultEditableModel(Class<E> itemClass)
 	{
-	    NullCheck.notNull(itemClass, "itemClass");
+	    requireNonNull(itemClass, "itemClass can't be null");
 	    this.itemClass = itemClass;
 	}
 	public DefaultEditableModel(Class<E> itemClass, E[] items)
@@ -351,7 +350,7 @@ public class ListUtils
 	}
 	@Override public boolean addToModel(int pos, java.util.function.Supplier<Object> supplier)
 	{
-	    NullCheck.notNull(supplier, "supplier");
+	    requireNonNull(supplier, "supplier can't be null");
 	    if (pos < 0)
 		throw new IllegalArgumentException("pos may not be negative (" + pos + ")");
 	    final Object value = supplier.get();
@@ -411,22 +410,22 @@ public class ListUtils
 	protected final Set<Object> items = new HashSet<>();
 	@Override public boolean marked(Object o)
 	{
-	    NullCheck.notNull(o, "o");
+	    requireNonNull(o, "o can't be null");
 	    return items.contains(o);
 	}
 	@Override public void mark(Object o)
 	{
-	    NullCheck.notNull(o, "o");
+	    requireNonNull(o, "o can't be null");
 	    items.add(o);
 	}
 	@Override public void unmark(Object o)
 	{
-	    NullCheck.notNull(o, "o");
+	    requireNonNull(o, "o can't be null");
 	    items.remove(o);
 	}
 	@Override public boolean toggleMark(Object o)
 	{
-	    NullCheck.notNull(o, "o");
+	    requireNonNull(o, "o can't be null");
 	    if (marked(o))
 	    {
 unmark(o);
@@ -462,16 +461,16 @@ mark(o);
 
 	public MarkableListAppearance(ControlContext context, MarkableListArea.MarksInfo marksInfo)
 	{
-	    NullCheck.notNull(context, "context");
-	    NullCheck.notNull(marksInfo, "marksInfo");
+	    requireNonNull(context, "context can't be null");
+	    requireNonNull(marksInfo, "marksInfo can't be null");
 	    this.context = context;
 	    this.marksInfo = marksInfo;
 	}
 
 	@Override public void announceItem(Object item, Set<Flags> flags)
 	{
-	    NullCheck.notNull(item, "item");
-	    NullCheck.notNull(flags, "flags");
+	    requireNonNull(item, "item can't be null");
+	    requireNonNull(flags, "flags can't be null");
 	    context.playSound(Sounds.LIST_ITEM);
 	    context.silence();
 	    if (flags.contains(Flags.BRIEF))
@@ -486,8 +485,8 @@ mark(o);
 
 	@Override public String getScreenAppearance(Object item, Set<Flags> flags)
 	{
-	    NullCheck.notNull(item, "item");
-	    NullCheck.notNull(flags, "flags");
+	    requireNonNull(item, "item can't be null");
+	    requireNonNull(flags, "flags can't be null");
 	    if (marksInfo.marked(item))
 		return "* " + item.toString();
 	    return "  " + item.toString();
@@ -513,10 +512,10 @@ mark(o);
 	@Override public boolean saveToClipboard(ListArea<E> listArea, ListArea.Model<E> model, ListArea.Appearance<E> appearance,
 						 int fromIndex, int toIndex, Clipboard clipboard)
 	{
-	    NullCheck.notNull(listArea, "listArea");
-	    NullCheck.notNull(model, "model");
-	    NullCheck.notNull(appearance, "appearance");
-	    NullCheck.notNull(clipboard, "clipboard");
+	    requireNonNull(listArea, "listArea can't be null");
+	    requireNonNull(model, "model can't be null");
+	    requireNonNull(appearance, "appearance can't be null");
+	    requireNonNull(clipboard, "clipboard can't be null");
 	    if (fromIndex < 0)
 		throw new IllegalArgumentException("fromIndex may not be negative (" + fromIndex + ")");
 	    if (toIndex < 0)
@@ -542,14 +541,14 @@ mark(o);
 	}
 	protected String getClipboardString(ListArea.Appearance<E> appearance, E obj)
 	{
-	    NullCheck.notNull(appearance, "appearance");
-	    NullCheck.notNull(obj, "obj");
+	    requireNonNull(appearance, "appearance can't be null");
+	    requireNonNull(obj, "obj can't be null");
 	    return appearance.getScreenAppearance(obj, EnumSet.of(ListArea.Appearance.Flags.CLIPBOARD));
 	}
 	protected Object getClipboardObj(ListArea.Appearance<E> appearance, E obj)
 	{
-	    NullCheck.notNull(appearance, "appearance");
-	    NullCheck.notNull(obj, "obj");
+	    requireNonNull(appearance, "appearance can't be null");
+	    requireNonNull(obj, "obj can't be null");
 	    if (obj instanceof java.io.File ||
 		obj instanceof java.net.URL ||
 		obj instanceof java.net.URI)
@@ -564,22 +563,22 @@ mark(o);
 	protected final Function<E, String> strFunc;
 	public FunctionalClipboardSaver(Function<E, Object> objFunc, Function<E, String> strFunc)
 	{
-	    NullCheck.notNull(objFunc, "objFunc");
-	    NullCheck.notNull(strFunc, "strFunc");
+	    requireNonNull(objFunc, "objFunc can't be null");
+	    requireNonNull(strFunc, "strFunc can't be null");
 	    this.objFunc = objFunc;
 	    this.strFunc = strFunc;
 	}
 	@Override protected Object getClipboardObj(ListArea.Appearance<E> appearance, E obj)
 	{
-	    NullCheck.notNull(appearance, "appearance");
-	    NullCheck.notNull(obj, "obj");
+	    requireNonNull(appearance, "appearance can't be null");
+	    requireNonNull(obj, "obj can't be null");
 	    final Object res = objFunc.apply(obj);
 	    return res != null?res:super.getClipboardObj(appearance, obj);
 	}
 	@Override protected String getClipboardString(ListArea.Appearance<E> appearance, E obj)
 	{
-	    NullCheck.notNull(appearance, "appearance");
-	    NullCheck.notNull(obj, "obj");
+	    requireNonNull(appearance, "appearance can't be null");
+	    requireNonNull(obj, "obj can't be null");
 	    final String res = strFunc.apply(obj);
 	    return res != null?res:super.getClipboardString(appearance, obj);
 	}

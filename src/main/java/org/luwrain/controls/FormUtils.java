@@ -7,6 +7,7 @@ import java.util.*;
 
 import org.luwrain.core.*;
 import org.luwrain.popups.Popups;
+import static java.util.Objects.*;
 
 public class FormUtils
 {
@@ -20,10 +21,10 @@ public class FormUtils
 	public FixedListChoosing(Luwrain luwrain, String name,
 				 Object[] items, Set<Popup.Flags> popupFlags)
 	{
-	    NullCheck.notNull(luwrain, "luwrain");
-	    NullCheck.notNull(name, "name");
+	    requireNonNull(luwrain, "luwrain can't be null");
+	    requireNonNull(name, "name can't be null");
 	    NullCheck.notNullItems(items, "items");
-	    NullCheck.notNull(popupFlags, "popupFlags");
+	    requireNonNull(popupFlags, "popupFlags can't be null");
 	    this.luwrain = luwrain;
 	    this.name = name;
 	    this.items = items;

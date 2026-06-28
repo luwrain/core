@@ -6,6 +6,7 @@ package org.luwrain.controls;
 import org.luwrain.core.*;
 
 import org.luwrain.controls.CommanderArea.EntryType;
+import static java.util.Objects.*;
 
 public class CommanderUtils
 {
@@ -13,8 +14,8 @@ public class CommanderUtils
     {
 	@Override public int compare(E o1, E o2)
 	{
-	    NullCheck.notNull(o1, "o1");
-	    NullCheck.notNull(o2, "o2");
+	    requireNonNull(o1, "o1 can't be null");
+	    requireNonNull(o2, "o2 can't be null");
 	    if (!(o1 instanceof CommanderArea.NativeItem) || !(o2 instanceof CommanderArea.NativeItem))
 		return 0;
 	    final CommanderArea.NativeItem w1 = (CommanderArea.NativeItem)o1;
@@ -45,9 +46,9 @@ public class CommanderUtils
 
     static public void defaultEntryAnnouncement(ControlContext context, String name, CommanderArea.EntryType type, boolean marked)
     {
-	NullCheck.notNull(context, "context");
-	NullCheck.notNull(name, "name");
-	NullCheck.notNull(type, "type");
+	requireNonNull(context, "context can't be null");
+	requireNonNull(name, "name can't be null");
+	requireNonNull(type, "type can't be null");
 	if (name.trim().isEmpty() && type != EntryType.PARENT)
 	{
 	    context.setEventResponse(DefaultEventResponse.hint(Hint.EMPTY_LINE));

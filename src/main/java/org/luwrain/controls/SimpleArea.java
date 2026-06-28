@@ -28,7 +28,7 @@ public class SimpleArea extends NavigationArea implements MutableLines
     {
 	super(environment);
 	this.environment = environment;
-	NullCheck.notNull(environment, "environment");
+	requireNonNull(environment, "environment can't be null");
     }
 
     public SimpleArea(ControlContext environment, String name)
@@ -36,8 +36,8 @@ public class SimpleArea extends NavigationArea implements MutableLines
 	super(environment);
 	this.environment = environment;
 	this.name = name;
-	NullCheck.notNull(environment, "environment");
-	NullCheck.notNull(name, "name");
+	requireNonNull(environment, "environment can't be null");
+	requireNonNull(name, "name can't be null");
     }
 
     public SimpleArea(ControlContext environment, String name,
@@ -46,15 +46,15 @@ public class SimpleArea extends NavigationArea implements MutableLines
 	super(environment);
 	this.environment = environment;
 	this.name = name;
-	NullCheck.notNull(environment, "environment");
-	NullCheck.notNull(name, "name");
+	requireNonNull(environment, "environment can't be null");
+	requireNonNull(name, "name can't be null");
 	NullCheck.notNullItems(lines, "lines");
 	content.setLines(lines);
     }
 
     @Override public void update(Updating updating)
     {
-	NullCheck.notNull(updating, "updating");
+	requireNonNull(updating, "updating can't be null");
 	content.update(updating);
 	afterChange();
     }
@@ -133,7 +133,7 @@ public class SimpleArea extends NavigationArea implements MutableLines
 
     @Override public void setLineMarks(int index, LineMarks lineMarks)
     {
-	NullCheck.notNull(lineMarks, "lineMarks");
+	requireNonNull(lineMarks, "lineMarks can't be null");
 	content.setLineMarks(index, lineMarks);
 	afterChange();
     }
@@ -146,7 +146,7 @@ public class SimpleArea extends NavigationArea implements MutableLines
 
     public void setName(String name)
     {
-	NullCheck.notNull(name, "name");
+	requireNonNull(name, "name can't be null");
 	this.name = name;
 	environment.onAreaNewName(this);
     }

@@ -76,7 +76,7 @@ public class SingleLineEdit implements ClipboardTranslator.Provider, RegionTextQ
 
     public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.withControl() || event.withAlt())
 	    return false;
 	if (event.isSpecial())
@@ -98,7 +98,7 @@ public class SingleLineEdit implements ClipboardTranslator.Provider, RegionTextQ
 
     public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() !=SystemEvent.Type.REGULAR)
 	    return false;
 	switch(event.getCode())
@@ -118,7 +118,7 @@ public class SingleLineEdit implements ClipboardTranslator.Provider, RegionTextQ
 
     public boolean onAreaQuery(AreaQuery query)
     {
-	NullCheck.notNull(query, "query");
+	requireNonNull(query, "query can't be null");
 	if (regionTextQueryTranslator.onAreaQuery(query, model.getHotPointX(), 0))
 	    return true;
 	return false;
@@ -127,7 +127,7 @@ public class SingleLineEdit implements ClipboardTranslator.Provider, RegionTextQ
     protected boolean onHome(InputEvent event)
     {
 	final String line = model.getLine();
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	model.setHotPointX(0);
 	if (!line.isEmpty())
 	    context.sayLetter(line.charAt(0)); else
@@ -138,7 +138,7 @@ public class SingleLineEdit implements ClipboardTranslator.Provider, RegionTextQ
     protected boolean onBackspace(InputEvent event)
     {
 	final String line = model.getLine();
-	NullCheck.notNull(line, "line");
+	requireNonNull(line, "line can't be null");
 	final int pos = model.getHotPointX();
 	if (pos < 0 || pos > line.length())
 	    return false;

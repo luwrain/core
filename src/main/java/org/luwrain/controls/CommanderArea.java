@@ -106,7 +106,7 @@ public class CommanderArea<E> extends ListArea<CommanderArea.Wrapper<E>>
 
     public void setCommanderComparator(Comparator<NativeItem<E>> comparator)
     {
-	NullCheck.notNull(comparator, "comparator");
+	requireNonNull(comparator, "comparator can't be null");
 	this.comparator = comparator;
     }
 
@@ -117,7 +117,7 @@ public class CommanderArea<E> extends ListArea<CommanderArea.Wrapper<E>>
 
     public boolean findFileName(String fileName, boolean announce)
     {
-	NullCheck.notNull(fileName, "fileName");
+	requireNonNull(fileName, "fileName can't be null");
 	if (isEmpty())
 	    return false;
 	final List<Wrapper<E>> wrappers = getListModel().wrappers;
@@ -222,21 +222,21 @@ protected Wrapper<E> getSelectedWrapper()
 
     public boolean open(E entry, boolean announce)
     {
-	NullCheck.notNull(entry, "entry ");
+	requireNonNull(entry, "entry can't be null");
 	return open(entry, null, announce);
     }
 
         //If no desiredSelected found, area tries to leave selection unchanged
     public boolean open(E entry, String desiredSelected, boolean announce)
     {
-	NullCheck.notNull(entry, "entry");
+	requireNonNull(entry, "entry can't be null");
 	return open(entry, desiredSelected, null, announce);
     }
 
     //If no desiredSelected found, area tries to leave selection unchanged
     public boolean open(E entry, String desiredSelected, String [] desiredMarked, boolean announce)
     {
-	NullCheck.notNull(entry, "entry");
+	requireNonNull(entry, "entry can't be null");
 	if (closed || isBusy())
 	    return false;
 	final E newCurrent = entry;
@@ -329,7 +329,7 @@ protected Wrapper<E> getSelectedWrapper()
 
     protected void acceptNewLocation(E location, List<Wrapper<E>> data, int selectedIndex, boolean announce)
     {
-	NullCheck.notNull(location, "location");
+	requireNonNull(location, "location can't be null");
 	currentLocation = location;
 	getListModel().wrappers = data;
 	super.redraw();
@@ -357,7 +357,7 @@ protected Wrapper<E> getSelectedWrapper()
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.isSpecial() && !event.isModified())
 	    switch(event.getSpecial())
 	    {
@@ -412,7 +412,7 @@ protected Wrapper<E> getSelectedWrapper()
 
     protected boolean onMarking(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (!flags.contains(Flags.MARKING))
 	    return false;
 	final Wrapper<E> wrapper = getSelectedWrapper();
@@ -430,7 +430,7 @@ protected Wrapper<E> getSelectedWrapper()
 
     protected boolean clickImpl(int index, Wrapper<E> wrapper)
     {
-	NullCheck.notNull(wrapper, "wrapper");
+	requireNonNull(wrapper, "wrapper can't be null");
 	if (closed || isBusy())
 	    return false;
 	if (clickHandler == null || currentLocation == null)
@@ -446,7 +446,7 @@ protected Wrapper<E> getSelectedWrapper()
 	if (wrapper.type == EntryType.DIR || wrapper.type == EntryType.SYMLINK_DIR)
 	{
 	    final ClickHandler.Result res = this.clickHandler.onCommanderClick(this, wrapper.obj, true);
-	    NullCheck.notNull(res, "res");
+	    requireNonNull(res, "res can't be null");
 	    switch(res)
 	    {
 	    case OPEN_DIR:
@@ -460,7 +460,7 @@ protected Wrapper<E> getSelectedWrapper()
 	    return false;
 	} //directory
 	final ClickHandler.Result res = this.clickHandler.onCommanderClick(this, wrapper.obj, false);
-	NullCheck.notNull(res, "res");
+	requireNonNull(res, "res can't be null");
 	return res == ClickHandler.Result.OK?true:false;
     }
 
@@ -471,13 +471,13 @@ protected Wrapper<E> getSelectedWrapper()
 
     protected String getBaseName(Wrapper wrapper)
     {
-	NullCheck.notNull(wrapper, "wrapper");
+	requireNonNull(wrapper, "wrapper can't be null");
 	return wrapper.getBaseName();
     }
 
     static protected <E> ListArea.Params<Wrapper<E>> createListParams(CommanderArea.Params<E> params)
     {
-	NullCheck.notNull(params, "params");
+	requireNonNull(params, "params can't be null");
 	NullCheck.notNull(params.context, "params.context");
 	NullCheck.notNull(params.model, "params.model");
 	NullCheck.notNull(params.appearance, "params.appearance");
@@ -500,9 +500,9 @@ final EntryType type;
 	boolean marked = false;
 	Wrapper(E obj, EntryType type, String baseName)
 	{
-	    NullCheck.notNull(obj, "obj");
-	    NullCheck.notNull(type, "type");
-	    NullCheck.notNull(baseName, "baseName");
+	    requireNonNull(obj, "obj can't be null");
+	    requireNonNull(type, "type can't be null");
+	    requireNonNull(baseName, "baseName can't be null");
 	    this.obj = obj;
 	    this.type = type;
 	    this.baseName = baseName;
@@ -541,19 +541,19 @@ final EntryType type;
 	protected final CommanderArea.Appearance<E> appearance;
 	public ListAppearanceImpl(CommanderArea.Appearance<E> appearance)
 	{
-	    NullCheck.notNull(appearance, "appearance");
+	    requireNonNull(appearance, "appearance can't be null");
 	    this.appearance = appearance;
 	}
 	@Override public void announceItem(Wrapper<E> wrapper, Set<Flags> flags)
 	{
-	    NullCheck.notNull(wrapper, "wrapper");
-	    NullCheck.notNull(flags, "flags");
+	    requireNonNull(wrapper, "wrapper can't be null");
+	    requireNonNull(flags, "flags can't be null");
 	    appearance.announceEntry(wrapper.obj, wrapper.type, wrapper.marked);
 	}
 	@Override public String getScreenAppearance(Wrapper<E> wrapper, Set<Flags> flags)
 	{
-	    NullCheck.notNull(wrapper, "wrapper");
-	    NullCheck.notNull(flags, "flags");
+	    requireNonNull(wrapper, "wrapper can't be null");
+	    requireNonNull(flags, "flags can't be null");
 	    final boolean marked = wrapper.marked;
 	    final EntryType type = wrapper.type;
 	    final String name = appearance.getEntryText(wrapper.obj, wrapper.type, wrapper.marked);
@@ -593,7 +593,7 @@ final EntryType type;
 	}
 	@Override public int getObservableRightBound(Wrapper<E> wrapper)
 	{
-	    NullCheck.notNull(wrapper, "wrapper");
+	    requireNonNull(wrapper, "wrapper can't be null");
 	    return wrapper.getBaseName().length() + 2;
 	}
     }
@@ -605,7 +605,7 @@ final EntryType type;
 	List<Wrapper<E>> wrappers = null;//null means the content is inaccessible
 	public ListModelAdapter(CommanderArea.Model<E> model, Filter<E> filter, Comparator<NativeItem<E>> comparator)
 	{
-	    NullCheck.notNull(model, "model");
+	    requireNonNull(model, "model can't be null");
 	    this.model = model;
 	}
 	@Override public int getItemCount()

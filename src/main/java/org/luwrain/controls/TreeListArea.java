@@ -7,7 +7,7 @@ import java.util.*;
 
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
-
+import static java.util.Objects.*;
 import static org.luwrain.core.DefaultEventResponse.*;
 
 public class TreeListArea<E> extends ListArea<E> implements ListArea.ClickHandler<E>
@@ -54,7 +54,7 @@ public interface Model<E>
 
     public void setLeafClickHandler(LeafClickHandler leafClickHandler)
     {
-	NullCheck.notNull(leafClickHandler, "leafClickHandler");
+	requireNonNull(leafClickHandler, "leafClickHandler can't be null");
 	this.leafClickHandler = leafClickHandler;
     }
 
@@ -119,7 +119,7 @@ public interface Model<E>
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.isSpecial() && !event.isModified())
 	    switch(event.getSpecial())
 	    {
@@ -146,7 +146,7 @@ public interface Model<E>
 
     static protected <E> ListArea.Params<E> createListParams(TreeListArea.Params params)
     {
-	NullCheck.notNull(params, "params");
+	requireNonNull(params, "params can't be null");
 	NullCheck.notNull(params.model, "params.model");
 final ListArea.Params<E> res = new ListArea.Params<>();
 res.context = params.context;
@@ -173,7 +173,7 @@ return res;
 	E selected = null;
 	public Frame(E parent)
 	{
-	    NullCheck.notNull(parent, "parent");
+	    requireNonNull(parent, "parent can't be null");
 	    this.parent = parent;
 	}
     }

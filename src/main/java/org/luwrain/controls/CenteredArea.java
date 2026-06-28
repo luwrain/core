@@ -5,6 +5,7 @@ package org.luwrain.controls;
 
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
+import static java.util.Objects.*;
 
 public class CenteredArea implements org.luwrain.core.Area
 {
@@ -19,7 +20,7 @@ public class CenteredArea implements org.luwrain.core.Area
 
     public CenteredArea(ControlContext context)
     {
-	NullCheck.notNull(context, "context");
+	requireNonNull(context, "context can't be null");
 	this.context = context;
 	this.screenWidth = context.getScreenWidth();
 	this.screenHeight = context.getScreenHeight();
@@ -27,8 +28,8 @@ public class CenteredArea implements org.luwrain.core.Area
 
     public CenteredArea(ControlContext context, String areaName)
     {
-	NullCheck.notNull(context, "context");
-	NullCheck.notNull(areaName, "areaName");
+	requireNonNull(context, "context can't be null");
+	requireNonNull(areaName, "areaName can't be null");
 	this.context = context;
 	this.areaName = areaName;
 	this.screenWidth = context.getScreenWidth();
@@ -75,20 +76,20 @@ public class CenteredArea implements org.luwrain.core.Area
 
     public void setAreaName(String newName)
     {
-	NullCheck.notNull(newName, "newName");
+	requireNonNull(newName, "newName can't be null");
 	this.areaName = areaName;
 	context.onAreaNewName(this);
     }
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	return false;
     }
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getCode() == SystemEvent.Code.FONT_SIZE_CHANGED)
 	{
 	    this.screenWidth = context.getScreenWidth();

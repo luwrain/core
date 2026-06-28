@@ -100,7 +100,7 @@ public class FormArea  extends NavigationArea
 
     public boolean hasItemWithName(String itemName)
     {
-	NullCheck.notNull(itemName, "itemName");
+	requireNonNull(itemName, "itemName can't be null");
 	if (itemName.isEmpty())
 	    return false;
 	for(Item i: items)
@@ -220,8 +220,8 @@ public class FormArea  extends NavigationArea
 
     public void setEnteredText(String itemName, String newText)
     {
-	NullCheck.notNull(itemName, "itemName");
-	NullCheck.notNull(newText, "newText");
+	requireNonNull(itemName, "itemName can't be null");
+	requireNonNull(newText, "newText can't be null");
 	if (itemName.trim().isEmpty())
 	    return;
 	for(Item i: items)
@@ -254,9 +254,9 @@ public class FormArea  extends NavigationArea
 			   Object initialSelectedItem, ListChoosing listChoosing,
 			   Object obj, boolean enabled)
     {
-	NullCheck.notNull(itemName, "itemName");
+	requireNonNull(itemName, "itemName can't be null");
 	requireNonNull(caption, "caption can't be null");
-	NullCheck.notNull(listChoosing, "listChoosing");
+	requireNonNull(listChoosing, "listChoosing can't be null");
 	if (itemName.trim().isEmpty() || hasItemWithName(itemName))
 	    return false;
 	final Item item = new Item(context, this, Type.LIST, itemName);
@@ -274,7 +274,7 @@ public class FormArea  extends NavigationArea
 
     public Object getSelectedListItem(String itemName)
     {
-	NullCheck.notNull(itemName, "itemName");
+	requireNonNull(itemName, "itemName can't be null");
 	if (itemName.trim().isEmpty())
 	    return null;
 	for(Item i: items)
@@ -286,7 +286,7 @@ public class FormArea  extends NavigationArea
     public boolean addCheckbox(String itemName, String caption,
 			       boolean initialState, Object obj, boolean enabled)
     {
-	NullCheck.notNull(itemName, "itemName");
+	requireNonNull(itemName, "itemName can't be null");
 	requireNonNull(caption, "caption can't be null");
 	if (itemName.trim().isEmpty() || hasItemWithName(itemName))
 	    return false;
@@ -304,14 +304,14 @@ public class FormArea  extends NavigationArea
 
     public boolean addCheckbox(String itemName, String caption, boolean initialState)
     {
-	NullCheck.notNull(itemName, "itemName");
+	requireNonNull(itemName, "itemName can't be null");
 	requireNonNull(caption, "caption can't be null");
 	return addCheckbox(itemName, caption, initialState, null, true);
     }
 
     public boolean getCheckboxState(String itemName)
     {
-	NullCheck.notNull(itemName, "itemName");
+	requireNonNull(itemName, "itemName can't be null");
 	if (itemName.trim().isEmpty())
 	    return false;
 	for(Item i: items)
@@ -338,7 +338,7 @@ public class FormArea  extends NavigationArea
 
     public boolean addStatic(String itemName, String caption)
     {
-	NullCheck.notNull(itemName, "itemName");
+	requireNonNull(itemName, "itemName can't be null");
 	requireNonNull(caption, "caption can't be null");
 	return addStatic(itemName, caption, "");
     }
@@ -385,8 +385,8 @@ public class FormArea  extends NavigationArea
     public boolean activateMultilineEdit(String caption, MutableMarkedLines content, MultilineEdit.Params params, boolean enabled)
     {
 	requireNonNull(caption, "caption can't be null");
-	NullCheck.notNull(content, "content");
-	NullCheck.notNull(params, "params");
+	requireNonNull(content, "content can't be null");
+	requireNonNull(params, "params can't be null");
 	if (isMultilineEditActivated())
 	    return false;
 	this.multilineEditCaption = caption;
@@ -424,7 +424,7 @@ return activateMultilineEdit(caption, content, params, enabled);
 
     public boolean updateMultilineEdit(MultilineEditUpdating updating)
     {
-	NullCheck.notNull(updating, "updating");
+	requireNonNull(updating, "updating can't be null");
 	if (mlEditContent == null)
 	    throw new IllegalStateException("Multiline edit not activated");
 	if (!updating.editUpdate(mlEditContent, mlEditHotPoint))
@@ -458,7 +458,7 @@ return activateMultilineEdit(caption, content, params, enabled);
 
     public String getMultilineEditText(String lineSeparator)
     {
-	NullCheck.notNull(lineSeparator, "lineSeparator");
+	requireNonNull(lineSeparator, "lineSeparator can't be null");
 	if (mlEditContent == null)
 	    return null;
 final int count = mlEditContent.getLineCount();
@@ -494,7 +494,7 @@ final int count = mlEditContent.getLineCount();
 
     public boolean removeItemByName(String itemName)
     {
-	NullCheck.notNull(itemName, "itemName");
+	requireNonNull(itemName, "itemName can't be null");
 	if (itemName.trim().isEmpty())
 	    return false;
 	for(int i = 0;i < items.size();++i)
@@ -587,7 +587,7 @@ final int count = mlEditContent.getLineCount();
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return super.onSystemEvent(event);
 	for(Item i: items)
@@ -605,7 +605,7 @@ final int count = mlEditContent.getLineCount();
 
     @Override public boolean onAreaQuery(AreaQuery query)
     {
-	NullCheck.notNull(query, "query");
+	requireNonNull(query, "query can't be null");
 	for(Item i: items)
 	    if (i.isEnabledEdit() && i.edit.isPosCovered(getHotPointX(), getHotPointY()) &&
 		    i.onAreaQuery(query))
@@ -692,8 +692,8 @@ final int count = mlEditContent.getLineCount();
 
     @Override public int getNewHotPointX(int oldHotPointY, int newHotPointY, int oldHotPointX, String oldLine, String newLine)
     {
-	NullCheck.notNull(oldLine, "oldLine");
-	NullCheck.notNull(newLine, "newLine");
+	requireNonNull(oldLine, "oldLine can't be null");
+	requireNonNull(newLine, "newLine can't be null");
 	// The first line of multiline edit
 	if (newHotPointY == items.size())
 	    return 0;
@@ -715,7 +715,7 @@ final int count = mlEditContent.getLineCount();
 
     public void setAreaName(String name)
     {
-	NullCheck.notNull(name, "name");
+	requireNonNull(name, "name can't be null");
 	this.name = name;
 	//context.onNewAreaName(this);
     }
@@ -790,10 +790,10 @@ protected ListChoosing listChoosing;
 	boolean checkboxState;
 	Item(ControlContext context, Area area, Type type, String name)
 	{
-	    NullCheck.notNull(context, "context");
-	    NullCheck.notNull(area, "area");
-	    NullCheck.notNull(type, "type");
-	    NullCheck.notNull(name, "name");
+	    requireNonNull(context, "context can't be null");
+	    requireNonNull(area, "area can't be null");
+	    requireNonNull(type, "type can't be null");
+	    requireNonNull(name, "name can't be null");
 	    //	    this.context = context;
 	    this.area = area;
 	    this.type = type;

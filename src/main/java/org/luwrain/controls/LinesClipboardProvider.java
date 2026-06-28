@@ -7,6 +7,8 @@ import java.util.*;
 
 import org.luwrain.core.*;
 
+import static java.util.Objects.*;
+
 public class LinesClipboardProvider implements ClipboardTranslator.Provider
 {
     public interface ClipboardSource
@@ -19,8 +21,8 @@ public class LinesClipboardProvider implements ClipboardTranslator.Provider
 
     public LinesClipboardProvider(Lines lines, ClipboardSource clipboardSource)
     {
-	NullCheck.notNull(lines, "lines");
-	NullCheck.notNull(clipboardSource, "clipboardSource");
+	requireNonNull(lines, "lines can't be null");
+	requireNonNull(clipboardSource, "clipboardSource can't be null");
 	this.lines = lines;
 	this.clipboardSource = clipboardSource;
     }

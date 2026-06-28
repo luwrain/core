@@ -4,10 +4,10 @@
 package org.luwrain.controls;
 
 import java.util.*;
-
 import org.luwrain.core.*;
 import org.luwrain.core.events.*;
 import org.luwrain.controls.*;
+import static java.util.Objects.*;
 
 public class MarkableListArea extends ListArea<Object>
 {
@@ -43,7 +43,7 @@ public class MarkableListArea extends ListArea<Object>
 
     @Override public boolean onInputEvent(InputEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (!event.isSpecial())
 	    switch(event.getChar())
 	    {
@@ -57,7 +57,7 @@ public class MarkableListArea extends ListArea<Object>
 
     @Override public boolean onSystemEvent(SystemEvent event)
     {
-	NullCheck.notNull(event, "event");
+	requireNonNull(event, "event can't be null");
 	if (event.getType() != SystemEvent.Type.REGULAR)
 	    return super.onSystemEvent(event);
 	switch(event.getCode())
