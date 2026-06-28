@@ -442,7 +442,7 @@ final class LuwrainImpl implements Luwrain
 
     @Override public void openFiles(String[] fileNames)
     {
-	requireNonNull(fileNames, "fileNames");
+	requireNonNull(fileNames, "fileNames can't be null");
 	if (fileNames.length == 0)
 	    throw new IllegalArgumentException("fileNames can't be empty");
 	for(String s: fileNames)

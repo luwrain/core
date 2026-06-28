@@ -10,8 +10,6 @@ import java.io.*;
 import java.nio.file.*;
 import org.apache.logging.log4j.*;
 
-//import com.google.gson.*;
-
 import org.luwrain.io.json.FileType;
 
 import static java.util.Objects.*;
@@ -19,9 +17,8 @@ import static java.util.Objects.*;
 final class FileTypes
 {
     static private final Logger log = LogManager.getLogger();
-    	static private final String JOB_PREFIX = "job:";
+    static private final String JOB_PREFIX = "job:";
 
-    //    private final Gson gson = new Gson();
     private final Map<String, FileType> fileTypes = new HashMap<>();
 
     void load(Configs configs)
@@ -37,12 +34,20 @@ final class FileTypes
     {
 	requireNonNull(core, "core can't be null");
 	requireNonNull(files, "files can't be null");
+	if (files.length == 0)
+	    throw new IllegalArgumentException("files can't be empty");
+	for(String s: files)
+	    if (requireNonNullElse(s, "").isEmpty())
+		throw new IllegalArgumentException("files can't contain empty items");
+	log.trace("Opening {}", Arrays.toString(files));
 	final String[] shortcuts = selectShortcuts(files);
+	log.trace("Selected shortcuts are {}", Arrays.toString(shortcuts));
 	final Map<String, List<String> > lists = new HashMap<>();
 	for(int i = 0;i < files.length;++i)
 	{
-	    final String s = shortcuts[i];
-	    final String f = files[i];
+	    final String
+	    s = shortcuts[i],
+f = files[i];
 	    if (s.isEmpty())
 		continue;
 	    if (lists.containsKey(s))
@@ -56,13 +61,16 @@ final class FileTypes
 	}
 	for(Map.Entry<String, List<String> > e: lists.entrySet())
 	{
+	    /*
 	    if (runJob(core, e.getKey(), e.getValue()))
 		continue;
-	    final String shortcut = e.getKey();
+	    */
+	    final var shortcut = e.getKey();
 	    //FIXME: Query shortcut
 	    final boolean takesMultiple = false;//FIXME:
 	    final boolean takesUrls = false; //FIXME:
 	    final String[] toOpen = e.getValue().toArray(new String[e.getValue().size()]);
+	    /*
 	    if (takesUrls)
 		for(int i = 0;i < toOpen.length;++i)
 		{
@@ -75,6 +83,7 @@ final class FileTypes
 			log.warn("Unable to generate URL for path " + toOpen[i] + " which is requested to open");
 		    }
 		}
+	    */
 	    if (!takesMultiple)
 	    {
 		for(String f: toOpen)
