@@ -43,10 +43,22 @@ final class GlobalKeys
 	cmd('j', Modifiers.SHIFT, Modifiers.ALT, "jobs"),
 	cmd('a', Modifiers.ALT, "ai"),
 	cmd('e', Modifiers.ALT, "notepad"),
+	cmd('m', Modifiers.ALT, "mail"),
+	cmd('m', Modifiers.ALT, Modifiers.SHIFT, "mail-message"),
+	cmd('n', Modifiers.ALT, "news"),
 	cmd('p', Modifiers.ALT, "player"),
 	cmd('s', Modifiers.ALT, "player-pause"),
+	cmd('w', Modifiers.ALT, "wiki"),
 	cmd('p', Modifiers.SHIFT, Modifiers.ALT, "control-panel"),
-		cmd('f', Modifiers.ALT, "web"),
+	cmd('f', Modifiers.ALT, "web"),
+	cmd('g', Modifiers.ALT, "osm"),
+	cmd('d', Modifiers.ALT, "diary"),
+		cmd('c', Modifiers.ALT, "calc"),
+		cmd('c', Modifiers.ALT, Modifiers.CONTROL, "calendar"),
+
+	//TODO: Only for linux
+	cmd('d', Modifiers.SHIFT, Modifiers.ALT, "man"),
+	cmd(Special.F4, "term")
     };
     
 
