@@ -17,10 +17,6 @@ dependencies {
   testImplementation libraries.junit
 }
 
-tasks.named('test') {
-  useJUnitPlatform()
-}
-
 publishing {
   publications {
     mavenJava(MavenPublication) {
@@ -36,4 +32,3 @@ publishing {
     }
   }
 }
-
