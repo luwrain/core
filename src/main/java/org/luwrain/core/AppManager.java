@@ -10,8 +10,6 @@ import static org.luwrain.core.NullCheck.*;
 
 final class AppManager
 {
-    static private final String LOG_COMPONENT = Base.LOG_COMPONENT;
-
     private LaunchedApp desktopApp = null;
     private final ArrayList<LaunchedApp> apps = new ArrayList<>();
     private int activeAppIndex = -1;

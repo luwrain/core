@@ -3,20 +3,20 @@
 
 package org.luwrain.core;
 
+import org.apache.logging.log4j.*;
+
 import static java.util.Objects.*;
-import static org.luwrain.core.Base.*;
-//import static org.luwrain.core.NullCheck.*;
 
 final class LaunchedApp extends LaunchedAppPopups
 {
-    static private final String LOG_COMPONENT = Base.LOG_COMPONENT;
-
+    static private final Logger log = LogManager.getLogger();
+    
     final Application app;
-    AreaLayout.Type layoutType;
-    Area[] areas;
-    OpenedArea[] areaWrappings;
-    int activeAreaIndex = 0;
-    Application activeAppBeforeLaunch;
+    Application activeAppBeforeLaunch = null;
+    private AreaLayout.Type layoutType;
+    private Area[] areas;
+    private OpenedArea[] areaWrappings;
+    private int activeAreaIndex = 0;
 
     LaunchedApp(Application app)
     {
@@ -31,7 +31,7 @@ final class LaunchedApp extends LaunchedAppPopups
 	areas = layout.getAreas();
 	if (areas == null)
 	{
-	    error("application " + app.getClass().getName() + " has area layout without areas");
+	    log.warn("The application {} has area layout without areas", app.getClass().getName());
 	    return false;
 	}
 	this.areaWrappings = new OpenedArea[areas.length];
@@ -39,7 +39,7 @@ final class LaunchedApp extends LaunchedAppPopups
 	{
 	    if (areas[i] == null)
 	    {
-		error("application " + app.getClass().getName() + " has a null area");
+		log.warn("The application {} has null area", app.getClass().getName());
 		return false;
 	    }
 	    areaWrappings[i] = new OpenedArea(areas[i]);
@@ -55,7 +55,7 @@ final class LaunchedApp extends LaunchedAppPopups
 	final Area[] newAreas = newLayout.getAreas();
 	if (newAreas == null)
 	{
-	    error("application " + app.getClass().getName() + " has area layout without areas");
+	    log.warn("The application {} has area layout without areas", app.getClass().getName());
 	    return false;
 	}
 	final OpenedArea[] newAreaWrappings = new OpenedArea[newAreas.length];
@@ -63,7 +63,7 @@ final class LaunchedApp extends LaunchedAppPopups
 	{
 	    if (newAreas[i] == null)
 	    {
-		error("application " + app.getClass().getName() + " has a null area");
+		log.warn("The application {} has null area", app.getClass().getName());
 		return false;
 	    }
 	    newAreaWrappings[i] = new OpenedArea(newAreas[i]);
@@ -84,21 +84,21 @@ final class LaunchedApp extends LaunchedAppPopups
     {
 	final AreaLayout layout;
 	try {
-	    layout = app.getAreaLayout();
+	    layout = app.getAreaLayout(); //TODO: Safe context
 	}
 	catch (Throwable e)
 	{
-	    error(e, "application " + app.getClass().getName() + " has thrown an exception on getAreaLayout()");
+	    log.warn("The application {} thrown an exception on getAreaLayout()", app.getClass().getName(), e);
 	    return null;
 	}
 	if (layout == null)
 	{
-	    error("application " + app.getClass().getName() + " has returned an empty area layout");
+	    log.warn("the application {} returned empty area layout", app.getClass().getName());
 	    return null;
 	}
 	if (!layout.isValid())
 	{
-	    error("application " + app.getClass().getName() + " has returned an invalid area layout");
+	    log.warn("The application {} returned invalid area layout", app.getClass().getName());
 	    return null;
 	}
 	return layout;
