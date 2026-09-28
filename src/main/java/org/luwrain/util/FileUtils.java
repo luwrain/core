@@ -6,6 +6,7 @@ package org.luwrain.util;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.regex.*;
 
 import static java.util.Objects.*;
 import static java.nio.file.Files.*;
@@ -143,9 +144,8 @@ public final class FileUtils
      * specified line separator.
      *
      * <p>If {@code lineSeparator} is {@code null}, the system default line
-     * separator is used. The separator is interpreted as a regular expression,
-     * as required by {@link String#split}. An empty file results in an empty
-     * array.</p>
+     * separator is used. The separator is matched literally; it is not treated
+     * as a regular expression. An empty file results in an empty array.</p>
      *
      * @param file file to read, must not be {@code null}
      * @param charset name of the character encoding to use, must not be
@@ -167,7 +167,8 @@ public final class FileUtils
 	final String text = readTextFile(file, charset);
 	if (text.isEmpty())
 	    return new String[0];
-	return text.split(lineSeparator != null?lineSeparator:System.getProperty("line.separator"), -1);
+	final String separator = lineSeparator != null?lineSeparator:System.getProperty("line.separator");
+	return text.split(Pattern.quote(separator), -1);
     }
 
     /**
