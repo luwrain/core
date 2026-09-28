@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.*;
 import java.nio.charset.*;
@@ -30,7 +31,7 @@ public class FileUtilsTest
 	assertThrows(NullPointerException.class, () -> FileUtils.writeRandomFile(null, 10));
     }
 
-    @Test void writeRandomFileCreatesFileOfGivenLength()
+    @Test void writeRandomFileCreatesFileOfGivenLength() throws IOException
     {
 	final int len = 1024;
 	final Path path = tempDir.resolve("data.bin");
@@ -43,7 +44,7 @@ public class FileUtilsTest
 	assertEquals(sha1, sha1Of(path));
     }
 
-    @Test void writeRandomFileProducesChecksumOfWrittenBytes()
+    @Test void writeRandomFileProducesChecksumOfWrittenBytes() throws IOException
     {
 	final int len = 257;
 	final Path path = tempDir.resolve("data2.bin");
@@ -54,7 +55,7 @@ public class FileUtilsTest
 	assertEquals(40, expected.length());
     }
 
-    @Test void writeRandomFileEmptyFile()
+    @Test void writeRandomFileEmptyFile() throws IOException
     {
 	final Path path = tempDir.resolve("empty.bin");
 	final String returned = FileUtils.writeRandomFile(path, 0);
@@ -77,7 +78,7 @@ public class FileUtilsTest
 	assertEquals("Привет, мир!", FileUtils.readTextFile(file, cp1251.name()));
     }
 
-    @Test void readTextFileEmptyFile()
+    @Test void readTextFileEmptyFile() throws IOException
     {
 	final File file = write(tempDir.resolve("empty.txt"), new byte[0]);
 	assertEquals("", FileUtils.readTextFile(file));
