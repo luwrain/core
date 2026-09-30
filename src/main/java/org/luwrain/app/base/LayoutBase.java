@@ -819,6 +819,16 @@ public interface ActionHandler
 	return res;
     }
 
+    public Area unwrapArea(Area area)
+    {
+	requireNonNull(area, "area");
+	final var res = areaWrappers.entrySet().stream()
+	.filter(e -> e.getValue() == area)
+	.map(e -> e.getKey())
+	.findFirst();
+	return res.isPresent() ? res.get() : null;
+    }
+
     /**
      * Clears the internal mapping of original areas to their wrappers.
      *
@@ -833,6 +843,7 @@ public interface ActionHandler
 	areaWrappers.clear();
     }
 
+    //TODO: Add note to this and similar functions that these functions do not call automatically App.setAreaLayout() to immediately apply it
     /**
      * Sets the area layout to a single area.
      *
