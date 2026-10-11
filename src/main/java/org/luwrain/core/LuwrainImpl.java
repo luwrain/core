@@ -334,10 +334,8 @@ final class LuwrainImpl implements Luwrain
         @Override public <T> List<T> createInstances(Class<T> c)
     {
 	requireNonNull(c, "c can't be null");
-	if (c.equals(org.luwrain.io.websearch.Engine.class) ||
-	    c.equals(MediaResourcePlayer.class))
+	//TODO: Configurable list
 	    return core.extensions.load(c);
-	return null;
     }
 
         @Override public FileFetcher[] findFetchers(String url)
@@ -673,7 +671,9 @@ final class LuwrainImpl implements Luwrain
 
     @Override public boolean openUrl(String url)
     {
-	notEmpty(url, "url");
+	requireNonNull(url, "url can't be null");
+	if (url.isBlank())
+	    throw new IllegalArgumentException("url can't be blank");
 	final var res = new AtomicBoolean(false);
 	runUiSafely(()->res.set(chainOfResponsibilityNoExc(this, URL_OPEN, new Object[]{url})));
 	return res.get();

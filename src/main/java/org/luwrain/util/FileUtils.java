@@ -28,7 +28,7 @@ import static org.luwrain.util.Sha1.*;
  * convenience overloads use it automatically. The methods in this class do not
  * perform any automatic character-set detection.</p>
  *
- * <p>Most methods validate their arguments with {@link Object#requireNonNull}
+ * <p>Most methods validate their arguments with {@code Object#requireNonNull}
  * and throw {@link IllegalArgumentException} for semantically invalid values,
  * such as an empty encoding name. Methods that perform I/O throw
  * {@link IOException}.</p>
