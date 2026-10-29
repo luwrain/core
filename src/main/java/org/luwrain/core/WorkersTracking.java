@@ -5,43 +5,50 @@ package org.luwrain.core;
 
 import java.util.*;
 import java.util.concurrent.*;
+import org.apache.logging.log4j.*;
 
 import static java.util.Objects.*;
 
-class WorkersTracking 
+final class WorkersTracking 
 {
-    static private final String LOG_COMPONENT = Core.LOG_COMPONENT;
+    static private final Logger log = LogManager.getLogger();
 
         private final Map<String, Entry> workers = new HashMap<>();
     private volatile boolean continueWork = true;
 
     boolean runExplicitly(String workerName)
     {
-	NullCheck.notEmpty(workerName, "workerName");
+	requireNonNull(workerName, "workerName can't be null");
+	if (workerName.isBlank())
+	    throw new IllegalArgumentException("workerName can't be empty");
 	if (!workers.containsKey(workerName))
 	    return false;
 	final Entry e = workers.get(workerName);
 	synchronized (e) {
 	    if (e.task != null && !e.task.isDone())
+	    {
+			    log.trace("Rejecting explicit run of the worker {} since it's already running", workerName);
 		return false;
+	    }
 	    e.task = new FutureTask<>(e.worker, null);
-	    e.executor.execute(e.task);
+	    e.task.run();
 	}
 	return true;
     }
 
     void doWork(Worker[] workersList)
     {
-	NullCheck.notNullItems(workersList, "workersList");
+	requireNonNull(workersList, "workersList can't be null");
 	workers.clear();
 	for(Worker w: workersList)
 	{
 	    final String name = w.getExtObjName();
 	    if (workers.containsKey(name))
 	    {
-		Log.warning(LOG_COMPONENT, "trying to register workers with the same name \'" + name + "\' twice, only the first one is accepted");
+		log.warn("Trying to register workers with the same name {}, only the first one is accepted", name);
 		continue;
 	    }
+	    log.trace("Adding the worker {}, firstLaunchDelay={}, launchPeriod={}", name, w.getFirstLaunchDelay(), w.getLaunchPeriod());
 	    workers.put(name, new Entry(name, w));
 	}
 	new Thread(()->{
@@ -54,14 +61,15 @@ class WorkersTracking
 			synchronized(e) {
 			    if (e.task != null && !e.task.isDone())
 				continue;
-			    final int delay = e.worker.getFirstLaunchDelay();
-			    final int period =     e.worker.getLaunchPeriod();
+			    final int
+			    delay = e.worker.getFirstLaunchDelay(),
+period =     e.worker.getLaunchPeriod();
 			    if (delay < 0 || period <= 0)
 				continue;
 			    if (counter >= delay && (counter - delay) % period == 0)
 			    {
 				e.task = new FutureTask<>(e.worker, null);
-				e.executor.execute(e.task);
+				e.task.run();
 			    }
 			}
 		    } //for(entries);
@@ -74,6 +82,7 @@ class WorkersTracking
 		    }
 		    ++counter;
 		}
+		log.trace("Finishing workers");
 	}, "luwrain.workers").start();
     }
 
@@ -82,19 +91,16 @@ class WorkersTracking
 	continueWork = false;
     }
 
-        static private class Entry 
+        static private final class Entry 
     {
-	final ExecutorService executor = Executors.newSingleThreadExecutor();
 final String name;
 final Worker worker;
 	FutureTask task = null;
 
 Entry(String name, Worker worker)
 	{
-	    NullCheck.notEmpty(name, "name");
-	    requireNonNull(worker, "worker can't be null");
-	    this.name = name;
-	    this.worker = worker;
+	    this.name = requireNonNull(name, "name can't be null");
+	    this.worker = requireNonNull(worker, "worker can't be null");
 	}
     }
 }
